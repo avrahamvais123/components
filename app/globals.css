@@ -216,6 +216,18 @@
     @apply bg-background text-foreground;
   }
 
+  .center{
+    @apply flex items-center justify-center;
+  }
+
+  .col{
+    @apply flex flex-col;
+  }
+
+  .col-center{
+    @apply flex flex-col items-center;
+  }
+
   .test{
     @apply border-4 border-red-600;
   }
