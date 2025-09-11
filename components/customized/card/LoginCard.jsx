@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
-export default function CreateAccountCard() {
+export default function LoginCard() {
   return (
     <Card className="w-[350px]">
       <CardHeader>
@@ -28,7 +28,7 @@ export default function CreateAccountCard() {
                 placeholder="הכנס את האימייל שלך"
               />
             </div>
-            <Button>בוא נתחיל</Button>
+            <Button>התחבר</Button>
           </div>
           <div className="relative my-4 flex items-center justify-center overflow-hidden">
             <Separator />

@@ -216,6 +216,10 @@
     @apply bg-background text-foreground;
   }
 
+  .full{
+    @apply size-full;
+  }
+
   .center{
     @apply flex items-center justify-center;
   }
