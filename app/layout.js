@@ -1,10 +1,14 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import Navbar from "@/components/customized/navbar/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+const NotoSansHebrew = Noto_Sans_Hebrew({
+  variable: "--font-NotoSansHebrew",
   subsets: ["latin"],
 });
 
