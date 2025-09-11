@@ -14,7 +14,6 @@ export default function Home() {
   return (
     <div className="h-dvh bg-muted">
       <div className="full col center gap-4">
-        <ThemeToggle />
       </div>
     </div>
   );

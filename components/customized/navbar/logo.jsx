@@ -1,18 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import { ThemeToggle } from "../ThemeToggle";
+import { useTheme } from "next-themes";
 
 export const Logo = () => {
-  return (
-    <div className="center z-50 gap-4 test">
-      <ThemeToggle />
+  const { theme, systemTheme, setTheme } = useTheme();
+  const effective = theme === "system" ? systemTheme : theme;
 
-      <Image
-        //src={`/images/logo-${theme === "dark" ? "white" : "black"}.png`}
-        src={`/images/logo-dark.png`}
-        width={200}
-        height={100}
-        className="h-9 w-auto"
-      />
-    </div>
+  return (
+    <Image
+      src={`/images/logo-${effective === "dark" ? "white" : "black"}.png`}
+      width={200}
+      height={100}
+      className="h-9 w-auto"
+    />
   );
 };
