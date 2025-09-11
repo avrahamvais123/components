@@ -1,14 +1,14 @@
 import { Geist, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
-import Navbar from "@/components/customized/navbar/Navbar";
+import Header from "@/components/customized/header/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
-const NotoSansHebrew = Noto_Sans_Hebrew({
-  variable: "--font-NotoSansHebrew",
+const NotoSans = Noto_Sans_Hebrew({
+  variable: "--font-noto-sans",
   subsets: ["latin"],
 });
 
@@ -20,9 +20,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="he" dir="rtl">
-      <body className={`${geistSans.variable} antialiased`}>
+      <body className={`${NotoSans.variable} antialiased`}>
         <Providers>
-          <Navbar />
+          <Header />
           {children}
         </Providers>
       </body>

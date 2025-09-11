@@ -4,7 +4,7 @@ import { ArrowUpRight, CirclePlay } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const Hero01 = () => {
+const Hero1 = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 bg-[url('/images/background-image.png')] bg-no-repeat bg-cover">
       <div className="text-center max-w-3xl">
@@ -37,4 +37,4 @@ const Hero01 = () => {
   );
 };
 
-export default Hero01;
+export default Hero1;
