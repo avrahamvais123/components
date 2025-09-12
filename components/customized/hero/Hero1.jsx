@@ -15,7 +15,7 @@ const Hero1 = () => {
         priority
         className="absolute inset-0 object-cover"
       />
-      <div className="absolute top-20 right-30 text-white max-w-3xl">
+      <div className="absolute top-10 md:top-20 md:right-30 p-4 col-center md:items-start text-white max-w-md md:max-w-3xl">
         {/* <Badge variant="secondary" className="rounded-full py-1 border-border" asChild>
           <Link href="#">
             Just released v1.0.0 <ArrowUpRight className="ml-1 size-4" />
