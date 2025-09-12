@@ -1,7 +1,7 @@
 "use client";
 
 import Hero1 from "@/components/customized/hero/Hero1";
-import { ThemeToggle } from "@/components/customized/ThemeToggle";
+import { ThemeToggle } from "@/components/customized/utils/ThemeToggle";
 import Features6 from "@/components/features/Features6";
 import Features7 from "@/components/features/Features7";
 import { store } from "@/lib/signals-store";
@@ -15,7 +15,7 @@ export default function Home() {
   console.log("store: ", store);
 
   return (
-    <div className="h-dvh bg-muted">
+    <div className="bg-muted">
       <Hero1 />
       <Features6 />
       {/* <Features7 /> */}

@@ -2,6 +2,7 @@ import { Geist, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import Header from "@/components/customized/header/Header";
+import Footer4 from "@/components/footer/Footer4";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <Header />
           {children}
+          <Footer4 />
         </Providers>
       </body>
     </html>

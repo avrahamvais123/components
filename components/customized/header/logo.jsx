@@ -1,27 +1,25 @@
-"use client";
-
+import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { ThemeToggle } from "../ThemeToggle";
-import { useTheme } from "next-themes";
-import { useMemo } from "react";
 
-export const Logo = () => {
+export const Logo = ({ className }) => {
   return (
-    <div className="relative h-9 w-[200px]">
+    <>
       <Image
         src="/images/logo-dark.png"
         alt="Logo light"
-        fill
-        className="object-contain dark:hidden"
+        width={200}
+        height={100}
+        className={cn("object-contain h-9 w-auto dark:hidden", className)}
         priority
       />
       <Image
         src="/images/logo-light.png"
         alt="Logo dark"
-        fill
-        className="object-contain hidden dark:block"
+        width={200}
+        height={100}
+        className={cn("object-contain h-9 w-auto hidden dark:block", className)}
         priority
       />
-    </div>
+    </>
   );
 };
