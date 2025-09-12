@@ -1,16 +1,19 @@
-import { Geist, Noto_Sans_Hebrew } from "next/font/google";
+// app/layout.js
+import { Rubik, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import Header from "@/components/customized/header/Header";
 import Footer4 from "@/components/footer/Footer4";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const rubik = Rubik({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-rubik", // אפשר להשאיר, לא חובה בשיטה הזו
 });
-const NotoSans = Noto_Sans_Hebrew({
+
+const notoSans = Noto_Sans_Hebrew({
+  // חשוב! שיהיה "hebrew" כדי שיטען גליפים בעברית
+  subsets: ["hebrew", "latin"],
   variable: "--font-noto-sans",
-  subsets: ["latin"],
 });
 
 export const metadata = {
@@ -21,7 +24,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="he" dir="rtl">
-      <body className={`${NotoSans.variable} antialiased`}>
+      {/* פשוט מחילים את הפונט ישירות על ה-body */}
+      <body className={`${rubik.className} antialiased`}>
         <Providers>
           <Header />
           {children}
