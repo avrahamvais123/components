@@ -39,16 +39,16 @@ export const NavMenu = (props) => {
           return (
             <NavigationMenuItem key={department}>
               <NavigationMenuTrigger>{department}</NavigationMenuTrigger>
-              <NavigationMenuContent>
+              <NavigationMenuContent className="test">
                 <ul className="grid w-[200px] gap-3 p-4 md:w-[300px] lg:w-[400px]">
                   {items.map((item) => (
                     <li key={item}>
-                      <Link
+                      <NavigationMenuLink
                         href="#"
                         className="block select-none rounded-md p-2 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                       >
                         {item}
-                      </Link>
+                      </NavigationMenuLink>
                     </li>
                   ))}
                 </ul>
@@ -56,7 +56,40 @@ export const NavMenu = (props) => {
             </NavigationMenuItem>
           );
         })}
-        {/* <NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
+};
+
+const ListItem = React.forwardRef(
+  ({ className, title, children, ...props }, ref) => {
+    return (
+      <li>
+        <NavigationMenuLink asChild>
+          <Link
+            ref={ref}
+            className={cn(
+              "block select-none space-y-2 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+              className
+            )}
+            {...props}
+          >
+            <props.icon className="mb-4 size-6" />
+            <div className="text-sm font-semibold leading-none">{title}</div>
+            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+              {children}
+            </p>
+          </Link>
+        </NavigationMenuLink>
+      </li>
+    );
+  }
+);
+
+ListItem.displayName = "ListItem";
+
+{
+  /* <NavigationMenuItem>
           <Button variant="ghost" asChild>
             <Link href="#">Home</Link>
           </Button>
@@ -94,34 +127,5 @@ export const NavMenu = (props) => {
               ))}
             </ul>
           </NavigationMenuContent>
-        </NavigationMenuItem> */}
-      </NavigationMenuList>
-    </NavigationMenu>
-  );
-};
-
-const ListItem = React.forwardRef(
-  ({ className, title, children, ...props }, ref) => {
-    return (
-      <li>
-        <NavigationMenuLink asChild>
-          <Link
-            ref={ref}
-            className={cn(
-              "block select-none space-y-2 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-              className
-            )}
-            {...props}
-          >
-            <props.icon className="mb-4 size-6" />
-            <div className="text-sm font-semibold leading-none">{title}</div>
-            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-              {children}
-            </p>
-          </Link>
-        </NavigationMenuLink>
-      </li>
-    );
-  }
-);
-ListItem.displayName = "ListItem";
+        </NavigationMenuItem> */
+}
