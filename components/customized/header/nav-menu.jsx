@@ -13,11 +13,50 @@ import Link from "next/link";
 import React from "react";
 import { foods, travelMenuItems } from "./config";
 
+const departments = {
+  "מוצרי מזון יבש": [
+    "פסטה, אורז ודגנים",
+    "קמח וסוכר",
+    "קטניות ושימורים",
+    "חטיפים וממתקים",
+    "קפה, תה ושוקו",
+  ],
+  "מוצרי חלב": ["חלב ומשקאות חלב", "גבינות", "יוגורטים", "חמאה ומרגרינה"],
+  "בשר ודגים": ["בשר טרי", "עוף", "דגים", "מוצרי מעדניה"],
+  "פירות וירקות": ["ירקות טריים", "פירות עונתיים", "עשבי תיבול"],
+  מאפייה: ["לחמים", "חלות", "עוגות ועוגיות"],
+  קפואים: ["ירקות קפואים", "פיצות קפואות", "גלידות וקינוחים"],
+  שתייה: ["מים מינרליים", "משקאות קלים", "מיצים", "אלכוהול ובירות"],
+  "ניקוי וטואלטיקה": ["חומרי ניקוי לבית", "סבונים ושמפו", "מוצרי היגיינה"],
+  "מוצרים לבית": ["כלי פלסטיק ונייר", "סוללות", "כלי מטבח פשוטים"],
+};
+
 export const NavMenu = (props) => {
   return (
     <NavigationMenu {...props}>
       <NavigationMenuList className="gap-1 space-x-0 text-sm">
-        <NavigationMenuItem>
+        {Object.entries(departments).map(([department, items]) => {
+          return (
+            <NavigationMenuItem key={department}>
+              <NavigationMenuTrigger>{department}</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[200px] gap-3 p-4 md:w-[300px] lg:w-[400px]">
+                  {items.map((item) => (
+                    <li key={item}>
+                      <Link
+                        href="#"
+                        className="block select-none rounded-md p-2 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                      >
+                        {item}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          );
+        })}
+        {/* <NavigationMenuItem>
           <Button variant="ghost" asChild>
             <Link href="#">Home</Link>
           </Button>
@@ -55,7 +94,7 @@ export const NavMenu = (props) => {
               ))}
             </ul>
           </NavigationMenuContent>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
       </NavigationMenuList>
     </NavigationMenu>
   );
