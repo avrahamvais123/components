@@ -3,6 +3,7 @@ import { Logo } from "./logo";
 import { NavMenu } from "./nav-menu";
 import { NavigationSheet } from "./navigation-sheet";
 import { ArrowUpRight } from "lucide-react";
+import MegaMenu from "../utils/MegaMenu";
 
 const Header = () => {
   return (
