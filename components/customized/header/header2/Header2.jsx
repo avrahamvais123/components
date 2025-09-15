@@ -277,11 +277,13 @@ export default function Header2() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
+            {/* Logo */}
             <Link href="/" className="text-primary hover:text-primary/90">
               <Logo />
             </Link>
+
             {/* Navigation menu */}
-            <NavigationMenu viewport={true} className="max-md:hidden">
+            <NavigationMenu viewport={false} className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
