@@ -40,7 +40,7 @@ export const NavMenu = (props) => {
             <NavigationMenuItem key={department}>
               <NavigationMenuTrigger>{department}</NavigationMenuTrigger>
               <NavigationMenuContent className="">
-                <ul className="grid w-[200px] gap-3 p-4 md:w-[300px] lg:w-[400px]">
+                <ul className="grid w-200">
                   {items.map((item) => (
                     <li key={item}>
                       <NavigationMenuLink className="block select-none rounded-md p-2 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">

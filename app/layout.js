@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "./providers";
 import Header from "@/components/customized/header/Header";
 import Footer4 from "@/components/footer/Footer4";
+import Header2 from "@/components/customized/header/Header2";
 
 const rubik = Rubik({
   subsets: ["hebrew", "latin"],
@@ -27,7 +28,7 @@ export default function RootLayout({ children }) {
       {/* פשוט מחילים את הפונט ישירות על ה-body */}
       <body className={`${rubik.className} antialiased`}>
         <Providers>
-          <Header />
+          <Header2 />
           {children}
           <Footer4 />
         </Providers>
