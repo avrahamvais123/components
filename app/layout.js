@@ -2,9 +2,9 @@
 import { Rubik, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
-import Header from "@/components/customized/header/Header";
+import Header from "@/components/customized/header/header1/Header";
 import Footer4 from "@/components/footer/Footer4";
-import Header2 from "@/components/customized/header/Header2";
+import Header2 from "@/components/customized/header/header2/Header2";
 
 const rubik = Rubik({
   subsets: ["hebrew", "latin"],

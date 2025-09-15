@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Logo } from "./logo";
+import { Logo } from "../logo";
 import Link from "next/link";
 
 // Navigation links array to be used in both desktop and mobile menus

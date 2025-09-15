@@ -11,7 +11,6 @@ import {
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
-import { foods, travelMenuItems } from "./config";
 
 const departments = {
   "מוצרי מזון יבש": [
