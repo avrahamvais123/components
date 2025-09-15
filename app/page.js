@@ -6,6 +6,7 @@ import Features6 from "@/components/features/Features6";
 import Features7 from "@/components/features/Features7";
 import { store } from "@/lib/signals-store";
 import { useSignals } from "@preact/signals-react/runtime";
+import { useDeepSignal } from "deepsignal/react";
 import { useSession } from "next-auth/react";
 
 export default function Home() {
