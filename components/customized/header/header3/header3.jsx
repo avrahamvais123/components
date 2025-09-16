@@ -11,6 +11,7 @@ import useHaederControl from "./useHaederControl";
 export default function Header3() {
   const {
     isOpen,
+    setIsOpen,
     openIndex,
     current,
     openPanel,
@@ -21,7 +22,7 @@ export default function Header3() {
   return (
     <header className="sticky top-0 z-10 bg-white">
       {/* לוגו ומחלקות */}
-      <div className="relative h-16 px-6 lg:px-10 flex items-center justify-between gap-6">
+      <div className="relative h-16 px-6 lg:px-10 flex items-center gap-6">
         {/* לוגו */}
         <Logo />
 

@@ -40,6 +40,7 @@ const useHaederControl = () => {
 
   return {
     isOpen,
+    setIsOpen,
     openIndex,
     current,
     openPanel,
