@@ -7,22 +7,15 @@ import useHaederControl from "./useHaederControl";
 import MegaMenu3 from "./MegaMenu3";
 
 export default function Header3() {
-  const {
-    isOpen,
-    openIndex,
-    openPanel,
-    scheduleClose,
-    clearCloseTimer,
-  } = useHaederControl();
+  const control = useHaederControl();
+  const { isOpen, openIndex, openPanel, scheduleClose, clearCloseTimer } = control;
 
   return (
-    <header className="sticky top-0 z-10 bg-white dark:bg-neutral-900">
+    <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
       {/* לוגו ומחלקות */}
       <div className="relative h-16 px-6 lg:px-10 flex items-center gap-6">
-        {/* לוגו */}
         <Logo />
 
-        {/* מחלקות */}
         <nav
           className="hidden md:flex items-center gap-1 lg:gap-2"
           onMouseEnter={clearCloseTimer}
@@ -31,7 +24,7 @@ export default function Header3() {
           {navigationLinks.map((link, i) => (
             <Button
               variant="ghost"
-              key={i}
+              key={link.label ?? i}
               onMouseEnter={() => openPanel(i)}
               onFocus={() => openPanel(i)}
               className={
@@ -41,6 +34,7 @@ export default function Header3() {
               }
               aria-expanded={isOpen && openIndex === i}
               aria-haspopup="menu"
+              aria-controls="mega-panel"
             >
               {link.label}
             </Button>
@@ -48,8 +42,8 @@ export default function Header3() {
         </nav>
       </div>
 
-      {/* מגה-פאנל */}
-      <MegaMenu3 />
+      {/* מגה-פאנל מקבל את ה-state בפרופס */}
+      <MegaMenu3 control={control} />
     </header>
   );
 }
