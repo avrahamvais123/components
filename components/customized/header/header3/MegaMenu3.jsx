@@ -6,7 +6,6 @@ import Link from "next/link";
 import { panelVariants, listVariants, itemVariants } from "./animationConfig";
 import { cn } from "@/lib/utils";
 
-
 export default function MegaMenu3({ control }) {
   const { isOpen, setIsOpen, current, scheduleClose, clearCloseTimer } =
     control;
@@ -37,6 +36,7 @@ export default function MegaMenu3({ control }) {
           role="menu"
           aria-label={current?.label ?? "מגה תפריט"}
         >
+          {/* image-hero */}
           {current?.hero?.image && (
             <motion.aside
               layout
@@ -83,6 +83,7 @@ export default function MegaMenu3({ control }) {
             </motion.aside>
           )}
 
+          {/* items */}
           <motion.ul
             variants={listVariants}
             initial="hidden"
@@ -96,7 +97,7 @@ export default function MegaMenu3({ control }) {
               <motion.li
                 key={item?.label ?? idx}
                 variants={itemVariants}
-                className="group rounded-xl border border-transparent hover:border-zinc-200 dark:hover:border-neutral-800 hover:bg-zinc-50 dark:hover:bg-neutral-800/60 p-3 lg:p-4"
+                className="group rounded-xl border border-zinc-200 hover:border-zinc-200 dark:hover:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 p-3 lg:p-4"
               >
                 <Link
                   href={item?.href || "#"}
