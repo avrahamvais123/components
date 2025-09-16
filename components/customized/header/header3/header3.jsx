@@ -21,7 +21,7 @@ export default function Header3() {
   } = useHaederControl();
 
   return (
-    <header className="sticky top-0 z-10 bg-white">
+    <header className="sticky top-0 z-10 bg-white dark:bg-neutral-900">
       {/* לוגו ומחלקות */}
       <div className="relative h-16 px-6 lg:px-10 flex items-center gap-6">
         {/* לוגו */}
