@@ -3,6 +3,14 @@ export const navigationLinks = [
     label: "מוצרי מזון יבש",
     submenu: true,
     type: "description",
+    hero: {
+    image: "/images/background-image.png",
+    alt: "גבינות ומעדנים",
+    eyebrow: "חדש בסופר",
+    title: "מבצעי מוצרי חלב",
+    ctaLabel: "למבצעים",
+    ctaHref: "/deals/dairy"
+  },
     items: [
       {
         href: "#",
