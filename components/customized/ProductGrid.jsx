@@ -108,28 +108,14 @@ function ProductCard({ product, currency, onAdd, onFavToggle }) {
 
   // Prefer symmetrical layout (works fine for RTL containers)
   return (
-    <Card className="overflow-hidden group border-muted/60 hover:shadow-md transition-shadow duration-200">
+    <Card className="overflow-hidden pt-0 group shadow-none border border-border hover:shadow-xl shadow-light-50 transition-shadow duration-200">
       <div className="relative">
-        {/* Badges (always above image) */}
-        <div className={cn("absolute z-20 top-2 flex gap-2 right-2")}>
-          {product.hot && (
-            <Badge className="bg-red-600 text-white hover:bg-red-600 inline-flex items-center gap-1">
-              <Flame className="h-3 w-3" /> חם
-            </Badge>
-          )}
-          {product.sale && (
-            <Badge className="bg-amber-500 text-white hover:bg-amber-500 inline-flex items-center gap-1">
-              <Percent className="h-3 w-3" /> מבצע
-            </Badge>
-          )}
-        </div>
-
         {/* Favorite (always above image) */}
         <button
           onClick={toggleFav}
           aria-label={fav ? "הסר ממועדפים" : "הוסף למועדפים"}
           className={cn(
-            "absolute top-2 left-2 z-20 p-2 rounded-full bg-white/80 backdrop-blur shadow hover:bg-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            "absolute top-3 right-3 z-20 p-2 rounded-full bg-white/80 backdrop-blur shadow hover:bg-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
           )}
         >
           <Heart
@@ -139,6 +125,20 @@ function ProductCard({ product, currency, onAdd, onFavToggle }) {
             )}
           />
         </button>
+
+        {/* Badges (always above image) */}
+        <div className="absolute z-20 top-3 flex gap-2 left-3">
+          {product.hot && (
+            <Badge className="bg-red-600 text-white hover:bg-red-600 inline-flex items-center gap-1">
+              חם <Flame className="size-3" />
+            </Badge>
+          )}
+          {product.sale && (
+            <Badge className="bg-amber-500 text-white hover:bg-amber-500 inline-flex items-center gap-1">
+              מבצע <Percent className="size-3" />
+            </Badge>
+          )}
+        </div>
 
         {/* Image (kept below overlays) */}
         <div className="relative z-0 aspect-square overflow-hidden bg-muted/30">
