@@ -6,6 +6,7 @@ import { navigationLinks } from "./navigationLinks";
 import useHaederControl from "./useHaederControl";
 import MegaMenu3 from "./MegaMenu3";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function Header3() {
   const control = useHaederControl();
@@ -16,7 +17,9 @@ export default function Header3() {
     <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
       {/* לוגו ומחלקות */}
       <div className="relative h-16 px-6 border-b lg:px-10 flex items-center gap-6">
-        <Logo />
+        <Link href="/">
+          <Logo />
+        </Link>
 
         <nav
           className="hidden md:flex items-center gap-1 lg:gap-2"
