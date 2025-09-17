@@ -24,7 +24,7 @@ const MegaMenueItems = ({ current, setIsOpen }) => {
           className="group rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-zinc-200 dark:hover:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 p-3 lg:p-4"
         >
           <Link
-            href={{ pathname: "/categories", query: { name: item.label } }}
+            href={{ pathname: "/products", query: { name: item.label } }}
             onClick={() => setIsOpen(false)}
           >
             <div className="flex items-start justify-between gap-3">
