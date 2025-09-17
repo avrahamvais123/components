@@ -162,7 +162,6 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
   );
 }
 
-
 /* --------- utils --------- */
 function formatPrice(n) {
   if (typeof n !== "number" || !Number.isFinite(n)) return "0.00";
@@ -170,4 +169,8 @@ function formatPrice(n) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+}
+
+function clamp(n, min, max) {
+  return Math.min(max, Math.max(min, n));
 }
