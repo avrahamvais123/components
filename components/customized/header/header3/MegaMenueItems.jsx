@@ -14,7 +14,7 @@ const MegaMenueItems = ({ current, setIsOpen }) => {
       animate="visible"
       className={cn(
         current?.hero?.image ? "lg:col-span-3" : "col-span-full",
-        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-3"
+        "h-fit grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-3"
       )}
     >
       {current?.items?.map((item, idx) => (
@@ -25,7 +25,6 @@ const MegaMenueItems = ({ current, setIsOpen }) => {
         >
           <Link
             href={item?.href || "#"}
-            className="block"
             onClick={() => setIsOpen(false)}
           >
             <div className="flex items-start justify-between gap-3">
@@ -33,7 +32,7 @@ const MegaMenueItems = ({ current, setIsOpen }) => {
                 {item?.label}
               </h4>
               <span className="opacity-0 group-hover:opacity-100 transition text-zinc-400">
-                ↗
+                ↖︎
               </span>
             </div>
             {item?.description && (
