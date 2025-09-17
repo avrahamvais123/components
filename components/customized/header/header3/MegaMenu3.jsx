@@ -97,7 +97,7 @@ export default function MegaMenu3({ control }) {
               <motion.li
                 key={item?.label ?? idx}
                 variants={itemVariants}
-                className="group rounded-xl border border-zinc-200 hover:border-zinc-200 dark:hover:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 p-3 lg:p-4"
+                className="group rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-zinc-200 dark:hover:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 p-3 lg:p-4"
               >
                 <Link
                   href={item?.href || "#"}
