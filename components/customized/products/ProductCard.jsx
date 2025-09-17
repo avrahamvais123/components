@@ -52,14 +52,14 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
 
   // Prefer symmetrical layout (works fine for RTL containers)
   return (
-    <Card className="h-fit w-75 overflow-hidden p-3 gap-2 group shadow-none hover:shadow-xl shadow-light-50 transition-shadow duration-200">
+    <Card className="h-fit w-75 overflow-hidden p-2 gap-2 group shadow-none hover:shadow-xl shadow-light-50 transition-shadow duration-200">
       <div className="relative">
         {/* Favorite (always above image) */}
         <button
           onClick={toggleFav}
           aria-label={fav ? "הסר ממועדפים" : "הוסף למועדפים"}
           className={cn(
-            "absolute top-3 right-3 z-20 p-2 rounded-full bg-white/80 backdrop-blur shadow hover:bg-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            "absolute top-3 right-3 z-20 p-2 rounded-full bg-white/50 backdrop-blur hover:bg-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
           )}
         >
           <Heart
@@ -151,10 +151,10 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
         </div>
       </CardContent>
 
-      <Separator className="my-2" />
+      {/* <Separator className="my-2" /> */}
 
-      <CardFooter className="pt-0 pb-1 px-0">
-        <Button className="w-full" onClick={handleAdd}>
+      <CardFooter className="p-1">
+        <Button className="w-full rounded-full" onClick={handleAdd}>
           <ShoppingCart className="size-4 ms-2" /> הוסף לסל
         </Button>
       </CardFooter>

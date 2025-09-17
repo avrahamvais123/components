@@ -21,6 +21,38 @@ const products = [
     image: "/images/milk.jpg",
     quantity: 10,
   },
+  {
+    id: 3,
+    title: "שוקו",
+    description: "1 ליטר, שוקו תנובה.",
+    price: 18.9,
+    image: "/images/milk.jpg",
+    quantity: 10,
+  },
+  {
+    id: 4,
+    title: "שוקו",
+    description: "1 ליטר, שוקו תנובה.",
+    price: 18.9,
+    image: "/images/milk.jpg",
+    quantity: 10,
+  },
+  {
+    id: 5,
+    title: "שוקו",
+    description: "1 ליטר, שוקו תנובה.",
+    price: 18.9,
+    image: "/images/milk.jpg",
+    quantity: 10,
+  },
+  {
+    id: 6,
+    title: "שוקו",
+    description: "1 ליטר, שוקו תנובה.",
+    price: 18.9,
+    image: "/images/milk.jpg",
+    quantity: 10,
+  },
 ];
 
 const Page = async (porps) => {
@@ -28,7 +60,7 @@ const Page = async (porps) => {
   const productName = searchParams?.name ?? "";
 
   return (
-    <div className="min-h-[calc(100dvh-5rem)]">
+    <div className="min-h-[calc(100dvh-5rem)] bg-accent">
       <ProductGrid products={products} />
     </div>
   );
