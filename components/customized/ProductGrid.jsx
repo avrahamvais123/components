@@ -108,7 +108,7 @@ function ProductCard({ product, currency, onAdd, onFavToggle }) {
 
   // Prefer symmetrical layout (works fine for RTL containers)
   return (
-    <Card className="overflow-hidden pt-0 group shadow-none border border-border hover:shadow-xl shadow-light-50 transition-shadow duration-200">
+    <Card className="h-100 w-75 overflow-hidden p-3 gap-0 group shadow-none border border-border hover:shadow-xl shadow-light-50 transition-shadow duration-200">
       <div className="relative">
         {/* Favorite (always above image) */}
         <button
@@ -141,7 +141,7 @@ function ProductCard({ product, currency, onAdd, onFavToggle }) {
         </div>
 
         {/* Image (kept below overlays) */}
-        <div className="relative z-0 aspect-square overflow-hidden bg-muted/30">
+        <div className="relative z-0 rounded-md aspect-video overflow-hidden bg-muted/30">
           {product.image ? (
             <Image
               src={product.image}
@@ -159,12 +159,12 @@ function ProductCard({ product, currency, onAdd, onFavToggle }) {
         </div>
       </div>
 
-      <CardHeader className="pb-2">
-        <h3 className="text-base font-semibold leading-tight line-clamp-2">
+      <CardHeader className="">
+        <h3 className="text-base font-semibold line-clamp-2">
           {product.title}
         </h3>
         {product.description && (
-          <p className="text-sm text-muted-foreground line-clamp-2">
+          <p className="text-sm text-muted-foreground -mt-2 line-clamp-2">
             {product.description}
           </p>
         )}
@@ -211,7 +211,7 @@ function ProductCard({ product, currency, onAdd, onFavToggle }) {
 
       <CardFooter className="pt-0">
         <Button className="w-full" onClick={handleAdd}>
-          <ShoppingCart className="h-4 w-4 ms-2" /> הוסף לסל
+          <ShoppingCart className="size-4 ms-2" /> הוסף לסל
         </Button>
       </CardFooter>
     </Card>
