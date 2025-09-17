@@ -1,8 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
-import { panelVariants, listVariants, itemVariants } from "./animationConfig";
+import { panelVariants } from "./animationConfig";
 import { cn } from "@/lib/utils";
 import MegaMenuImage from "./MegaMenuImage";
 import MegaMenueItems from "./MegaMenueItems";
