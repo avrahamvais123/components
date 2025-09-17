@@ -1,6 +1,7 @@
 import ProductGrid from "@/components/customized/products/ProductGrid";
 import React from "react";
 import { medusa } from "@/lib/medusa";
+import Image from "next/image";
 
 const products = [
   {
@@ -61,6 +62,16 @@ const Page = async (porps) => {
 
   return (
     <div className="min-h-[calc(100dvh-5rem)] bg-accent">
+      <div className="relative w-full h-100 overflow-hidden">
+        <div className="absolute inset-0 z-10 full bg-black/30" />
+        <Image
+          src="/images/background-image.png"
+          alt="image hero"
+          width={400}
+          height={100}
+          className="absolute inset-0 full object-cover"
+        />
+      </div>
       <ProductGrid products={products} />
     </div>
   );
