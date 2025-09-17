@@ -153,8 +153,8 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
 
       {/* <Separator className="my-2" /> */}
 
-      <CardFooter className="p-1">
-        <Button className="w-full rounded-full" onClick={handleAdd}>
+      <CardFooter className="px-4 py-2">
+        <Button className="w-full" onClick={handleAdd}>
           <ShoppingCart className="size-4 ms-2" /> הוסף לסל
         </Button>
       </CardFooter>

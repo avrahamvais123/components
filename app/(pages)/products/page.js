@@ -9,7 +9,7 @@ const products = [
     description: "1 ליטר, תנובה.",
     price: 11.9,
     image: "/images/milk.jpg",
-    quantity: 10,
+    quantity: 1,
     hot: true,
     sale: true,
   },
@@ -19,7 +19,7 @@ const products = [
     description: "1 ליטר, שוקו תנובה.",
     price: 18.9,
     image: "/images/milk.jpg",
-    quantity: 10,
+    quantity: 1,
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ const products = [
     description: "1 ליטר, שוקו תנובה.",
     price: 18.9,
     image: "/images/milk.jpg",
-    quantity: 10,
+    quantity: 1,
   },
   {
     id: 4,
@@ -35,7 +35,7 @@ const products = [
     description: "1 ליטר, שוקו תנובה.",
     price: 18.9,
     image: "/images/milk.jpg",
-    quantity: 10,
+    quantity: 1,
   },
   {
     id: 5,
@@ -43,7 +43,7 @@ const products = [
     description: "1 ליטר, שוקו תנובה.",
     price: 18.9,
     image: "/images/milk.jpg",
-    quantity: 10,
+    quantity: 1,
   },
   {
     id: 6,
@@ -51,7 +51,7 @@ const products = [
     description: "1 ליטר, שוקו תנובה.",
     price: 18.9,
     image: "/images/milk.jpg",
-    quantity: 10,
+    quantity: 1,
   },
 ];
 
