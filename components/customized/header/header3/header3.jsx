@@ -27,22 +27,27 @@ export default function Header3() {
           onMouseLeave={scheduleClose}
         >
           {navigationLinks.map((link, i) => (
-            <Button
-              variant="ghost"
+            <Link
               key={link.label ?? i}
+              onClick={(e) => openPanel(null)}
               onMouseEnter={() => openPanel(i)}
               onFocus={() => openPanel(i)}
-              className={cn(
-                isOpen && openIndex === i
-                  ? "bg-neutral-100 text-neutral-900"
-                  : "hover:bg-neutral-100 text-neutral-700"
-              )}
-              aria-expanded={isOpen && openIndex === i}
-              aria-haspopup="menu"
-              aria-controls="mega-panel"
+              href={{ pathname: "/categories", query: { name: link.label } }}
             >
-              {link.label}
-            </Button>
+              <Button
+                variant="ghost"
+                className={cn(
+                  isOpen && openIndex === i
+                    ? "bg-neutral-100 text-neutral-900"
+                    : "hover:bg-neutral-100 text-neutral-700"
+                )}
+                aria-expanded={isOpen && openIndex === i}
+                aria-haspopup="menu"
+                aria-controls="mega-panel"
+              >
+                {link.label}
+              </Button>
+            </Link>
           ))}
         </nav>
       </div>
