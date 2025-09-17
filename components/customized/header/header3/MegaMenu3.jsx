@@ -32,7 +32,7 @@ export default function MegaMenu3({ control }) {
           className={cn(
             "absolute inset-x-0 top-16 z-40 p-3 lg:p-4 overflow-hidden",
             "grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-3",
-            "border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900",
+            "border border-t-0 border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900",
             "shadow-[0_20px_40px_-20px_rgba(0,0,0,0.2)]"
           )}
         >
