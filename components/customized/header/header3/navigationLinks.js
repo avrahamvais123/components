@@ -4,35 +4,39 @@ export const navigationLinks = [
     submenu: true,
     type: "description",
     hero: {
-    image: "/images/background-image.png",
-    alt: "גבינות ומעדנים",
-    eyebrow: "חדש בסופר",
-    title: "מבצעי מוצרי חלב",
-    ctaLabel: "למבצעים",
-    ctaHref: "/deals/dairy"
-  },
+      image: "/images/background-image.png",
+      alt: "גבינות ומעדנים",
+      eyebrow: "חדש בסופר",
+      title: "מבצעי מוצרי חלב",
+      ctaLabel: "למבצעים",
+      ctaHref: "/deals/dairy",
+    },
     items: [
       {
-        href: "#",
+        href: "/categories/פסטה, אורז ודגנים",
         label: "פסטה, אורז ודגנים",
         description: "מבחר פסטות, אורז ודגנים יבשים.",
       },
       {
-        href: "#",
+        href: "/categories/קמח וסוכר",
         label: "קמח וסוכר",
         description: "קמחים וסוגי סוכר לאפייה ובישול.",
       },
       {
-        href: "#",
+        href: "/categories/קטניות ושימורים",
         label: "קטניות ושימורים",
         description: "עדשים, שעועית, חומוס ושימורי ירקות.",
       },
       {
-        href: "#",
+        href: "/categories/חטיפים וממתקים",
         label: "חטיפים וממתקים",
         description: "ביסקוויטים, שוקולד, וחטיפים מלוחים.",
       },
-      { href: "#", label: "קפה, תה ושוקו", description: "מגוון משקאות חמים." },
+      {
+        href: "/categories/קפה, תה ושוקו",
+        label: "קפה, תה ושוקו",
+        description: "מגוון משקאות חמים.",
+      },
     ],
   },
   {
@@ -41,17 +45,25 @@ export const navigationLinks = [
     type: "description",
     items: [
       {
-        href: "#",
+        href: "/categories/חלב ומשקאות חלב",
         label: "חלב ומשקאות חלב",
         description: "חלב טרי ומשקאות חלב שונים.",
       },
       {
-        href: "#",
+        href: "/categories/גבינות",
         label: "גבינות",
         description: "גבינות קשות, רכות וגבינות שמנת.",
       },
-      { href: "#", label: "יוגורטים", description: "יוגורטים במגוון טעמים." },
-      { href: "#", label: "חמאה ומרגרינה", description: "למאפים ובישול." },
+      {
+        href: "/categories/יוגורטים",
+        label: "יוגורטים",
+        description: "יוגורטים במגוון טעמים.",
+      },
+      {
+        href: "/categories/חמאה ומרגרינה",
+        label: "חמאה ומרגרינה",
+        description: "למאפים ובישול.",
+      },
     ],
   },
   {
@@ -59,10 +71,26 @@ export const navigationLinks = [
     submenu: true,
     type: "description",
     items: [
-      { href: "#", label: "בשר טרי", description: "נתחי בשר מובחרים." },
-      { href: "#", label: "עוף", description: "חזה עוף, כנפיים ושוקיים." },
-      { href: "#", label: "דגים", description: "דגים טריים וקפואים." },
-      { href: "#", label: "מוצרי מעדניה", description: "נקניקים ונקניקיות." },
+      {
+        href: "/categories/בשר טרי",
+        label: "בשר טרי",
+        description: "נתחי בשר מובחרים.",
+      },
+      {
+        href: "/categories/עוף",
+        label: "עוף",
+        description: "חזה עוף, כנפיים ושוקיים.",
+      },
+      {
+        href: "/categories/דגים",
+        label: "דגים",
+        description: "דגים טריים וקפואים.",
+      },
+      {
+        href: "/categories/מוצרי מעדניה",
+        label: "מוצרי מעדניה",
+        description: "נקניקים ונקניקיות.",
+      },
     ],
   },
   {
