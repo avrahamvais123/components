@@ -81,6 +81,15 @@ function ProductCard({ product, currency, onAdd, onFavToggle }) {
 
   const dec = () => setQty((q) => Math.max(1, q - 1));
   const inc = () => setQty((q) => Math.min(99, q + 1));
+  const quantityChange = (e) => {
+    const val = e.target.value;
+    const num = parseInt(val, 10);
+    if (isNaN(num)) {
+      setQty(1);
+    } else {
+      setQty(clamp(num, 1, 99));
+    }
+  };
   const toggleFav = () => {
     setFav((f) => {
       const next = !f;
@@ -172,23 +181,27 @@ function ProductCard({ product, currency, onAdd, onFavToggle }) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
-              onClick={dec}
-              aria-label="הפחת כמות"
-            >
-              −
-            </Button>
-            <span className="w-8 text-center text-sm" aria-live="polite">
-              {qty}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
+              className="size-8 rounded-r-full"
               onClick={inc}
               aria-label="הוסף כמות"
             >
               ＋
+            </Button>
+            <input
+              type="text"
+              className="w-8 text-center focus-within:outline-none appearance-none"
+              value={qty}
+              onChange={quantityChange}
+              aria-live="polite"
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 rounded-l-full"
+              onClick={dec}
+              aria-label="הפחת כמות"
+            >
+              −
             </Button>
           </div>
         </div>
@@ -320,7 +333,7 @@ export const productsWithNulls = [
   },
 ];
 
-export function ProductGridTestCases() {
+/* export function ProductGridTestCases() {
   return (
     <div className="space-y-10 p-4" dir="rtl">
       <section>
@@ -350,3 +363,4 @@ export function ProductGridTestCases() {
     </div>
   );
 }
+ */
