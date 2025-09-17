@@ -1,4 +1,4 @@
-import ProductGrid from "@/components/customized/ProductGrid";
+import ProductGrid from "@/components/customized/products/ProductGrid";
 import React from "react";
 import { medusa } from "@/lib/medusa";
 
@@ -7,11 +7,19 @@ const products = [
     id: 1,
     title: "חלב טרי",
     description: "1 ליטר, תנובה.",
-    price: 18.9,
+    price: 11.9,
     image: "/images/milk.jpg",
     quantity: 10,
     hot: true,
     sale: true,
+  },
+  {
+    id: 2,
+    title: "שוקו",
+    description: "1 ליטר, שוקו תנובה.",
+    price: 18.9,
+    image: "/images/milk.jpg",
+    quantity: 10,
   },
 ];
 
