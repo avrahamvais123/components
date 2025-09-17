@@ -13,27 +13,22 @@ export const navigationLinks = [
     },
     items: [
       {
-        href: "/categories/פסטה, אורז ודגנים",
         label: "פסטה, אורז ודגנים",
         description: "מבחר פסטות, אורז ודגנים יבשים.",
       },
       {
-        href: "/categories/קמח וסוכר",
         label: "קמח וסוכר",
         description: "קמחים וסוגי סוכר לאפייה ובישול.",
       },
       {
-        href: "/categories/קטניות ושימורים",
         label: "קטניות ושימורים",
         description: "עדשים, שעועית, חומוס ושימורי ירקות.",
       },
       {
-        href: "/categories/חטיפים וממתקים",
         label: "חטיפים וממתקים",
         description: "ביסקוויטים, שוקולד, וחטיפים מלוחים.",
       },
       {
-        href: "/categories/קפה, תה ושוקו",
         label: "קפה, תה ושוקו",
         description: "מגוון משקאות חמים.",
       },
@@ -45,22 +40,18 @@ export const navigationLinks = [
     type: "description",
     items: [
       {
-        href: "/categories/חלב ומשקאות חלב",
         label: "חלב ומשקאות חלב",
         description: "חלב טרי ומשקאות חלב שונים.",
       },
       {
-        href: "/categories/גבינות",
         label: "גבינות",
         description: "גבינות קשות, רכות וגבינות שמנת.",
       },
       {
-        href: "/categories/יוגורטים",
         label: "יוגורטים",
         description: "יוגורטים במגוון טעמים.",
       },
       {
-        href: "/categories/חמאה ומרגרינה",
         label: "חמאה ומרגרינה",
         description: "למאפים ובישול.",
       },
@@ -72,22 +63,18 @@ export const navigationLinks = [
     type: "description",
     items: [
       {
-        href: "/categories/בשר טרי",
         label: "בשר טרי",
         description: "נתחי בשר מובחרים.",
       },
       {
-        href: "/categories/עוף",
         label: "עוף",
         description: "חזה עוף, כנפיים ושוקיים.",
       },
       {
-        href: "/categories/דגים",
         label: "דגים",
         description: "דגים טריים וקפואים.",
       },
       {
-        href: "/categories/מוצרי מעדניה",
         label: "מוצרי מעדניה",
         description: "נקניקים ונקניקיות.",
       },
@@ -98,10 +85,9 @@ export const navigationLinks = [
     submenu: true,
     type: "description",
     items: [
-      { href: "#", label: "ירקות טריים", description: "מבחר ירקות יומיומיים." },
-      { href: "#", label: "פירות עונתיים", description: "פירות בהתאם לעונה." },
+      { label: "ירקות טריים", description: "מבחר ירקות יומיומיים." },
+      { label: "פירות עונתיים", description: "פירות בהתאם לעונה." },
       {
-        href: "#",
         label: "עשבי תיבול",
         description: "בזיליקום, פטרוזיליה, כוסברה ועוד.",
       },
@@ -112,10 +98,9 @@ export const navigationLinks = [
     submenu: true,
     type: "description",
     items: [
-      { href: "#", label: "לחמים", description: "לחמים טריים." },
-      { href: "#", label: "חלות", description: "חלות לשבת." },
+      { label: "לחמים", description: "לחמים טריים." },
+      { label: "חלות", description: "חלות לשבת." },
       {
-        href: "#",
         label: "עוגות ועוגיות",
         description: "מבחר מתוקים מהמאפייה.",
       },
@@ -127,13 +112,11 @@ export const navigationLinks = [
     type: "description",
     items: [
       {
-        href: "#",
         label: "ירקות קפואים",
         description: "אפונה, תירס, שעועית ועוד.",
       },
-      { href: "#", label: "פיצות קפואות", description: "פתרון מהיר לארוחה." },
+      { label: "פיצות קפואות", description: "פתרון מהיר לארוחה." },
       {
-        href: "#",
         label: "גלידות וקינוחים",
         description: "שלל טעמים לכל המשפחה.",
       },
@@ -145,14 +128,12 @@ export const navigationLinks = [
     type: "description",
     items: [
       {
-        href: "#",
         label: "מים מינרליים",
         description: "בקבוקים גדולים וקטנים.",
       },
-      { href: "#", label: "משקאות קלים", description: "קולה, ספרייט ועוד." },
-      { href: "#", label: "מיצים", description: "מיצים טבעיים וסחוטים." },
+      { label: "משקאות קלים", description: "קולה, ספרייט ועוד." },
+      { label: "מיצים", description: "מיצים טבעיים וסחוטים." },
       {
-        href: "#",
         label: "אלכוהול ובירות",
         description: "יינות, בירות ומשקאות חריפים.",
       },
@@ -164,13 +145,11 @@ export const navigationLinks = [
     type: "description",
     items: [
       {
-        href: "#",
         label: "חומרי ניקוי לבית",
         description: "ניקוי רצפות, מטבח וחדרי אמבטיה.",
       },
-      { href: "#", label: "סבונים ושמפו", description: "היגיינה יומיומית." },
+      { label: "סבונים ושמפו", description: "היגיינה יומיומית." },
       {
-        href: "#",
         label: "מוצרי היגיינה",
         description: "נייר טואלט, מגבונים ועוד.",
       },
@@ -182,13 +161,11 @@ export const navigationLinks = [
     type: "description",
     items: [
       {
-        href: "#",
         label: "כלי פלסטיק ונייר",
         description: "צלחות, כוסות וסכו״ם חד פעמי.",
       },
-      { href: "#", label: "סוללות", description: "סוללות לכל סוגי המכשירים." },
+      { label: "סוללות", description: "סוללות לכל סוגי המכשירים." },
       {
-        href: "#",
         label: "כלי מטבח פשוטים",
         description: "סירים, מחבתות וכלי בסיס.",
       },
