@@ -121,42 +121,45 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
             {currency}
             {formatPrice(product.price)}
           </div>
-          {/* Qty stepper */}
-          <div className="flex items-center rounded-full border bg-background">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 rounded-r-full"
-              onClick={inc}
-              aria-label="הוסף כמות"
-            >
-              ＋
-            </Button>
-            <input
-              type="text"
-              className="w-8 text-center focus-within:outline-none appearance-none"
-              value={qty}
-              onChange={quantityChange}
-              aria-live="polite"
-            />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 rounded-l-full"
-              onClick={dec}
-              aria-label="הפחת כמות"
-            >
-              −
-            </Button>
-          </div>
         </div>
       </CardContent>
 
       {/* <Separator className="my-2" /> */}
 
-      <CardFooter className="px-4 py-2">
-        <Button className="w-full" onClick={handleAdd}>
-          <ShoppingCart className="size-4 ms-2" /> הוסף לסל
+      <CardFooter className="px-4 py-2 center justify-between">
+        {/* Qty stepper */}
+        <div className="flex items-center rounded-full border bg-background">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 rounded-r-full text-red-600 hover:text-white hover:bg-red-600"
+            onClick={inc}
+            aria-label="הוסף כמות"
+          >
+            ＋
+          </Button>
+          <input
+            type="text"
+            className="w-8 text-center focus-within:outline-none appearance-none"
+            value={qty}
+            onChange={quantityChange}
+            aria-live="polite"
+          />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 rounded-l-full text-red-600 hover:text-white hover:bg-red-600"
+            onClick={dec}
+            aria-label="הפחת כמות"
+          >
+            −
+          </Button>
+        </div>
+        <Button
+          className="rounded-full h-8 bg-red-600 hover:bg-red-500 border border-red-600"
+          onClick={handleAdd}
+        >
+          <ShoppingCart className="size-4" /> הוסף לסל
         </Button>
       </CardFooter>
     </Card>
