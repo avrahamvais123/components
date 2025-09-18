@@ -53,7 +53,7 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
 
   // Prefer symmetrical layout (works fine for RTL containers)
   return (
-    <Card className="full max-w-xs overflow-hidden p-2 gap-2 group shadow-none">
+    <Card className="full overflow-hidden p-2 gap-2 group shadow-none">
       <div className="relative">
         {/* Favorite (always above image) */}
         <button

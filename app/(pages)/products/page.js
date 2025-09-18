@@ -12,7 +12,8 @@ const products = [
     title: "חלב 3%",
     description: "חלב פרה 1 ליטר, תנובה.",
     price: 6.9,
-    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b",
+    image:
+      "https://images.unsplash.com/photo-1634141510639-d691d86f47be?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
     hot: true,
   },
@@ -21,7 +22,8 @@ const products = [
     title: "חלב 1%",
     description: "חלב דל שומן 1 ליטר.",
     price: 6.5,
-    image: "https://images.unsplash.com/photo-1567443024551-f3eec9fcaad2",
+    image:
+      "https://images.unsplash.com/photo-1563636619-e9143da7973b?q=80&w=1365&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
   },
   {
@@ -29,7 +31,8 @@ const products = [
     title: "חלב סויה",
     description: "משקה סויה טבעי ללא לקטוז.",
     price: 12.9,
-    image: "https://images.unsplash.com/photo-1634662407214-4f3cf1911091",
+    image:
+      "https://images.unsplash.com/photo-1722518252679-3a77ae458836?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
     sale: true,
   },
@@ -38,7 +41,8 @@ const products = [
     title: "חלב שקדים",
     description: "חלב צמחי על בסיס שקדים.",
     price: 14.5,
-    image: "https://images.unsplash.com/photo-1632324348946-cc0d9ff556c0",
+    image:
+      "https://images.unsplash.com/photo-1601436423474-51738541c1b1?q=80&w=1227&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
   },
   {
@@ -46,7 +50,8 @@ const products = [
     title: "שוקו בקבוק",
     description: 'שוקו קר 500 מ"ל.',
     price: 8.9,
-    image: "https://images.unsplash.com/photo-1606787366850-de6330128bfc",
+    image:
+      "https://plus.unsplash.com/premium_photo-1663853293850-6099a76d4c51?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
   },
   {
@@ -54,7 +59,8 @@ const products = [
     title: "חלב נטול לקטוז",
     description: "1 ליטר, תנובה נטול לקטוז.",
     price: 9.9,
-    image: "https://images.unsplash.com/photo-1527168027773-3d2d9ff7d8a4",
+    image:
+      "https://images.unsplash.com/photo-1553301803-768cd4a59b9c?q=80&w=1952&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
   },
 
@@ -64,7 +70,8 @@ const products = [
     title: "גבינת קוטג'",
     description: "5% שומן, גביע 250 גרם.",
     price: 7.9,
-    image: "https://images.unsplash.com/photo-1563245372-f2f8ca7a7d17",
+    image:
+      "https://plus.unsplash.com/premium_photo-1663127123513-a11369f67c8c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
     hot: true,
   },
@@ -73,7 +80,8 @@ const products = [
     title: "גבינה צהובה",
     description: "פרוסות 28% שומן, 200 גרם.",
     price: 15.9,
-    image: "https://images.unsplash.com/photo-1604908177371-3f26e413d739",
+    image:
+      "https://plus.unsplash.com/premium_photo-1700004499998-7036bab69a46?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
   },
   {
@@ -81,7 +89,8 @@ const products = [
     title: "גבינת מוצרלה",
     description: "מגורדת, 200 גרם.",
     price: 13.9,
-    image: "https://images.unsplash.com/photo-1626082927306-3b04e3d6b7a1",
+    image:
+      "https://images.unsplash.com/photo-1674526498355-e20c280bc6ef?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
   },
   {
@@ -89,7 +98,8 @@ const products = [
     title: "גבינה בולגרית",
     description: "16% שומן, קוביות במים.",
     price: 12.9,
-    image: "https://images.unsplash.com/photo-1627360239425-b5a3a6f963e7",
+    image:
+      "https://plus.unsplash.com/premium_photo-1700612684956-2a6b996d6df7?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
   },
   {
@@ -97,7 +107,8 @@ const products = [
     title: "גבינת שמנת",
     description: "30% שומן, 200 גרם.",
     price: 11.9,
-    image: "https://images.unsplash.com/photo-1589187155479-039a7ec9af1c",
+    image:
+      "https://images.unsplash.com/photo-1663447170676-99f1ec83931a?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quantity: 1,
     sale: true,
   },
@@ -198,7 +209,15 @@ const Page = async (porps) => {
     <div className="min-h-[calc(100dvh-5rem)] bg-accent">
       <div className="relative w-full h-100 overflow-hidden">
         <div className="absolute inset-0 z-10 full bg-neutral-900/70 center">
-          <h1 className="font-bold text-white">{productName}</h1>
+          <div className="col-center gap-4 max-w-5xl">
+            <h1 className="font-bold text-white">{productName}</h1>
+            <p className="text-white text-center">
+              מוצרי חלב ומשקאות חלב הם חלק מרכזי מתזונה יומיומית מאוזנת. הם
+              מספקים מקור חשוב לסידן, חלבון וערכים תזונתיים חיוניים, ותורמים
+              לשמירה על אורח חיים בריא. אצלנו תמצאו מגוון מוצרי חלב ומשקאות
+              איכותיים, טריים ובסטנדרט גבוה, המתאימים לכל המשפחה.{" "}
+            </p>
+          </div>
         </div>
         <Image
           src="/images/background-image.png"
