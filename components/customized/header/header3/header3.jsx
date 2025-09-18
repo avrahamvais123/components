@@ -38,7 +38,7 @@ export default function Header3() {
                 variant="ghost"
                 className={cn(
                   isOpen && openIndex === i
-                    ? "bg-neutral-100 text-neutral-900"
+                    ? "hover:bg-accent hover:text-accent-foreground dark:bg-accent/50"
                     : "hover:bg-neutral-100 text-neutral-700"
                 )}
                 aria-expanded={isOpen && openIndex === i}
