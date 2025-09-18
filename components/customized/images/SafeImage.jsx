@@ -27,7 +27,7 @@ export default function SafeImage({
       ) : (
         <Image
           {...props}
-          className={cn("absolute inset-0 object-cover", className)}
+          className={cn("object-cover size-[70%]", className)}
           src={src}
           alt={alt}
           onError={() => setIsError(true)}

@@ -53,7 +53,7 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
 
   // Prefer symmetrical layout (works fine for RTL containers)
   return (
-    <Card className="full overflow-hidden p-2 gap-2 group shadow-none">
+    <Card className="full overflow-hidden p-2 gap-2 group hover:border-neutral-600 transition-all shadow-none">
       <div className="relative">
         {/* Favorite (always above image) */}
         <button
@@ -86,7 +86,7 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
         </div>
 
         {/* Image (kept below overlays) */}
-        <div className="relative z-0 rounded-md aspect-square overflow-hidden bg-muted/30">
+        <div className="relative z-0 rounded-md aspect-square overflow-hidden">
           {product.image ? (
             <SafeImage
               src={product.image}
@@ -94,7 +94,7 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
               width={600}
               height={600}
               wrapperClassName=""
-              className="full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="full object-cover transition-transform duration-300"
             />
           ) : (
             <div className="full grid place-items-center text-muted-foreground">

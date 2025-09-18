@@ -1,8 +1,5 @@
-"use client";
-
 import ProductGrid from "@/components/customized/products/ProductGrid";
 import React from "react";
-import { medusa } from "@/lib/medusa";
 import Image from "next/image";
 
 const products = [
@@ -13,7 +10,7 @@ const products = [
     description: "חלב פרה 1 ליטר, תנובה.",
     price: 6.9,
     image:
-      "https://images.unsplash.com/photo-1634141510639-d691d86f47be?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://res.cloudinary.com/shufersal/image/upload/f_auto,q_auto/v1551800922/prod/product_images/products_large/JTC18_L_P_42435_1.png",
     quantity: 1,
     hot: true,
   },
@@ -23,7 +20,7 @@ const products = [
     description: "חלב דל שומן 1 ליטר.",
     price: 6.5,
     image:
-      "https://images.unsplash.com/photo-1563636619-e9143da7973b?q=80&w=1365&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://res.cloudinary.com/shufersal/image/upload/f_auto,q_auto/v1551800922/prod/product_images/products_large/JSE12_L_P_42411_1.png",
     quantity: 1,
   },
   {
@@ -220,7 +217,7 @@ const Page = async (porps) => {
           </div>
         </div>
         <Image
-          src="/images/background-image.png"
+          src="https://images.unsplash.com/photo-1506617420156-8e4536971650?q=80&w=3223&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dg"
           alt="image hero"
           width={400}
           height={100}
