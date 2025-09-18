@@ -10,6 +10,17 @@ import { useSignals } from "@preact/signals-react/runtime";
 import { useDeepSignal } from "deepsignal/react";
 import { useSession } from "next-auth/react";
 import { z } from "zod";
+import {
+  NumberField,
+  Label,
+  Group,
+  Input,
+  Button,
+  FieldError,
+  Text,
+} from "react-aria-components";
+import { Plus, Minus } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const fields = [
   {
@@ -108,6 +119,73 @@ export default function Home() {
           fields={fields}
           onSubmit={handleSubmit}
         />
+
+        <NumberField
+          defaultValue={1024}
+          minValue={0}
+          className="group/num w-full"
+        >
+          <div className="mb-1 flex items-baseline justify-between">
+            <Label
+              className={cn(
+                "text-sm font-medium text-zinc-800 dark:text-zinc-100",
+                "group-data-[invalid]/num:text-red-600"
+              )}
+            >
+              רוחב (px)
+            </Label>
+          </div>
+
+          <Group
+            className={`
+            flex items-stretch w-full overflow-hidden rounded-xl border bg-white
+            border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 transition
+            focus-within:ring-2 focus-within:ring-zinc-950/10 dark:focus-within:ring-white/10
+            data-[invalid]:border-red-500 data-[invalid]:focus-within:ring-red-500/20
+            data-[disabled]:opacity-60 data-[disabled]:cursor-not-allowed
+          `}
+          >
+            <Button
+              slot="decrement"
+              className={`
+              grid place-items-center px-3 min-h-10 aspect-square
+              border-e border-zinc-300 dark:border-zinc-700
+              hover:bg-zinc-50 dark:hover:bg-zinc-800
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950/10
+              aria-[disabled=true]:opacity-40
+            `}
+            >
+              <Minus size={18} />
+            </Button>
+
+            <Input
+              className={`
+              w-full px-3 text-base leading-none bg-transparent outline-none
+              text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400
+              [appearance:textfield]
+              [&::-webkit-outer-spin-button]:appearance-none
+              [&::-webkit-inner-spin-button]:appearance-none
+              text-center sm:text-start
+            `}
+              placeholder="0"
+            />
+
+            <Button
+              slot="increment"
+              className={`
+              grid place-items-center px-3 min-h-10 aspect-square
+              border-s border-zinc-300 dark:border-zinc-700
+              hover:bg-zinc-50 dark:hover:bg-zinc-800
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950/10
+              aria-[disabled=true]:opacity-40
+            `}
+            >
+              <Plus size={18} />
+            </Button>
+          </Group>
+
+          <FieldError className="mt-1 text-xs text-red-600" />
+        </NumberField>
       </div>
     </div>
   );

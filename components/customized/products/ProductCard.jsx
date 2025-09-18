@@ -13,6 +13,7 @@ import { Heart, ShoppingCart, Flame, Percent } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React, { useState } from "react";
+import SafeImage from "../images/SafeImage";
 
 /**
  * ProductCard expects a *normalized* product (see normalizeProduct).
@@ -52,7 +53,7 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
 
   // Prefer symmetrical layout (works fine for RTL containers)
   return (
-    <Card className="h-fit max-w-75 overflow-hidden p-2 gap-2 group shadow-none hover:shadow-xl shadow-light-50 transition-shadow duration-200">
+    <Card className="full max-w-xs overflow-hidden p-2 gap-2 group shadow-none">
       <div className="relative">
         {/* Favorite (always above image) */}
         <button
@@ -87,16 +88,16 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
         {/* Image (kept below overlays) */}
         <div className="relative z-0 rounded-md aspect-square overflow-hidden bg-muted/30">
           {product.image ? (
-            <Image
+            <SafeImage
               src={product.image}
               alt={product.title}
               width={600}
               height={600}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              priority={false}
+              wrapperClassName=""
+              className="full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="h-full w-full grid place-items-center text-muted-foreground">
+            <div className="full grid place-items-center text-muted-foreground">
               אין תמונה
             </div>
           )}

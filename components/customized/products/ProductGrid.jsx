@@ -33,8 +33,8 @@ export default function ProductGrid({
   const safeProducts = useMemo(() => sanitizeProducts(products), [products]);
 
   return (
-    <div className="w-fit p-8 mx-auto min-h-[calc(100dvh-4rem)]">
-      <div className="max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+    <div className="full p-8 min-h-[calc(100dvh-4rem)]">
+      <div className="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {safeProducts.map((p, idx) => (
           <ProductCard
             key={p.id ?? `product-${idx}`}

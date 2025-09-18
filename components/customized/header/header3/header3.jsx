@@ -22,7 +22,7 @@ export default function Header3() {
         </Link>
 
         <nav
-          className="hidden md:flex items-center gap-1 lg:gap-2"
+          className="hidden lg:flex items-center gap-1 lg:gap-2"
           onMouseEnter={clearCloseTimer}
           onMouseLeave={scheduleClose}
         >
