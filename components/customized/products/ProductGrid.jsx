@@ -24,13 +24,16 @@ import ProductCard from "./ProductCard";
  *  - onFavToggle?: (id, isFav) => void // called when favorite toggled
  *
  */
-export default function ProductGrid({
-  products = [],
-  currency = "₪",
-  onAdd,
-  onFavToggle,
-}) {
+export default function ProductGrid({ products = [], currency = "₪" }) {
   const safeProducts = useMemo(() => sanitizeProducts(products), [products]);
+
+  const onAdd = (product) => {
+    console.log("הוספת מוצר לעגלה:", product);
+  };
+
+  const onFavToggle = (productId, isFav) => {
+    console.log("שינוי מצב מועדפים למוצר:", productId, isFav);
+  };
 
   return (
     <div className="full p-8 min-h-[calc(100dvh-4rem)] bg-white dark:bg-neutral-950">
