@@ -9,7 +9,7 @@ export const Logo = ({ className }) => {
         alt="Logo light"
         width={200}
         height={100}
-        className={cn("object-contain h-9 w-auto dark:hidden", className)}
+        className={cn("object-contain min-h-9 w-auto dark:hidden", className)}
         priority
       />
       <Image
@@ -17,7 +17,7 @@ export const Logo = ({ className }) => {
         alt="Logo dark"
         width={200}
         height={100}
-        className={cn("object-contain h-9 w-auto hidden dark:block", className)}
+        className={cn("object-contain min-h-9 w-auto hidden dark:block", className)}
         priority
       />
     </>

@@ -7,11 +7,21 @@ import useHaederControl from "./useHaederControl";
 import MegaMenu3 from "./MegaMenu3";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cart } from "@/lib/signals-store";
+import { useSignals } from "@preact/signals-react/runtime";
 
 export default function Header3() {
+  useSignals();
   const control = useHaederControl();
-  const { isOpen, openIndex, openPanel, scheduleClose, clearCloseTimer } =
-    control;
+  const {
+    isOpen,
+    openIndex,
+    openPanel,
+    scheduleClose,
+    clearCloseTimer,
+  } = control;
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
@@ -39,7 +49,7 @@ export default function Header3() {
                 className={cn(
                   isOpen && openIndex === i
                     ? "hover:bg-accent hover:text-accent-foreground dark:bg-accent/50"
-                    : "hover:bg-neutral-100 text-neutral-700"
+                    : "hover:bg-neutral-100 text-foreground/70"
                 )}
                 aria-expanded={isOpen && openIndex === i}
                 aria-haspopup="menu"
@@ -50,6 +60,11 @@ export default function Header3() {
             </Link>
           ))}
         </nav>
+
+        <button className="relative">
+          <ShoppingCart className="size-6 text-foreground/70" />
+          {cart.length > 0 && <Badge  className="absolute top-0 left-0 -translate-1/2 bg-red-600 text-white center rounded-full w-4 aspect-square text-[0.5rem]">{cart.length}</Badge>}
+        </button>
       </div>
 
       {/* מגה-פאנל מקבל את ה-state בפרופס */}

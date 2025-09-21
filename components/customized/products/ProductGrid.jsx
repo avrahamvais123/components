@@ -2,6 +2,8 @@
 
 import React, { useMemo, useState } from "react";
 import ProductCard from "./ProductCard";
+import { cart } from "@/lib/signals-store";
+import { useSignals } from "@preact/signals-react/runtime";
 
 /**
  * ProductGrid (Defensive Edition)
@@ -25,10 +27,29 @@ import ProductCard from "./ProductCard";
  *
  */
 export default function ProductGrid({ products = [], currency = "₪" }) {
+  useSignals();
   const safeProducts = useMemo(() => sanitizeProducts(products), [products]);
 
   const onAdd = (product) => {
     console.log("הוספת מוצר לעגלה:", product);
+    console.log("cart: ", cart);
+
+    if (cart.find((p) => p.id === product.id)) {
+      // מוצר כבר קיים בעגלה, אפשר להציג הודעה או לעדכן כמות
+      console.log("המוצר כבר קיים בעגלה.");
+
+      if (product.quantity) {
+        const index = cart.findIndex((p) => p.id === product.id);
+        if (index !== -1) {
+          cart[index].quantity += product.quantity;
+        }
+      } else {
+        console.log("לא ניתן לעדכן כמות, אין כמות מוגדרת למוצר.");
+      }
+      return;
+    }
+
+    cart.push(product);
   };
 
   const onFavToggle = (productId, isFav) => {
