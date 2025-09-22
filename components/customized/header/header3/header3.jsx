@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { cart } from "@/lib/signals-store";
+import { cart } from "@/lib/signals/signals-store";
 import { useSignals } from "@preact/signals-react/runtime";
 
 export default function Header3() {

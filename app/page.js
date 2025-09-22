@@ -5,7 +5,7 @@ import Hero1 from "@/components/customized/hero/Hero1";
 import { ThemeToggle } from "@/components/customized/utils/ThemeToggle";
 import Features6 from "@/components/features/Features6";
 import Features7 from "@/components/features/Features7";
-import { store } from "@/lib/signals-store";
+import { store } from "@/lib/signals/signals-store";
 import { useSignals } from "@preact/signals-react/runtime";
 import { useDeepSignal } from "deepsignal/react";
 import { useSession } from "next-auth/react";

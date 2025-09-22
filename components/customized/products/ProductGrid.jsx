@@ -2,8 +2,9 @@
 
 import React, { useMemo, useState } from "react";
 import ProductCard from "./ProductCard";
-import { cart } from "@/lib/signals-store";
+import { cart, store } from "@/lib/signals/signals-store";
 import { useSignals } from "@preact/signals-react/runtime";
+import { products } from "@/lib/signals/signals-products";
 
 /**
  * ProductGrid (Defensive Edition)
@@ -26,7 +27,7 @@ import { useSignals } from "@preact/signals-react/runtime";
  *  - onFavToggle?: (id, isFav) => void // called when favorite toggled
  *
  */
-export default function ProductGrid({ products = [], currency = "₪" }) {
+export default function ProductGrid({ currency = "₪" }) {
   useSignals();
   const safeProducts = useMemo(() => sanitizeProducts(products), [products]);
 
@@ -55,9 +56,14 @@ export default function ProductGrid({ products = [], currency = "₪" }) {
   const onFavToggle = (productId, isFav) => {
     console.log("שינוי מצב מועדפים למוצר:", productId, isFav);
   };
+  
 
   return (
     <div className="full p-8 min-h-[calc(100dvh-4rem)] bg-white dark:bg-neutral-950">
+      <button onClick={() => products[0].quantity++} className="">
+        {products[0].quantity}
+      </button>
+
       <div className="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
         {safeProducts.map((p, idx) => (
           <ProductCard
