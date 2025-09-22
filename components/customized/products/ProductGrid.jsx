@@ -65,7 +65,7 @@ export default function ProductGrid({ currency = "₪" }) {
       </button>
 
       <div className="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        {safeProducts.map((p, idx) => (
+        {products.map((p, idx) => (
           <ProductCard
             key={p.id ?? `product-${idx}`}
             product={p}
@@ -75,7 +75,7 @@ export default function ProductGrid({ currency = "₪" }) {
           />
         ))}
       </div>
-      {safeProducts.length === 0 && (
+      {products.length === 0 && (
         <p className="text-sm text-muted-foreground mt-2">
           לא נמצאו מוצרים להצגה.
         </p>
