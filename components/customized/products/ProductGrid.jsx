@@ -56,7 +56,6 @@ export default function ProductGrid({ currency = "₪" }) {
   const onFavToggle = (productId, isFav) => {
     console.log("שינוי מצב מועדפים למוצר:", productId, isFav);
   };
-  
 
   return (
     <div className="full p-8 min-h-[calc(100dvh-4rem)] bg-white dark:bg-neutral-950">
@@ -66,13 +65,7 @@ export default function ProductGrid({ currency = "₪" }) {
 
       <div className="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
         {products.map((p, idx) => (
-          <ProductCard
-            key={p.id ?? `product-${idx}`}
-            product={p}
-            currency={currency}
-            onAdd={onAdd}
-            onFavToggle={onFavToggle}
-          />
+          <ProductCard key={p.id ?? `product-${idx}`} product={p} />
         ))}
       </div>
       {products.length === 0 && (
