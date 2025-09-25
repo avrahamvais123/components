@@ -46,9 +46,10 @@ export default function ProductCard({ product, currency, onAdd, onFavToggle }) {
   };
 
   const handleAdd = () => {
-    try {
+    /* try {
       onAdd?.({ ...product, quantity: qty });
-    } catch {}
+    } catch {} */
+    onAdd(product);
   };
 
   // Prefer symmetrical layout (works fine for RTL containers)
