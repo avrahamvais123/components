@@ -35,7 +35,7 @@ export default function Header3() {
               onClick={(e) => openPanel(null)}
               onMouseEnter={() => openPanel(i)}
               onFocus={() => openPanel(i)}
-              href={{ pathname: "/categories", query: { name: link.label } }}
+              href={{ pathname: "/categories", query: { name: link.label },  }}
             >
               <Button
                 variant="ghost"
