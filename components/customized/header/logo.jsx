@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 
 export const Logo = ({ className }) => {
   return (
-    <>
+    <Link href="/" className="h-10 w-auto">
       <Image
         src="/images/logo-dark.png"
         alt="Logo light"
@@ -20,6 +21,6 @@ export const Logo = ({ className }) => {
         className={cn("object-contain full hidden dark:block", className)}
         priority
       />
-    </>
+    </Link>
   );
 };

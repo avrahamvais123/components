@@ -15,21 +15,14 @@ import { useSignals } from "@preact/signals-react/runtime";
 export default function Header3() {
   useSignals();
   const control = useHaederControl();
-  const {
-    isOpen,
-    openIndex,
-    openPanel,
-    scheduleClose,
-    clearCloseTimer,
-  } = control;
+  const { isOpen, openIndex, openPanel, scheduleClose, clearCloseTimer } =
+    control;
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
       {/* לוגו ומחלקות */}
       <div className="relative h-16 px-6 border-b lg:px-10 flex items-center gap-6">
-        <Link href="/" className="h-10 w-auto">
-          <Logo />
-        </Link>
+        <Logo />
 
         <nav
           className="hidden lg:flex items-center gap-1 lg:gap-2"
@@ -63,7 +56,11 @@ export default function Header3() {
 
         <button className="relative">
           <ShoppingCart className="size-6 text-foreground/70" />
-          {cart.length > 0 && <Badge  className="absolute top-0 left-0 -translate-1/2 bg-red-600 text-white center rounded-full w-4 aspect-square text-[0.5rem]">{cart.length}</Badge>}
+          {cart.length > 0 && (
+            <Badge className="absolute top-0 left-0 -translate-1/2 bg-red-600 text-white center rounded-full w-4 aspect-square text-[0.5rem]">
+              {cart.length}
+            </Badge>
+          )}
         </button>
       </div>
 
