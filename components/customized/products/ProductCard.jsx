@@ -16,7 +16,7 @@ import { useSignal } from "@preact/signals-react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { cart } from "@/lib/signals/signals-store";
 
-export default function ProductCard({ key, product, currency = "₪" }) {
+export default function ProductCard({ product, currency = "₪" }) {
   useSignals(); // מאזין לכל קריאה של סיגנלים/פרוקסי במהלך הרנדר
 
   // סיגנל מקומי (לא useState)
@@ -49,15 +49,18 @@ export default function ProductCard({ key, product, currency = "₪" }) {
       console.log("המוצר כבר קיים בעגלה.");
 
       const index = cart.findIndex((p) => p.id === product.id);
-      cart[index].quantity++;
+      if (index !== -1) {
+        cart[index].quantity += product.quantity;
+      }
     } else {
-      cart.push(product);
+      //cart.push({ ...product });
+      cart.push({ ...product });
     }
   };
 
   return (
     <Card
-      key={key}
+      key={product?.id}
       className="full overflow-hidden p-2 gap-2 group hover:border-neutral-600 transition-all shadow-none"
     >
       <div className="relative">

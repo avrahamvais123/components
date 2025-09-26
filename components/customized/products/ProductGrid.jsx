@@ -65,7 +65,7 @@ export default function ProductGrid({ currency = "₪" }) {
 
       <div className="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
         {products.map((p, idx) => (
-          <ProductCard key={p.id ?? `product-${idx}`} product={p} />
+          <ProductCard onAdd={onAdd} product={p} />
         ))}
       </div>
       {products.length === 0 && (
