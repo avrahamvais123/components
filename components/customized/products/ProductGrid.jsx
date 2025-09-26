@@ -1,67 +1,20 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { Fragment } from "react";
 import ProductCard from "./ProductCard";
-import { cart, store } from "@/lib/signals/signals-store";
 import { useSignals } from "@preact/signals-react/runtime";
 import { products } from "@/lib/signals/signals-products";
 
-/**
- * ProductGrid (Defensive Edition)
- * ------------------------------------------------------
- *
- * Props:
- *  - products: Array of possibly-partial product items
- *      {
- *        id?: string | number
- *        title?: string
- *        description?: string
- *        price?: number
- *        image?: string
- *        quantity?: number
- *        hot?: boolean
- *        sale?: boolean
- *      }
- *  - currency?: string             // e.g. "₪" or "$"
- *  - onAdd?: (item) => void        // called when Add button clicked
- *  - onFavToggle?: (id, isFav) => void // called when favorite toggled
- *
- */
-export default function ProductGrid({ currency = "₪" }) {
+export default function ProductGrid() {
   useSignals();
-  const safeProducts = useMemo(() => sanitizeProducts(products), [products]);
-
-  const onAdd = (product) => {
-    console.log("הוספת מוצר לעגלה:", product);
-    console.log("cart: ", cart);
-
-    if (cart.find((p) => p.id === product.id)) {
-      // מוצר כבר קיים בעגלה, אפשר להציג הודעה או לעדכן כמות
-      console.log("המוצר כבר קיים בעגלה.");
-
-      if (product.quantity) {
-        const index = cart.findIndex((p) => p.id === product.id);
-        if (index !== -1) {
-          cart[index].quantity += product.quantity;
-        }
-      } else {
-        console.log("לא ניתן לעדכן כמות, אין כמות מוגדרת למוצר.");
-      }
-      return;
-    }
-
-    cart.push(product);
-  };
-
-  const onFavToggle = (productId, isFav) => {
-    console.log("שינוי מצב מועדפים למוצר:", productId, isFav);
-  };
 
   return (
     <div className="full p-8 min-h-[calc(100dvh-4rem)] bg-white dark:bg-neutral-950">
       <div className="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
         {products.map((p, idx) => (
-          <ProductCard onAdd={onAdd} product={p} />
+          <Fragment key={p?.id ?? idx}>
+            <ProductCard product={p} />
+          </Fragment>
         ))}
       </div>
       {products.length === 0 && (
@@ -111,103 +64,3 @@ function normalizeProduct(raw, idx) {
 function clamp(n, min, max) {
   return Math.min(max, Math.max(min, n));
 }
-
-// ---------------------- Example Usage ----------------------
-/**
- * Example usage in a Next.js page or component (RTL):
- *
- * <section dir="rtl" className="p-4 lg:p-6">
- *   <ProductGrid
- *     currency="₪"
- *     products={validProducts}
- *     onAdd={(item) => console.log("Add to cart:", item)}
- *     onFavToggle={(id, isFav) => console.log("Fav toggled:", id, isFav)}
- *   />
- * </section>
- */
-
-// ---------------------- Test Cases ----------------------
-// Keep these for quick manual verification.
-/* export const validProducts = [
-  {
-    id: 1,
-    title: "קפה שחור",
-    description: "250 גר׳ טחון טרי.",
-    price: 18.9,
-    image: "/images/coffee.jpg",
-    hot: true,
-  },
-  {
-    id: 2,
-    title: "שמן זית כתית",
-    description: "750 מ" + "ל, קורטינה.",
-    price: 39.0,
-    image: "/images/olive-oil.jpg",
-    sale: true,
-  },
-  {
-    id: 3,
-    title: "פסטה פנה",
-    description: "500 גר׳ חיטת דורום.",
-    price: 7.5,
-    image: "/images/pasta.jpg",
-  },
-  {
-    id: 4,
-    title: "טחינה",
-    description: "400 גר׳ אל-ארז.",
-    price: 14.9,
-    image: "/images/tahini.jpg",
-    hot: true,
-    sale: true,
-  },
-]; */
-
-/* export const productsWithNulls = [
-  null,
-  undefined,
-  42,
-  { title: "ללא מחיר", description: "אין price מוגדר", image: "" },
-  { id: "A-7", title: "רק שם", price: 0 },
-  { id: "A-8", description: "רק תיאור", price: 12.3 },
-  { id: "A-9", title: "כמות לא חוקית", price: 10, quantity: -5 },
-  {
-    id: "A-10",
-    title: "מוצר תקין",
-    description: "בדיקה",
-    price: 22.9,
-    hot: true,
-  },
-]; */
-
-/* export function ProductGridTestCases() {
-  return (
-    <div className="space-y-10 p-4" dir="rtl">
-      <section>
-        <h2 className="text-lg font-bold mb-2">מוצרים תקינים</h2>
-        <ProductGrid
-          products={validProducts}
-          currency="₪"
-          onAdd={console.log}
-          onFavToggle={console.log}
-        />
-      </section>
-      <section>
-        <h2 className="text-lg font-bold mb-2">
-          מערך עם null/undefined/לא תקין
-        </h2>
-        <ProductGrid
-          products={productsWithNulls}
-          currency="₪"
-          onAdd={console.log}
-          onFavToggle={console.log}
-        />
-      </section>
-      <section>
-        <h2 className="text-lg font-bold mb-2">ריק (אמור להציג הודעה קצרה)</h2>
-        <ProductGrid products={[]} currency="₪" />
-      </section>
-    </div>
-  );
-}
- */
