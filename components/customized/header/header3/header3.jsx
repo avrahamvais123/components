@@ -27,7 +27,7 @@ export default function Header3() {
     <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
       {/* לוגו ומחלקות */}
       <div className="relative h-16 px-6 border-b lg:px-10 flex items-center gap-6">
-        <Link href="/">
+        <Link href="/" className="h-10 w-auto">
           <Logo />
         </Link>
 
