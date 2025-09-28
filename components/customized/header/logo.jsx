@@ -2,15 +2,15 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-export const Logo = ({ className }) => {
+export const Logo = ({ imageClassName, wrapperClassName }) => {
   return (
-    <Link href="/" className="h-10 w-auto">
+    <Link href="/" className={cn("h-10 w-auto", wrapperClassName)}>
       <Image
         src="/images/logo-dark.png"
         alt="Logo light"
         width={200}
         height={100}
-        className={cn("object-contain full dark:hidden", className)}
+        className={cn("object-contain full dark:hidden", imageClassName)}
         priority
       />
       <Image
@@ -18,7 +18,7 @@ export const Logo = ({ className }) => {
         alt="Logo dark"
         width={200}
         height={100}
-        className={cn("object-contain full hidden dark:block", className)}
+        className={cn("object-contain full hidden dark:block", imageClassName)}
         priority
       />
     </Link>
