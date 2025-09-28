@@ -21,15 +21,39 @@ export default function ProductCard({ product, currency = "₪" }) {
 
   const inc = () => {
     product.quantity = clamp((product.quantity ?? 0) + 1, 1, 99);
+    // עדכון כמות בעגלה או הוספה לעגלה אם לא קיים
+    const id = product.id;
+    if (!id) return;
+    if (cart[id]) {
+      cart[id].quantity = product.quantity;
+    } else {
+      cart[id] = { ...product };
+    }
   };
 
   const dec = () => {
     product.quantity = clamp((product.quantity ?? 1) - 1, 1, 99);
+    // עדכון כמות בעגלה או הוספה לעגלה אם לא קיים
+    const id = product.id;
+    if (!id) return;
+    if (cart[id]) {
+      cart[id].quantity = product.quantity;
+    } else {
+      cart[id] = { ...product };
+    }
   };
 
   const quantityChange = (e) => {
-    const num = parseInt(e.currentTarget, 10);
+    const num = parseInt(e.currentTarget.value, 10);
     product.quantity = Number.isFinite(num) ? clamp(num, 1, 99) : 1;
+    // עדכון כמות בעגלה או הוספה לעגלה אם לא קיים
+    const id = product.id;
+    if (!id) return;
+    if (cart[id]) {
+      cart[id].quantity = product.quantity;
+    } else {
+      cart[id] = { ...product };
+    }
   };
 
   const toggleFav = () => {};
@@ -37,6 +61,9 @@ export default function ProductCard({ product, currency = "₪" }) {
   const handleAdd = () => {
     console.log("הוספת מוצר לעגלה:🔵", product);
     console.log("cart🟡: ", cart);
+
+    const id = product.id;
+    if (!id) return; // הגנה – חובה ID
 
     // אם הכמות התחלתית היא 0 או לא קיימת – נהפוך אותה ל-1
     const nextQty =
@@ -47,21 +74,17 @@ export default function ProductCard({ product, currency = "₪" }) {
       product.quantity = 1; // זה יגרום לרנדר מחדש ולהציג את ה־QtyStepper
     }
 
-    // נעדכן/נוסיף לעגלה לפי id
-    const id = product.id;
-    if (!id) return; // הגנה – חובה ID
-
     // אם כבר יש בעגלה – נוסיף את הכמות הנוכחית של המוצר (עכשיו לפחות 1)
     if (cart[id]) {
       cart[id].quantity += product.quantity;
     } else {
-      // שמור עותק כדי לא לשתף רפרנס מלא אם לא רוצים תופעות לוואי
       cart[id] = { ...product };
     }
 
     console.log("product.quantity🟣:", product.quantity);
     console.log("cart[id].quantity🟢:", cart[id].quantity);
   };
+  console.log('cart: ', cart);
 
   return (
     <Card className="full overflow-hidden p-2 gap-2 group hover:border-neutral-600 transition-all shadow-none">
