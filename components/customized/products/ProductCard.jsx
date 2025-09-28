@@ -12,7 +12,6 @@ import { Heart, ShoppingCart, Flame, Percent } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SafeImage from "../images/SafeImage";
 import React from "react";
-import { useSignal } from "@preact/signals-react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { cart, favorities } from "@/lib/signals/signals-store";
 

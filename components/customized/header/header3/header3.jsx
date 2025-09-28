@@ -18,6 +18,8 @@ export default function Header3() {
   const { isOpen, openIndex, openPanel, scheduleClose, clearCloseTimer } =
     control;
 
+
+
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
       {/* לוגו ומחלקות */}
@@ -56,9 +58,9 @@ export default function Header3() {
 
         <button className="relative">
           <ShoppingCart className="size-6 text-foreground/70" />
-          {cart.length > 0 && (
-            <Badge className="absolute top-0 left-0 -translate-1/2 bg-red-600 text-white center rounded-full w-4 aspect-square text-[0.5rem]">
-              {cart.length}
+          {Object.keys(cart).length > 0 && (
+            <Badge className="absolute top-0 left-0 -translate-1/2 bg-red-600 text-white center rounded-full w-4 aspect-square text-[0.75rem]">
+              {Object.keys(cart).length}
             </Badge>
           )}
         </button>
