@@ -28,7 +28,7 @@ export default function ProductCard({ product, currency = "₪" }) {
   };
 
   const quantityChange = (e) => {
-    const num = parseInt(e.currentTarget.value, 10);
+    const num = parseInt(e.currentTarget, 10);
     product.quantity = Number.isFinite(num) ? clamp(num, 1, 99) : 1;
   };
 
@@ -36,7 +36,7 @@ export default function ProductCard({ product, currency = "₪" }) {
 
   const handleAdd = () => {
     console.log("הוספת מוצר לעגלה:🔵", product);
-    console.log("cart🟡: ", cart.value);
+    console.log("cart🟡: ", cart);
 
     // אם הכמות התחלתית היא 0 או לא קיימת – נהפוך אותה ל-1
     const nextQty =
@@ -52,15 +52,15 @@ export default function ProductCard({ product, currency = "₪" }) {
     if (!id) return; // הגנה – חובה ID
 
     // אם כבר יש בעגלה – נוסיף את הכמות הנוכחית של המוצר (עכשיו לפחות 1)
-    if (cart.value[id]) {
-      cart.value[id].quantity += product.quantity;
+    if (cart[id]) {
+      cart[id].quantity += product.quantity;
     } else {
       // שמור עותק כדי לא לשתף רפרנס מלא אם לא רוצים תופעות לוואי
-      cart.value[id] = { ...product };
+      cart[id] = { ...product };
     }
 
     console.log("product.quantity🟣:", product.quantity);
-    console.log("cart[id].quantity🟢:", cart.value[id].quantity);
+    console.log("cart[id].quantity🟢:", cart[id].quantity);
   };
 
   return (
@@ -69,7 +69,7 @@ export default function ProductCard({ product, currency = "₪" }) {
         {/* Favorite */}
         {/* <button
           onClick={toggleFav}
-          aria-label={fav.value ? "הסר ממועדפים" : "הוסף למועדפים"}
+          aria-label={fav ? "הסר ממועדפים" : "הוסף למועדפים"}
           className={cn(
             "absolute top-3 right-3 z-20 p-2 rounded-full bg-white/50 backdrop-blur hover:bg-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
           )}
@@ -77,7 +77,7 @@ export default function ProductCard({ product, currency = "₪" }) {
           <Heart
             className={cn(
               "h-5 w-5",
-              fav.value ? "fill-red-500 text-red-500" : "text-foreground/70"
+              fav ? "fill-red-500 text-red-500" : "text-foreground/70"
             )}
           />
         </button> */}
