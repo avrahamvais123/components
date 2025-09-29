@@ -95,7 +95,11 @@ export default function PayPalTestPage() {
               <CardContent>
                 {testAmount > 0 ? (
                   <PayPalButton
-                    amount={testAmount}
+                    cartItems={[{ 
+                      id: 'milk', 
+                      quantity: Math.max(1, Math.floor(testAmount / 4.99)),
+                      name: 'חלב - מוצר בדיקה'
+                    }]}
                     currency={testCurrency}
                     onSuccess={handleSuccess}
                     onError={handleError}

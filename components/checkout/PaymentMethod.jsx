@@ -10,9 +10,10 @@ import { motion } from "framer-motion";
 import { PayPalButton } from "./PayPalButton";
 import { PaymentStatus } from "./PaymentStatus";
 import { PayPalSetupChecker } from "./PayPalSetupChecker";
+import { PriceValidator } from "./PriceValidator";
 import { usePaymentHandler } from "@/app/hooks/usePaymentHandler";
 
-export function PaymentMethod({ control, watchPaymentMethod, totalAmount = 100, currency = "USD" }) {
+export function PaymentMethod({ control, watchPaymentMethod, cartItems = [], currency = "USD", shippingCost = 0, tax = 0, discount = 0 }) {
   const {
     paymentStatus,
     paymentError,
@@ -169,12 +170,16 @@ export function PaymentMethod({ control, watchPaymentMethod, totalAmount = 100, 
               className="space-y-4 p-4 border rounded-lg bg-gray-50"
             >
               <PayPalSetupChecker />
+              <PriceValidator cartItems={cartItems} currency={currency} />
               <div className="text-center text-sm text-gray-600 mb-4">
                 לחץ על הכפתור למטה כדי להמשיך לתשלום דרך PayPal
               </div>
               <PayPalButton
-                amount={totalAmount}
+                cartItems={cartItems}
                 currency={currency}
+                shippingCost={shippingCost}
+                tax={tax}
+                discount={discount}
                 onSuccess={handlePaymentSuccess}
                 onError={handlePaymentError}
                 disabled={paymentStatus === 'processing' || paymentStatus === 'success'}

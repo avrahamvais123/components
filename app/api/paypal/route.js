@@ -25,14 +25,42 @@ async function getPayPalAccessToken() {
   return data.access_token;
 }
 
+// Import the product catalog
+import { calculateCartTotal } from '../products/route.js';
+
+// Calculate total amount based on cart items (server-side validation)
+async function calculateOrderTotal(cartItems, shippingCost = 0, tax = 0, discount = 0) {
+  if (!Array.isArray(cartItems) || cartItems.length === 0) {
+    throw new Error('עגלת קניות ריקה או לא תקינה');
+  }
+
+  // חישוב סכום על בסיס מחירי השרת בלבד
+  const cartCalculation = calculateCartTotal(cartItems);
+  
+  const subtotal = cartCalculation.subtotal;
+  const total = subtotal + shippingCost + tax - discount;
+  
+  return {
+    subtotal: Math.round(subtotal * 100) / 100,
+    shippingCost: Math.round(shippingCost * 100) / 100,
+    tax: Math.round(tax * 100) / 100,
+    discount: Math.round(discount * 100) / 100,
+    total: Math.round(total * 100) / 100,
+    items: cartCalculation.items,
+  };
+}
+
 // Create PayPal order
 export async function POST(request) {
   try {
-    const { amount, currency = 'USD' } = await request.json();
+    const { cartItems, currency = 'USD', shippingCost = 0, tax = 0, discount = 0 } = await request.json();
 
-    if (!amount) {
-      return NextResponse.json({ error: 'Amount is required' }, { status: 400 });
+    if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+      return NextResponse.json({ error: 'Cart items are required' }, { status: 400 });
     }
+
+    // חישוב הסכום בצד השרת (לא סומכים על הקליינט!)
+    const calculatedAmounts = calculateOrderTotal(cartItems, shippingCost, tax, discount);
 
     const accessToken = await getPayPalAccessToken();
 
@@ -42,8 +70,35 @@ export async function POST(request) {
         {
           amount: {
             currency_code: currency,
-            value: amount.toString(),
+            value: calculatedAmounts.total.toString(),
+            breakdown: {
+              item_total: {
+                currency_code: currency,
+                value: calculatedAmounts.subtotal.toString(),
+              },
+              shipping: {
+                currency_code: currency,
+                value: calculatedAmounts.shippingCost.toString(),
+              },
+              tax_total: {
+                currency_code: currency,
+                value: calculatedAmounts.tax.toString(),
+              },
+              discount: {
+                currency_code: currency,
+                value: calculatedAmounts.discount.toString(),
+              },
+            },
           },
+          items: calculatedAmounts.items.map(item => ({
+            name: item.name,
+            unit_amount: {
+              currency_code: currency,
+              value: item.price.toString(),
+            },
+            quantity: item.quantity.toString(),
+            sku: item.id,
+          })),
         },
       ],
     };
@@ -60,7 +115,11 @@ export async function POST(request) {
     const order = await response.json();
 
     if (response.ok) {
-      return NextResponse.json({ orderID: order.id });
+      return NextResponse.json({ 
+        orderID: order.id,
+        calculatedTotal: calculatedAmounts.total,
+        breakdown: calculatedAmounts 
+      });
     } else {
       console.error('PayPal order creation error:', order);
       return NextResponse.json({ error: 'Failed to create PayPal order' }, { status: 500 });

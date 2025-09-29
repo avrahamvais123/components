@@ -91,8 +91,11 @@ export function CheckoutForm() {
             <PaymentMethod 
               control={form.control} 
               watchPaymentMethod={watchPaymentMethod}
-              totalAmount={totalPrice.value}
+              cartItems={cartItems.value}
               currency={selectedCurrency}
+              shippingCost={0}
+              tax={0}
+              discount={0}
             />
             
             <NotesAndTerms control={form.control} />

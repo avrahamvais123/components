@@ -4,20 +4,31 @@ import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-export function PayPalButton({ amount, currency = "USD", onSuccess, onError, disabled = false }) {
+export function PayPalButton({ cartItems, currency = "USD", shippingCost = 0, tax = 0, discount = 0, onSuccess, onError, disabled = false }) {
   const [{ isPending }] = usePayPalScriptReducer();
   const [loading, setLoading] = useState(false);
 
   const createOrder = async (data, actions) => {
     setLoading(true);
     try {
-      // יצירת הזמנה דרך ה-API שלנו
+      // בדיקת תקינות העגלה
+      if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+        throw new Error('עגלת הקניות ריקה');
+      }
+
+      // יצירת הזמנה דרך ה-API שלנו (הסכום יחושב בצד השרת!)
       const response = await fetch('/api/paypal', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount, currency }),
+        body: JSON.stringify({ 
+          cartItems, 
+          currency, 
+          shippingCost, 
+          tax, 
+          discount 
+        }),
       });
 
       const orderData = await response.json();
@@ -63,8 +74,11 @@ export function PayPalButton({ amount, currency = "USD", onSuccess, onError, dis
         body: JSON.stringify({
           paymentDetails: details,
           paymentMethod: 'paypal',
-          total: amount,
+          cartItems: cartItems,
           currency: currency,
+          shippingCost,
+          tax,
+          discount,
           timestamp: new Date().toISOString(),
         }),
       });

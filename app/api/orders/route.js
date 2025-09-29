@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { calculateCartTotal } from '../products/route.js';
 
 // מידע זמני למשתמש - בפרודקשן יהיה מסד נתונים אמיתי
 let orders = [];
@@ -22,13 +23,31 @@ export async function POST(request) {
       );
     }
 
-    // יצירת הזמנה חדשה
+    // חישוב הסכום בצד השרת (אבטחה!)
+    const serverCalculation = calculateCartTotal(orderData.cartItems);
+    const shippingCost = orderData.shippingCost || 0;
+    const tax = orderData.tax || 0;
+    const discount = orderData.discount || 0;
+    const serverTotal = serverCalculation.subtotal + shippingCost + tax - discount;
+
+    // יצירת הזמנה חדשה עם סכומים מחושבים בשרת
     const newOrder = {
       id: generateOrderId(),
-      ...orderData,
+      paymentDetails: orderData.paymentDetails,
+      paymentMethod: orderData.paymentMethod,
+      cartItems: orderData.cartItems,
+      serverCalculation: {
+        subtotal: serverCalculation.subtotal,
+        shippingCost,
+        tax,
+        discount,
+        total: Math.round(serverTotal * 100) / 100,
+      },
+      currency: orderData.currency || 'USD',
       status: 'completed',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      timestamp: orderData.timestamp,
     };
 
     // שמירת ההזמנה (בפרודקשן - במסד נתונים)
