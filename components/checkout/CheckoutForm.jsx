@@ -14,13 +14,29 @@ import { ShippingAddress } from "./ShippingAddress";
 import { PaymentMethod } from "./PaymentMethod";
 import { NotesAndTerms } from "./NotesAndTerms";
 import { OrderSummary } from "./OrderSummary";
+import { MobileOrderSummary } from "./MobileOrderSummary";
+import { StickyPaymentButton } from "./StickyPaymentButton";
 import { checkoutFormSchema } from "./checkoutSchema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function CheckoutForm() {
   useSignals();
   const router = useRouter();
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [mobileOrderSummaryOpen, setMobileOrderSummaryOpen] = useState(false);
+  const [showStickyButton, setShowStickyButton] = useState(false);
+
+  // Show sticky button when scrolling down on mobile
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const shouldShow = scrollY > 200; // Show after scrolling 200px
+      setShowStickyButton(shouldShow);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   const cartItems = useComputed(() => Object.values(cart));
   const totalPrice = useComputed(() =>
@@ -73,14 +89,24 @@ export function CheckoutForm() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* טופס התשלום */}
-      <motion.div 
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="space-y-6"
-      >
+    <div className={`space-y-6 ${showStickyButton ? 'pb-24 xl:pb-0' : ''}`}>
+      {/* Mobile Order Summary */}
+      <MobileOrderSummary
+        cartItems={cartItems.value}
+        totalPrice={totalPrice.value}
+        itemsCount={itemsCount.value}
+        isOpen={mobileOrderSummaryOpen}
+        onToggle={() => setMobileOrderSummaryOpen(!mobileOrderSummaryOpen)}
+      />
+      
+      <div className="flex flex-col xl:grid xl:grid-cols-12 gap-6 xl:gap-8 xl:items-start">
+        {/* טופס התשלום */}
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="xl:col-span-7 space-y-6 order-2 xl:order-1"
+        >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             
@@ -100,8 +126,8 @@ export function CheckoutForm() {
             
             <NotesAndTerms control={form.control} />
 
-            {/* כפתור שליחה - רק במובייל */}
-            <div className="lg:hidden">
+            {/* כפתור שליחה - רק במובייל וטאבלט */}
+            <div className="xl:hidden">
               <Button 
                 type="submit" 
                 className="w-full h-12 text-lg"
@@ -116,13 +142,24 @@ export function CheckoutForm() {
       </motion.div>
 
       {/* סיכום ההזמנה */}
-      <OrderSummary 
-        cartItems={cartItems.value}
-        totalPrice={totalPrice.value}
-        itemsCount={itemsCount.value}
-        onSubmit={form.handleSubmit(onSubmit)}
-        isSubmitting={form.formState.isSubmitting}
-      />
+      <div className="xl:col-span-5 order-1 xl:order-2 xl:sticky xl:top-4 xl:self-start">
+        <OrderSummary 
+          cartItems={cartItems.value}
+          totalPrice={totalPrice.value}
+          itemsCount={itemsCount.value}
+          onSubmit={form.handleSubmit(onSubmit)}
+          isSubmitting={form.formState.isSubmitting}
+        />
+      </div>
+    </div>
+    
+    {/* Sticky Payment Button for Mobile */}
+    <StickyPaymentButton
+      onSubmit={form.handleSubmit(onSubmit)}
+      isSubmitting={form.formState.isSubmitting}
+      totalPrice={totalPrice.value}
+      isVisible={showStickyButton}
+    />
     </div>
   );
 }

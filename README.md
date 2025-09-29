@@ -14,9 +14,16 @@ This project includes a **secure** PayPal payment integration with server-side p
 - **Test PayPal**: [http://localhost:3001/paypal-test](http://localhost:3001/paypal-test) (בדיקת PayPal)
 - **Checkout**: [http://localhost:3001/checkout](http://localhost:3001/checkout) (עמוד תשלום)
 
+### 📱 Responsive Design:
+- **Mobile-first approach** - עיצוב מותאם לכל המכשירים
+- **Adaptive layout** - Grid layout בדסקטופ, stack במובייל  
+- **Sticky payment button** - כפתור תשלום צף במובייל
+- **Collapsible order summary** - סיכום מתקפל לחיסכון במקום
+
 ### Documentation:
 - [Setup Guide](./PAYPAL_SETUP.md) - הוראות הגדרה מפורטות
 - [Security Guide](./SECURITY_IMPROVEMENTS.md) - מדריך אבטחה ושיפורים
+- [Responsive Guide](./RESPONSIVE_IMPROVEMENTS.md) - שיפורי רספונסיביות
 - [Integration Summary](./PAYPAL_INTEGRATION_SUMMARY.md) - סיכום טכני
 
 ## Getting Started

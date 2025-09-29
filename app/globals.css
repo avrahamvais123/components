@@ -24,6 +24,95 @@
   @apply bg-gray-400;
 }
 
+/* Order summary specific scrolling */
+.order-items-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f3f4f6;
+}
+
+.order-items-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.order-items-scroll::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+.order-items-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.order-items-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Desktop order summary improvements */
+@media (min-width: 1280px) {
+  .order-summary-desktop {
+    min-height: calc(100vh - 12rem);
+    max-height: calc(100vh - 3rem);
+  }
+  
+  .order-items-scroll {
+    max-height: 35vh;
+  }
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .checkout-container {
+    @apply space-y-4;
+  }
+  
+  .checkout-form {
+    @apply space-y-4;
+  }
+  
+  .order-summary {
+    @apply mb-4;
+  }
+}
+
+/* Better mobile scrolling */
+.mobile-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Improved focus states for accessibility */
+.checkout-input:focus {
+  @apply ring-2 ring-blue-500;
+}
+
+/* Better mobile buttons */
+@media (max-width: 640px) {
+  .mobile-button {
+    @apply h-12 text-base font-medium;
+  }
+  
+  /* Add bottom padding when sticky button is shown */
+  .checkout-page-with-sticky {
+    padding-bottom: 100px;
+  }
+}
+
+/* Smooth transitions for responsive components */
+.checkout-form-section {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Better mobile input styling */
+@media (max-width: 768px) {
+  .checkout-input {
+    @apply h-12 text-base;
+  }
+  
+  .checkout-card {
+    @apply rounded-lg shadow-sm;
+  }
+}
+
 @theme inline {
 
   --radius-sm: calc(var(--radius) - 4px);
