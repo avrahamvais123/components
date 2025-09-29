@@ -20,11 +20,13 @@ import { deepSignal } from "deepsignal/react";
 import { ShoppingCart, Minus, Plus, Trash2, X as XIcon } from "lucide-react";
 import React from "react";
 import { signal } from "@preact/signals-react";
+import { useRouter } from "next/navigation";
 
 const openModal = signal(false); // ✅ נשמר בין רנדרים
 
 const CartModal = () => {
   useSignals(); // נדרש לשימוש ב-signals
+  const router = useRouter();
 
   const cartCount = useComputed(() => Object.keys(cart).length);
   const cartItems = useComputed(() => Object.values(cart));
@@ -58,10 +60,10 @@ const CartModal = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="relative">
-          <ShoppingCart className="size-6 text-foreground/70" />
+        <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors group">
+          <ShoppingCart className="size-6 text-foreground/70 group-hover:text-foreground transition-colors" />
           {cartCount.value > 0 && (
-            <Badge className="absolute -top-2 -right-2 bg-red-600 text-white center rounded-full w-5 h-5 text-xs flex items-center justify-center">
+            <Badge className="absolute -top-1 -right-1 bg-red-600 text-white center rounded-full w-5 h-5 text-xs flex items-center justify-center animate-pulse">
               {cartCount.value}
             </Badge>
           )}
@@ -159,7 +161,10 @@ const CartModal = () => {
                 <span>₪{totalPrice.value.toFixed(2)}</span>
               </div>
               
-              <button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md transition-colors">
+              <button 
+                onClick={() => router.push('/checkout')}
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md transition-colors"
+              >
                 המשך לתשלום
               </button>
             </div>
