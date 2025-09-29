@@ -18,7 +18,7 @@ export default function Header3() {
   const { isOpen, openIndex, openPanel, scheduleClose, clearCloseTimer } =
     control;
 
-    const cartCount = useComputed(() => Object.keys(cart).length);
+  const cartCount = useComputed(() => Object.keys(cart).length);
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
