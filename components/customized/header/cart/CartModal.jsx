@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -16,7 +17,7 @@ import {
   useSignalEffect,
 } from "@preact/signals-react/runtime";
 import { deepSignal } from "deepsignal/react";
-import { ShoppingCart, Minus, Plus, Trash2 } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, X as XIcon } from "lucide-react";
 import React from "react";
 import { signal } from "@preact/signals-react";
 
@@ -67,8 +68,14 @@ const CartModal = () => {
         </button>
       </SheetTrigger>
       
-      <SheetContent side="left" className="w-[400px] sm:w-[540px]">
-        <SheetHeader>
+      <SheetContent side="left" className="w-[400px] sm:w-[540px] [&>button:last-child]:hidden">
+        {/* Custom close button positioned on the left */}
+        <SheetClose className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 left-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none z-10">
+          <XIcon className="size-4" />
+          <span className="sr-only">סגור</span>
+        </SheetClose>
+        
+        <SheetHeader className="pr-8">
           <SheetTitle>עגלת הקניות שלך</SheetTitle>
           <SheetDescription>
             {cartCount.value === 0 
@@ -78,17 +85,17 @@ const CartModal = () => {
           </SheetDescription>
         </SheetHeader>
         
-        <div className="flex flex-col h-full">
-          {/* Cart Items */}
-          <div className="flex-1 overflow-y-auto px-4">
+        <div className="flex flex-col h-full max-h-[calc(100vh-8rem)]">
+          {/* Cart Items - עם גובה מוגבל */}
+          <div className="flex-1 overflow-y-auto px-4 min-h-0">
             {cartCount.value === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center">
+              <div className="flex flex-col items-center justify-center h-full text-center min-h-[300px]">
                 <ShoppingCart className="w-16 h-16 text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">העגלה שלך ריקה</p>
                 <p className="text-sm text-muted-foreground">הוסף מוצרים כדי להתחיל</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 py-4">
                 {cartItems.value.map((item) => (
                   <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg">
                     <div className="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0">
@@ -144,15 +151,15 @@ const CartModal = () => {
             )}
           </div>
           
-          {/* Footer with total and checkout */}
+          {/* Footer with total and checkout - קבוע בתחתית */}
           {cartCount.value > 0 && (
-            <div className="border-t p-4 space-y-4">
+            <div className="border-t bg-background p-4 space-y-4 flex-shrink-0">
               <div className="flex justify-between items-center font-semibold">
                 <span>סה"כ:</span>
                 <span>₪{totalPrice.value.toFixed(2)}</span>
               </div>
               
-              <button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md">
+              <button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md transition-colors">
                 המשך לתשלום
               </button>
             </div>
