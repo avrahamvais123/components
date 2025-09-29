@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## PayPal Integration
+
+This project includes a complete PayPal payment integration. See [PAYPAL_SETUP.md](./PAYPAL_SETUP.md) for detailed setup instructions.
+
+### Quick Links
+- **Test PayPal**: [http://localhost:3001/paypal-test](http://localhost:3001/paypal-test) (בדיקת PayPal)
+- **Checkout**: [http://localhost:3001/checkout](http://localhost:3001/checkout) (עמוד תשלום)
+
 ## Getting Started
 
 First, run the development server:

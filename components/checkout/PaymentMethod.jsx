@@ -7,8 +7,20 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { CreditCard } from "lucide-react";
 import { motion } from "framer-motion";
+import { PayPalButton } from "./PayPalButton";
+import { PaymentStatus } from "./PaymentStatus";
+import { PayPalSetupChecker } from "./PayPalSetupChecker";
+import { usePaymentHandler } from "@/app/hooks/usePaymentHandler";
 
-export function PaymentMethod({ control, watchPaymentMethod }) {
+export function PaymentMethod({ control, watchPaymentMethod, totalAmount = 100, currency = "USD" }) {
+  const {
+    paymentStatus,
+    paymentError,
+    paymentDetails,
+    handlePaymentSuccess,
+    handlePaymentError,
+    setProcessing,
+  } = usePaymentHandler();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -144,6 +156,34 @@ export function PaymentMethod({ control, watchPaymentMethod }) {
                   )}
                 />
               </div>
+            </motion.div>
+          )}
+
+          {/* PayPal תשלום */}
+          {watchPaymentMethod === "paypal" && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-4 p-4 border rounded-lg bg-gray-50"
+            >
+              <PayPalSetupChecker />
+              <div className="text-center text-sm text-gray-600 mb-4">
+                לחץ על הכפתור למטה כדי להמשיך לתשלום דרך PayPal
+              </div>
+              <PayPalButton
+                amount={totalAmount}
+                currency={currency}
+                onSuccess={handlePaymentSuccess}
+                onError={handlePaymentError}
+                disabled={paymentStatus === 'processing' || paymentStatus === 'success'}
+              />
+              <PaymentStatus 
+                status={paymentStatus} 
+                error={paymentError} 
+                details={paymentDetails} 
+              />
             </motion.div>
           )}
         </CardContent>

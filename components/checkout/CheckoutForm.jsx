@@ -15,10 +15,12 @@ import { PaymentMethod } from "./PaymentMethod";
 import { NotesAndTerms } from "./NotesAndTerms";
 import { OrderSummary } from "./OrderSummary";
 import { checkoutFormSchema } from "./checkoutSchema";
+import { useState } from "react";
 
 export function CheckoutForm() {
   useSignals();
   const router = useRouter();
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
   
   const cartItems = useComputed(() => Object.values(cart));
   const totalPrice = useComputed(() =>
@@ -89,6 +91,8 @@ export function CheckoutForm() {
             <PaymentMethod 
               control={form.control} 
               watchPaymentMethod={watchPaymentMethod}
+              totalAmount={totalPrice.value}
+              currency={selectedCurrency}
             />
             
             <NotesAndTerms control={form.control} />
