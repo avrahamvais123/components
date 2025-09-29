@@ -23,11 +23,14 @@ export default function ProductCard({ product, currency = "₪" }) {
   const cartItem = id ? cart[id] : null;
   
   // אם המוצר קיים בעגלה, נשתמש בכמות מהעגלה
-  const currentQuantity = cartItem ? cartItem.quantity : (product.quantity || 0);
+  const currentQuantity = cartItem ? cartItem.quantity : 0;
   
   // נעדכן את המוצר אם צריך
   if (cartItem && product.quantity !== cartItem.quantity) {
     product.quantity = cartItem.quantity;
+  } else if (!cartItem && product.quantity > 0) {
+    // אם המוצר לא קיים בעגלה אבל יש לו כמות, נאפס אותו
+    product.quantity = 0;
   }
 
   const inc = () => {
@@ -43,32 +46,43 @@ export default function ProductCard({ product, currency = "₪" }) {
   };
 
   const dec = () => {
-    const newQuantity = clamp((currentQuantity ?? 1) - 1, 1, 99);
-    product.quantity = newQuantity;
-    // עדכון כמות בעגלה או הוספה לעגלה אם לא קיים
+    const newQuantity = (currentQuantity ?? 1) - 1;
+    
     if (!id) return;
-    if (cart[id]) {
-      cart[id].quantity = newQuantity;
-      // אם הכמות הגיעה ל-0, נמחק מהעגלה
-      if (newQuantity <= 0) {
-        delete cart[id];
-        product.quantity = 0;
-      }
+    
+    if (newQuantity <= 0) {
+      // אם הכמות יורדת ל-0 או פחות, נמחק מהעגלה ונאפס את המוצר
+      delete cart[id];
+      product.quantity = 0;
     } else {
-      cart[id] = { ...product, quantity: newQuantity };
+      // אחרת נעדכן את הכמות
+      const clampedQuantity = clamp(newQuantity, 1, 99);
+      product.quantity = clampedQuantity;
+      if (cart[id]) {
+        cart[id].quantity = clampedQuantity;
+      } else {
+        cart[id] = { ...product, quantity: clampedQuantity };
+      }
     }
   };
 
   const quantityChange = (e) => {
     const num = parseInt(e.currentTarget.value, 10);
-    const newQuantity = Number.isFinite(num) ? clamp(num, 1, 99) : 1;
-    product.quantity = newQuantity;
-    // עדכון כמות בעגלה או הוספה לעגלה אם לא קיים
+    
     if (!id) return;
-    if (cart[id]) {
-      cart[id].quantity = newQuantity;
+    
+    if (!Number.isFinite(num) || num <= 0) {
+      // אם הכמות לא תקינה או 0, נמחק מהעגלה
+      delete cart[id];
+      product.quantity = 0;
     } else {
-      cart[id] = { ...product, quantity: newQuantity };
+      const newQuantity = clamp(num, 1, 99);
+      product.quantity = newQuantity;
+      if (cart[id]) {
+        cart[id].quantity = newQuantity;
+      } else {
+        cart[id] = { ...product, quantity: newQuantity };
+      }
     }
   };
 

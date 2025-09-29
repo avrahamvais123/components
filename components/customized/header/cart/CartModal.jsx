@@ -50,6 +50,7 @@ const CartModal = () => {
   };
 
   const removeFromCart = (productId) => {
+    // מוחקים את המוצר מהעגלה - זה יגרום לסינכרון אוטומטי במוצר
     delete cart[productId];
   };
 
@@ -107,7 +108,15 @@ const CartModal = () => {
                     
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() => {
+                          const newQuantity = item.quantity - 1;
+                          if (newQuantity <= 0) {
+                            // אם הכמות יורדת ל-0, נמחק את המוצר
+                            removeFromCart(item.id);
+                          } else {
+                            updateQuantity(item.id, newQuantity);
+                          }
+                        }}
                         className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100"
                       >
                         <Minus className="w-4 h-4" />
