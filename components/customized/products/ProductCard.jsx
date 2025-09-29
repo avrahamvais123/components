@@ -18,40 +18,57 @@ import { cart, favorities } from "@/lib/signals/signals-store";
 export default function ProductCard({ product, currency = "₪" }) {
   useSignals(); // מאזין לכל קריאה של סיגנלים/פרוקסי במהלך הרנדר
 
+  // נבדוק אם המוצר קיים בעגלה ונסנכרן את הכמות
+  const id = product.id;
+  const cartItem = id ? cart[id] : null;
+  
+  // אם המוצר קיים בעגלה, נשתמש בכמות מהעגלה
+  const currentQuantity = cartItem ? cartItem.quantity : (product.quantity || 0);
+  
+  // נעדכן את המוצר אם צריך
+  if (cartItem && product.quantity !== cartItem.quantity) {
+    product.quantity = cartItem.quantity;
+  }
+
   const inc = () => {
-    product.quantity = clamp((product.quantity ?? 0) + 1, 1, 99);
+    const newQuantity = clamp((currentQuantity ?? 0) + 1, 1, 99);
+    product.quantity = newQuantity;
     // עדכון כמות בעגלה או הוספה לעגלה אם לא קיים
-    const id = product.id;
     if (!id) return;
     if (cart[id]) {
-      cart[id].quantity = product.quantity;
+      cart[id].quantity = newQuantity;
     } else {
-      cart[id] = { ...product };
+      cart[id] = { ...product, quantity: newQuantity };
     }
   };
 
   const dec = () => {
-    product.quantity = clamp((product.quantity ?? 1) - 1, 1, 99);
+    const newQuantity = clamp((currentQuantity ?? 1) - 1, 1, 99);
+    product.quantity = newQuantity;
     // עדכון כמות בעגלה או הוספה לעגלה אם לא קיים
-    const id = product.id;
     if (!id) return;
     if (cart[id]) {
-      cart[id].quantity = product.quantity;
+      cart[id].quantity = newQuantity;
+      // אם הכמות הגיעה ל-0, נמחק מהעגלה
+      if (newQuantity <= 0) {
+        delete cart[id];
+        product.quantity = 0;
+      }
     } else {
-      cart[id] = { ...product };
+      cart[id] = { ...product, quantity: newQuantity };
     }
   };
 
   const quantityChange = (e) => {
     const num = parseInt(e.currentTarget.value, 10);
-    product.quantity = Number.isFinite(num) ? clamp(num, 1, 99) : 1;
+    const newQuantity = Number.isFinite(num) ? clamp(num, 1, 99) : 1;
+    product.quantity = newQuantity;
     // עדכון כמות בעגלה או הוספה לעגלה אם לא קיים
-    const id = product.id;
     if (!id) return;
     if (cart[id]) {
-      cart[id].quantity = product.quantity;
+      cart[id].quantity = newQuantity;
     } else {
-      cart[id] = { ...product };
+      cart[id] = { ...product, quantity: newQuantity };
     }
   };
 
@@ -159,9 +176,9 @@ export default function ProductCard({ product, currency = "₪" }) {
 
       <CardFooter className="px-4 py-2 center justify-end">
         {/* Qty stepper */}
-        {product.quantity ? (
+        {currentQuantity > 0 ? (
           <QtyStepper
-            quantity={product.quantity}
+            quantity={currentQuantity}
             onInc={inc}
             onDec={dec}
             onChange={quantityChange}

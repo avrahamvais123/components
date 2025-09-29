@@ -7,18 +7,12 @@ import useHaederControl from "./useHaederControl";
 import MegaMenu3 from "./MegaMenu3";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { cart } from "@/lib/signals/signals-store";
-import { useSignals, useComputed } from "@preact/signals-react/runtime";
+import CartModal from "../cart/CartModal";
 
 export default function Header3() {
-  useSignals();
   const control = useHaederControl();
   const { isOpen, openIndex, openPanel, scheduleClose, clearCloseTimer } =
     control;
-
-  const cartCount = useComputed(() => Object.keys(cart).length);
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
@@ -37,7 +31,7 @@ export default function Header3() {
               onClick={(e) => openPanel(null)}
               onMouseEnter={() => openPanel(i)}
               onFocus={() => openPanel(i)}
-              href={{ pathname: "/categories", query: { name: link.label },  }}
+              href={{ pathname: "/categories", query: { name: link.label } }}
             >
               <Button
                 variant="ghost"
@@ -56,14 +50,7 @@ export default function Header3() {
           ))}
         </nav>
 
-        <button className="relative">
-          <ShoppingCart className="size-6 text-foreground/70" />
-          {cartCount > 0 && (
-            <Badge className="absolute top-0 left-0 -translate-1/2 bg-red-600 text-white center rounded-full w-4 aspect-square text-[0.5rem]">
-              {cartCount}
-            </Badge>
-          )}
-        </button>
+        <CartModal />
       </div>
 
       {/* מגה-פאנל מקבל את ה-state בפרופס */}
