@@ -3,6 +3,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
+:root {
+  --header-height: 4rem; /* 64px */
+  --sticky-offset: calc(var(--header-height) + 1rem);
+}
+
+/* Sticky order summary with header offset */
+.sticky-order-summary {
+  position: sticky;
+  top: calc(4rem + 1rem); /* header height + spacing */
+}
+
 /* Custom scrollbar styles */
 .scrollbar-thin {
   scrollbar-width: thin;

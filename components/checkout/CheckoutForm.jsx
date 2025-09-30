@@ -142,7 +142,7 @@ export function CheckoutForm() {
       </motion.div>
 
       {/* סיכום ההזמנה */}
-      <div className="xl:col-span-5 order-1 xl:order-2 xl:sticky xl:top-4 xl:self-start">
+      <div className="xl:col-span-5 order-1 xl:order-2 xl:sticky xl:top-20 xl:self-start">
         <OrderSummary 
           cartItems={cartItems.value}
           totalPrice={totalPrice.value}
