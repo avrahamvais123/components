@@ -9,17 +9,24 @@ import { OrderSummaryItem } from "./OrderSummaryItem";
 export function OrderSummary({ cartItems, totalPrice, itemsCount, onSubmit, isSubmitting }) {
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
-      className="space-y-6"
-    >
+    <div className="space-y-6">
       {/* סיכום מוצרים */}
-      <Card className="order-summary-desktop xl:max-h-[calc(100vh-2rem)] overflow-hidden flex flex-col shadow-lg border border-gray-200 dark:border-gray-700">
-        <CardHeader className="flex-shrink-0">
-          <CardTitle className="text-lg md:text-xl">סיכום ההזמנה</CardTitle>
-          <CardDescription>{itemsCount} פריטים</CardDescription>
+      <Card className="order-summary-desktop xl:max-h-[calc(100vh-2rem)] overflow-hidden flex flex-col shadow-2xl border-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg">
+        <CardHeader className="flex-shrink-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 dark:from-indigo-500/20 dark:to-purple-500/20">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+                סיכום ההזמנה
+              </CardTitle>
+              <CardDescription className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">
+                {itemsCount} פריטים בעגלה
+              </CardDescription>
+            </div>
+            <div className="p-3 bg-white/50 dark:bg-gray-800/50 rounded-xl shadow-sm">
+              <Shield className="w-6 h-6 text-green-500" />
+            </div>
+          </div>
+          <div className="h-1 w-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mt-4"></div>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col overflow-hidden p-4 xl:p-5 2xl:p-6 space-y-4 pb-6">
           {/* רשימת מוצרים - עם גלילה */}
@@ -66,35 +73,47 @@ export function OrderSummary({ cartItems, totalPrice, itemsCount, onSubmit, isSu
           </div>
 
           {/* כפתור שליחה - רק בדסקטופ */}
-          <div className="hidden xl:block flex-shrink-0 mt-auto pt-3">
+          <div className="hidden xl:block flex-shrink-0 mt-auto pt-4">
             <button 
               onClick={onSubmit}
-              className="w-full h-11 xl:h-10 text-sm bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              className="w-full h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 pulse-glow"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "מעבד הזמנה..." : "השלם הזמנה • ₪" + totalPrice.toFixed(2)}
+              {isSubmitting ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  מעבד הזמנה...
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-2">
+                  <span>השלם הזמנה • ₪{totalPrice.toFixed(2)}</span>
+                  <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
+                    <span className="text-xs">✓</span>
+                  </div>
+                </div>
+              )}
             </button>
           </div>
 
           {/* תכונות אבטחה */}
-          <div className="text-center space-y-2 pt-2 xl:pt-1 mt-auto border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
-            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3 gap-2 xl:gap-1 2xl:gap-2">
-              <div className="flex items-center justify-center gap-2 text-xs xl:text-[10px] text-gray-600 dark:text-gray-400">
-                <Shield className="w-3 h-3 xl:w-2.5 xl:h-2.5" />
-                <span>תשלום מאובטח</span>
+          <div className="text-center space-y-3 pt-4 mt-auto border-t border-gradient-to-r from-indigo-200 to-purple-200 dark:from-indigo-800 dark:to-purple-800 flex-shrink-0">
+            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3 gap-3 xl:gap-2 2xl:gap-3">
+              <div className="flex items-center justify-center gap-2 text-xs xl:text-[11px] text-gray-600 dark:text-gray-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg">
+                <Shield className="w-3 h-3 xl:w-3 xl:h-3 text-green-500" />
+                <span className="font-medium">תשלום מאובטח</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-xs xl:text-[10px] text-gray-600 dark:text-gray-400">
-                <Truck className="w-3 h-3 xl:w-2.5 xl:h-2.5" />
-                <span>משלוח חינם מ-₪200</span>
+              <div className="flex items-center justify-center gap-2 text-xs xl:text-[11px] text-gray-600 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded-lg">
+                <Truck className="w-3 h-3 xl:w-3 xl:h-3 text-blue-500" />
+                <span className="font-medium">משלוח חינם מ-₪200</span>
               </div>
-              <div className="flex items-center justify-center gap-2 text-xs xl:text-[10px] text-gray-600 dark:text-gray-400">
-                <Clock className="w-3 h-3 xl:w-2.5 xl:h-2.5" />
-                <span>משלוח 3-5 ימים</span>
+              <div className="flex items-center justify-center gap-2 text-xs xl:text-[11px] text-gray-600 dark:text-gray-400 bg-purple-50 dark:bg-purple-900/20 px-3 py-2 rounded-lg">
+                <Clock className="w-3 h-3 xl:w-3 xl:h-3 text-purple-500" />
+                <span className="font-medium">משלוח 3-5 ימים</span>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 }

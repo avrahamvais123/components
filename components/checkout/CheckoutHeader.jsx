@@ -2,37 +2,18 @@ import { CheckCircle } from "lucide-react";
 
 export function CheckoutHeader() {
   return (
-    <div className="mb-6 md:mb-8 text-center">
-      <h1 className="text-2xl md:text-3xl xl:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">השלמת ההזמנה</h1>
-      <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg max-w-2xl mx-auto">מלא את הפרטים כדי להשלים את ההזמנה</p>
-      
-      {/* סרגל התקדמות */}
-      <div className="flex items-center justify-center gap-2 md:gap-4 mt-4 md:mt-6 mb-6 md:mb-8 overflow-x-auto pb-2">
-        <div className="flex items-center gap-1 md:gap-2 min-w-0">
-          <div className="w-6 h-6 md:w-8 md:h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-bold flex-shrink-0">
-            <CheckCircle className="w-3 h-3 md:w-4 md:h-4" />
-          </div>
-          <span className="text-xs md:text-sm font-medium text-green-600 whitespace-nowrap">עגלת קניות</span>
-        </div>
-        
-        <div className="h-0.5 w-6 md:w-12 bg-gray-300 dark:bg-gray-600 flex-shrink-0"></div>
-        
-        <div className="flex items-center gap-1 md:gap-2 min-w-0">
-          <div className="w-6 h-6 md:w-8 md:h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-bold flex-shrink-0">
-            2
-          </div>
-          <span className="text-xs md:text-sm font-medium text-blue-600 dark:text-blue-400 whitespace-nowrap">פרטי תשלום</span>
-        </div>
-        
-        <div className="h-0.5 w-6 md:w-12 bg-gray-300 dark:bg-gray-600 flex-shrink-0"></div>
-        
-        <div className="flex items-center gap-1 md:gap-2 min-w-0">
-          <div className="w-6 h-6 md:w-8 md:h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400 text-xs md:text-sm font-bold flex-shrink-0">
-            3
-          </div>
-          <span className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">אישור הזמנה</span>
-        </div>
+    <div className="mb-8 md:mb-12 text-center">
+      <div className="relative">
+        <h1 className="text-3xl md:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-gray-900 via-indigo-800 to-purple-800 dark:from-gray-100 dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent mb-4">
+          השלמת ההזמנה
+        </h1>
+        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full opacity-70"></div>
       </div>
+      <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+        מלא את הפרטים בטופס המאובטח שלנו כדי להשלים את ההזמנה שלך בבטחה
+      </p>
+      
+
     </div>
   );
 }

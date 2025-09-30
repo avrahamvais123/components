@@ -28,12 +28,15 @@ export function PaymentMethod({ control, watchPaymentMethod, cartItems = [], cur
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
     >
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="w-5 h-5" />
+      <Card className="shadow-lg border-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-3 text-xl font-semibold">
+            <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+              <CreditCard className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            </div>
             אופן תשלום
           </CardTitle>
+          <div className="h-1 w-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
         </CardHeader>
         <CardContent className="space-y-4">
           <FormField
