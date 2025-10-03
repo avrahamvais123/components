@@ -21,6 +21,14 @@ import {
 } from "react-aria-components";
 import { Plus, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Ephemeris from "ephemeris";
+import { ephemToHebrew } from "@/utils/astro-he";
+
+function getPlacementsHe(dateISO, lat, lon, height = 0) {
+  const date = new Date(dateISO);
+  const ephem = Ephemeris.getAllPlanets(date, lon, lat, height); // lon ואז lat
+  return ephemToHebrew(ephem);
+}
 
 const fields = [
   {
@@ -98,18 +106,22 @@ const fields = [
   { name: "attachment", label: "קובץ צרופה", type: "file" },
 ];
 
-function handleSubmit(data) {
-  console.log("Submitted data:", data);
-}
+function handleSubmit(data) {}
 
 export default function Home() {
   useSignals(); // חשוב כדי ש-React "ישמע" לקריאות לסיגנלים בזמן רנדר
   const { data: session } = useSession();
-  console.log("session: ", session);
-  console.log("store: ", store);
 
   return (
     <div className="bg-muted">
+      <Button
+        onClick={() => {
+          const dataHe = getPlacementsHe("1987-01-28T02:30:00Z", 32.08, 34.78);
+          console.log("עברית 🧿:", dataHe);
+        }}
+      >
+        click
+      </Button>
       <Hero1 />
       <Features6 />
       {/* <Features7 /> */}
