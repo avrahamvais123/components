@@ -29,6 +29,7 @@
     "@tanstack/react-table": "^8.21.3",
     "@uidotdev/usehooks": "^2.4.1",
     "argon2": "^0.44.0",
+    "circular-natal-horoscope-js": "^1.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "deepsignal": "^1.6.0",
