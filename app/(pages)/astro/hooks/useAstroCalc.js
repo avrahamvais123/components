@@ -1,9 +1,9 @@
-// app/astro/useAstroCalc.js
+// app/astro/hooks/useAstroCalc.js
 "use client";
 
 import { useState, useCallback } from "react";
 
-// שמות וסמלי מזלות באותו סדר
+// מזלות
 export const SIGN_NAMES = [
   "טלה",
   "שור",
@@ -33,7 +33,7 @@ export const SIGN_GLYPHS = [
   "♓︎",
 ];
 
-// שמות פלנטות בעברית
+// פלנטות בעברית
 export const PLANET_NAMES_HE = {
   sun: "שמש",
   moon: "ירח",
@@ -47,14 +47,64 @@ export const PLANET_NAMES_HE = {
   pluto: "פלוטו",
 };
 
-// עזר לזוויות ולתצוגה בתוך מזל
+// רשימות עזר ל־UI
+export const PROFILE_ALL_KEYS = [
+  "sun",
+  "moon",
+  "mercury",
+  "venus",
+  "mars",
+  "jupiter",
+  "saturn",
+  "uranus",
+  "neptune",
+  "pluto",
+];
+export const PROFILE_DEFAULT_INCLUDE = [
+  "sun",
+  "moon",
+  "mercury",
+  "venus",
+  "mars",
+]; // ← ברירת מחדל: 5 אישיות
+
+// יסודות + איכויות (כולל צבעים)
+export const ELEMENT_KEYS = ["fire", "earth", "air", "water"];
+export const ELEMENT_NAMES = {
+  fire: "אש",
+  earth: "אדמה",
+  air: "אוויר",
+  water: "מים",
+};
+export const ELEMENT_COLORS = {
+  fire: "#ef4444",
+  earth: "#8b5cf6",
+  air: "#0ea5e9",
+  water: "#14b8a6",
+};
+
+export const QUALITY_KEYS = ["cardinal", "fixed", "mutable"];
+export const QUALITY_NAMES = {
+  cardinal: "קרדינלי",
+  fixed: "קבוע",
+  mutable: "משתנה",
+};
+export const QUALITY_COLORS = {
+  cardinal: "#f59e0b",
+  fixed: "#16a34a",
+  mutable: "#64748b",
+};
+
+// זויות בתוך מזל
 export const norm360 = (deg) => ((deg % 360) + 360) % 360;
 export const signIndex = (deg) => Math.floor(norm360(deg) / 30);
 export const signNameOf = (deg) => SIGN_NAMES[signIndex(deg)];
 export const signGlyphOf = (deg) => SIGN_GLYPHS[signIndex(deg)];
 export const degInSign = (deg) => norm360(deg) % 30;
-// פורמט d°mm' (0–30 בתוך המזל)
+
+// פורמטים לתצוגה
 export const fmtInSign = (deg) => {
+  // d°mm'
   const x = degInSign(deg);
   let d = Math.floor(x);
   let m = Math.round((x - d) * 60);
@@ -64,11 +114,14 @@ export const fmtInSign = (deg) => {
   }
   return `${d}°${String(m).padStart(2, "0")}'`;
 };
+export const fmtInSignDec = (deg, decimals = 2) =>
+  `${degInSign(deg).toFixed(decimals)}°`;
+export const fmtInSignDegOnly = (deg) => `${Math.floor(degInSign(deg))}°`;
 
-// קריאת מעלות ממבנים שונים של הספרייה
+// קריאת מעלות
 function readDegrees(maybe) {
   if (!maybe) return null;
-  if (typeof maybe.longitude === "number") return maybe.longitude; // { longitude }
+  if (typeof maybe.longitude === "number") return maybe.longitude;
   const deg = maybe?.ChartPosition?.Ecliptic?.DecimalDegrees;
   if (typeof deg === "number") return deg;
   const startDeg =
@@ -91,11 +144,13 @@ function extractHouses(horoscope) {
       0;
     return {
       house: i + 1,
-      deg, // 0..360 (לשימוש פנימי)
+      deg,
       signIndex: signIndex(deg),
       signName: signNameOf(deg),
       signGlyph: signGlyphOf(deg),
-      degText: fmtInSign(deg), // לתצוגה 0..30
+      degText: fmtInSign(deg),
+      degDecText: fmtInSignDec(deg),
+      degOnlyText: fmtInSignDegOnly(deg),
     };
   });
 }
@@ -110,26 +165,19 @@ function extractAngles(horoscope) {
     readDegrees(horoscope?.Midheaven?.ChartPosition) ??
     readDegrees(horoscope?.Midheaven) ??
     0;
-
-  return {
-    ascendant: {
-      deg: ascDeg,
-      signIndex: signIndex(ascDeg),
-      signName: signNameOf(ascDeg),
-      signGlyph: signGlyphOf(ascDeg),
-      degText: fmtInSign(ascDeg),
-    },
-    midheaven: {
-      deg: mcDeg,
-      signIndex: signIndex(mcDeg),
-      signName: signNameOf(mcDeg),
-      signGlyph: signGlyphOf(mcDeg),
-      degText: fmtInSign(mcDeg),
-    },
-  };
+  const build = (deg) => ({
+    deg,
+    signIndex: signIndex(deg),
+    signName: signNameOf(deg),
+    signGlyph: signGlyphOf(deg),
+    degText: fmtInSign(deg),
+    degDecText: fmtInSignDec(deg),
+    degOnlyText: fmtInSignDegOnly(deg),
+  });
+  return { ascendant: build(ascDeg), midheaven: build(mcDeg) };
 }
 
-// נורמליזציה של מפתח פלנטה למיפוי עברית
+// נרמול מפתח פלנטה
 const normalizePlanetKey = (k) =>
   String(k || "")
     .trim()
@@ -151,30 +199,19 @@ function extractPlanets(horoscope) {
         signName: signNameOf(deg),
         signGlyph: signGlyphOf(deg),
         degText: fmtInSign(deg),
+        degDecText: fmtInSignDec(deg),
+        degOnlyText: fmtInSignDegOnly(deg),
         retro: !!b.isRetrograde,
       };
     });
   }
-  const names = [
-    "sun",
-    "moon",
-    "mercury",
-    "venus",
-    "mars",
-    "jupiter",
-    "saturn",
-    "uranus",
-    "neptune",
-    "pluto",
-  ];
+  const names = [...PROFILE_ALL_KEYS];
   return names.map((key) => {
     let body = null;
     if (typeof horoscope?.getPlanet === "function") {
       try {
         body = horoscope.getPlanet(key);
-      } catch {
-        body = null;
-      }
+      } catch {}
     }
     if (!body) body = horoscope?.CelestialBodies?.[key] || null;
     const deg =
@@ -189,12 +226,14 @@ function extractPlanets(horoscope) {
       signName: signNameOf(deg),
       signGlyph: signGlyphOf(deg),
       degText: fmtInSign(deg),
+      degDecText: fmtInSignDec(deg),
+      degOnlyText: fmtInSignDegOnly(deg),
       retro,
     };
   });
 }
 
-// ---- היבטים ----
+// היבטים
 export const ASPECT_ANGLES = {
   conjunction: 0,
   semisextile: 30,
@@ -204,11 +243,8 @@ export const ASPECT_ANGLES = {
   quincunx: 150,
   opposition: 180,
 };
-
-// הפרש זוויתי מינימלי 0..180
 const angleDiff = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
 
-// היבטים לפי מעלות (degree mode)
 function computeAspectsByDegree(
   planets,
   {
@@ -237,12 +273,16 @@ function computeAspectsByDegree(
               sign: A.signName,
               glyph: A.signGlyph,
               degText: A.degText,
+              degDecText: A.degDecText,
+              degOnlyText: A.degOnlyText,
             },
             bInfo: {
               nameHe: B.nameHe,
               sign: B.signName,
               glyph: B.signGlyph,
               degText: B.degText,
+              degDecText: B.degDecText,
+              degOnlyText: B.degOnlyText,
             },
             orb: +delta.toFixed(2),
             distance: +d.toFixed(2),
@@ -255,7 +295,6 @@ function computeAspectsByDegree(
   return res;
 }
 
-// היבטים לפי מזלות בלבד (sign mode)
 function computeAspectsBySign(
   planets,
   { aspects = ["conjunction", "sextile", "square", "trine", "opposition"] } = {}
@@ -291,12 +330,16 @@ function computeAspectsBySign(
             sign: A.signName,
             glyph: A.signGlyph,
             degText: A.degText,
+            degDecText: A.degDecText,
+            degOnlyText: A.degOnlyText,
           },
           bInfo: {
             nameHe: B.nameHe,
             sign: B.signName,
             glyph: B.signGlyph,
             degText: B.degText,
+            degDecText: B.degDecText,
+            degOnlyText: B.degOnlyText,
           },
           signDistance: d,
         });
@@ -306,17 +349,96 @@ function computeAspectsBySign(
   return res;
 }
 
-/**
- * useAstroCalc — הוק שמחשב מפה ומחזיר נתונים + היבטים
- * שימוש:
- * const { calc, result } = useAstroCalc();
- * await calc(form, { aspectMode:'degree', orb:7, aspects:['conjunction','sextile','square','trine','opposition'] });
- *
- * פרמטרים:
- * aspectMode: 'degree' | 'sign' | 'none'
- * orb: מספר (ברירת מחדל 7) — רלוונטי רק ל-'degree'
- * aspects: רשימת היבטים פעילה (מפתחות מ-ASPECT_ANGLES)
- */
+// ---- פרופיל יסודות/איכויות ----
+const SIGN_TO_ELEMENT = [
+  "fire",
+  "earth",
+  "air",
+  "water",
+  "fire",
+  "earth",
+  "air",
+  "water",
+  "fire",
+  "earth",
+  "air",
+  "water",
+];
+const SIGN_TO_QUALITY = [
+  "cardinal",
+  "fixed",
+  "mutable",
+  "cardinal",
+  "fixed",
+  "mutable",
+  "cardinal",
+  "fixed",
+  "mutable",
+  "cardinal",
+  "fixed",
+  "mutable",
+];
+
+/** includeKeys: מערך מפתחות לכלול; excludeKeys: מערך מפתחות להחריג */
+function computeProfile(planets, { includeKeys, excludeKeys } = {}) {
+  // ברירת מחדל: 5 אישיות
+  let include =
+    Array.isArray(includeKeys) && includeKeys.length
+      ? new Set(includeKeys)
+      : new Set(PROFILE_DEFAULT_INCLUDE);
+
+  if (Array.isArray(excludeKeys) && excludeKeys.length) {
+    for (const k of excludeKeys) include.delete(k);
+  }
+
+  // סינון לפי מה שבאמת קיים במפה
+  const planetKeys = new Set(planets.map((p) => p.key));
+  include = new Set([...include].filter((k) => planetKeys.has(k)));
+
+  const used = planets.filter((p) => include.has(p.key));
+  const total = used.length || 1;
+
+  const eCounts = { fire: 0, earth: 0, air: 0, water: 0 };
+  const eLists = { fire: [], earth: [], air: [], water: [] };
+  const qCounts = { cardinal: 0, fixed: 0, mutable: 0 };
+  const qLists = { cardinal: [], fixed: [], mutable: [] };
+
+  for (const p of used) {
+    const eKey = SIGN_TO_ELEMENT[p.signIndex];
+    const qKey = SIGN_TO_QUALITY[p.signIndex];
+    eCounts[eKey]++;
+    eLists[eKey].push(p.nameHe);
+    qCounts[qKey]++;
+    qLists[qKey].push(p.nameHe);
+  }
+
+  const ePerc = Object.fromEntries(
+    ELEMENT_KEYS.map((k) => [k, +((eCounts[k] * 100) / total).toFixed(1)])
+  );
+  const qPerc = Object.fromEntries(
+    QUALITY_KEYS.map((k) => [k, +((qCounts[k] * 100) / total).toFixed(1)])
+  );
+
+  return {
+    considered: [...include], // אילו גופים נכללו בפועל
+    elements: {
+      counts: eCounts,
+      lists: eLists,
+      percents: ePerc,
+      missing: ELEMENT_KEYS.filter((k) => eCounts[k] === 0),
+      total,
+    },
+    qualities: {
+      counts: qCounts,
+      lists: qLists,
+      percents: qPerc,
+      missing: QUALITY_KEYS.filter((k) => qCounts[k] === 0),
+      total,
+    },
+  };
+}
+
+/** useAstroCalc */
 export default function useAstroCalc() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -329,6 +451,8 @@ export default function useAstroCalc() {
         aspectMode = "none",
         orb = 7,
         aspects = ["conjunction", "sextile", "square", "trine", "opposition"],
+        profileIncludeKeys, // מערך לכלול
+        profileExcludeKeys, // מערך להחריג (אופציונלי)
       } = {}
     ) => {
       setError("");
@@ -349,14 +473,13 @@ export default function useAstroCalc() {
 
         const origin = new Origin({
           year: y,
-          month: m - 1, // 0-based!
+          month: m - 1,
           date: d,
           hour: hh,
           minute: mm,
           latitude: form.lat,
           longitude: form.lon,
         });
-
         const horoscope = new Horoscope({
           origin,
           houseSystem: form.houseSystem || "placidus",
@@ -368,11 +491,15 @@ export default function useAstroCalc() {
         const planets = extractPlanets(horoscope);
 
         let aspectsOut = [];
-        if (aspectMode === "degree") {
+        if (aspectMode === "degree")
           aspectsOut = computeAspectsByDegree(planets, { aspects, orb });
-        } else if (aspectMode === "sign") {
+        else if (aspectMode === "sign")
           aspectsOut = computeAspectsBySign(planets, { aspects });
-        }
+
+        const profile = computeProfile(planets, {
+          includeKeys: profileIncludeKeys,
+          excludeKeys: profileExcludeKeys,
+        });
 
         setResult({
           meta: {
@@ -383,6 +510,7 @@ export default function useAstroCalc() {
           houses,
           planets,
           aspects: aspectsOut,
+          profile,
         });
       } catch (e) {
         console.error(e);
@@ -399,8 +527,10 @@ export default function useAstroCalc() {
     loading,
     error,
     result,
-    // עזר ללקוח:
+    // עזר ל־UI:
     fmtInSign,
+    fmtInSignDec,
+    fmtInSignDegOnly,
     signNameOf,
     signGlyphOf,
     degInSign,
@@ -408,5 +538,13 @@ export default function useAstroCalc() {
     SIGN_GLYPHS,
     PLANET_NAMES_HE,
     ASPECT_ANGLES,
+    ELEMENT_KEYS,
+    ELEMENT_NAMES,
+    ELEMENT_COLORS,
+    QUALITY_KEYS,
+    QUALITY_NAMES,
+    QUALITY_COLORS,
+    PROFILE_ALL_KEYS,
+    PROFILE_DEFAULT_INCLUDE,
   };
 }
