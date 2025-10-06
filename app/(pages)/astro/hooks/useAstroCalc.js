@@ -45,6 +45,8 @@ export const PLANET_NAMES_HE = {
   uranus: "אורנוס",
   neptune: "נפטון",
   pluto: "פלוטו",
+  chiron: "כירון",
+  sirius: "סיריוס",
 };
 
 // רשימות עזר ל־UI
@@ -59,6 +61,8 @@ export const PROFILE_ALL_KEYS = [
   "uranus",
   "neptune",
   "pluto",
+  "chiron",
+  "sirius",
 ];
 export const PROFILE_DEFAULT_INCLUDE = [
   "sun",
