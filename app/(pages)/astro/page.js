@@ -3,11 +3,29 @@
 
 import { useMemo, useState } from "react";
 import useAstroCalc, {
-  ELEMENT_KEYS, ELEMENT_NAMES, ELEMENT_COLORS,
-  QUALITY_KEYS, QUALITY_NAMES, QUALITY_COLORS,
-  PROFILE_ALL_KEYS, PROFILE_DEFAULT_INCLUDE, PLANET_NAMES_HE,
+  ELEMENT_KEYS,
+  ELEMENT_NAMES,
+  ELEMENT_COLORS,
+  QUALITY_KEYS,
+  QUALITY_NAMES,
+  QUALITY_COLORS,
+  PROFILE_ALL_KEYS,
+  PROFILE_DEFAULT_INCLUDE,
+  PLANET_NAMES_HE,
 } from "./hooks/useAstroCalc";
 import CityCombobox from "./components/CityCombobox";
+import { watch, store as createStore } from "hyperactiv/react";
+
+const store = createStore({ counter: 0 });
+
+const Counter = watch(() => {
+  return (
+    <div>
+      <h1>Counter: {store.counter}</h1>
+      <button onClick={() => (store.counter += 1)}>Click me</button>
+    </div>
+  );
+});
 
 function labelAspect(type) {
   const map = {
@@ -23,30 +41,41 @@ function labelAspect(type) {
 }
 
 const ASPECT_COLORS = {
-  conjunction: "#6b7280", semisextile: "#f59e0b", sextile: "#16a34a",
-  square: "#ef4444", trine: "#0ea5e9", quincunx: "#14b8a6", opposition: "#8b5cf6",
+  conjunction: "#6b7280",
+  semisextile: "#f59e0b",
+  sextile: "#16a34a",
+  square: "#ef4444",
+  trine: "#0ea5e9",
+  quincunx: "#14b8a6",
+  opposition: "#8b5cf6",
 };
 
-const PERSONAL = new Set(["sun","moon","mercury","venus","mars"]);
-const GENERATIONAL = new Set(["jupiter","saturn","uranus","neptune","pluto"]);
+const PERSONAL = new Set(["sun", "moon", "mercury", "venus", "mars"]);
+const GENERATIONAL = new Set([
+  "jupiter",
+  "saturn",
+  "uranus",
+  "neptune",
+  "pluto",
+]);
 
 // המרת מספרים לספרות רומיות
 function toRoman(num) {
   const romanNumerals = [
-    { value: 12, symbol: 'XII' },
-    { value: 11, symbol: 'XI' },
-    { value: 10, symbol: 'X' },
-    { value: 9, symbol: 'IX' },
-    { value: 8, symbol: 'VIII' },
-    { value: 7, symbol: 'VII' },
-    { value: 6, symbol: 'VI' },
-    { value: 5, symbol: 'V' },
-    { value: 4, symbol: 'IV' },
-    { value: 3, symbol: 'III' },
-    { value: 2, symbol: 'II' },
-    { value: 1, symbol: 'I' }
+    { value: 12, symbol: "XII" },
+    { value: 11, symbol: "XI" },
+    { value: 10, symbol: "X" },
+    { value: 9, symbol: "IX" },
+    { value: 8, symbol: "VIII" },
+    { value: 7, symbol: "VII" },
+    { value: 6, symbol: "VI" },
+    { value: 5, symbol: "V" },
+    { value: 4, symbol: "IV" },
+    { value: 3, symbol: "III" },
+    { value: 2, symbol: "II" },
+    { value: 1, symbol: "I" },
   ];
-  
+
   for (const numeral of romanNumerals) {
     if (num === numeral.value) {
       return numeral.symbol;
@@ -56,6 +85,8 @@ function toRoman(num) {
 }
 
 export default function AstroPage() {
+  console.log("store: ", store);
+
   const [form, setForm] = useState({
     date: "2010-03-16",
     time: "10:00",
@@ -75,21 +106,24 @@ export default function AstroPage() {
   const { calc, loading, error, result } = useAstroCalc();
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const onChangeNum = (e) => setForm({ ...form, [e.target.name]: parseFloat(e.target.value) });
+  const onChangeNum = (e) =>
+    setForm({ ...form, [e.target.name]: parseFloat(e.target.value) });
 
   const toggleKey = (k) => {
     setProfileKeys((prev) =>
-      prev.includes(k) ? prev.filter(x => x !== k) : [...prev, k]
+      prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]
     );
   };
-  const selectAll  = () => setProfileKeys([...PROFILE_ALL_KEYS]);
-  const clearAll   = () => setProfileKeys([]);
+  const selectAll = () => setProfileKeys([...PROFILE_ALL_KEYS]);
+  const clearAll = () => setProfileKeys([]);
   const setDefault = () => setProfileKeys([...PROFILE_DEFAULT_INCLUDE]);
 
-  const run = () => calc(form, {
-    aspectMode, orb,
-    profileIncludeKeys: profileKeys, // ← נעביר להוק את הבחירה
-  });
+  const run = () =>
+    calc(form, {
+      aspectMode,
+      orb,
+      profileIncludeKeys: profileKeys, // ← נעביר להוק את הבחירה
+    });
 
   // היבטים — חלוקה
   const groupedAspects = useMemo(() => {
@@ -110,10 +144,11 @@ export default function AstroPage() {
     return (
       <li>
         {a.aInfo.nameHe} ({a.aInfo.glyph} {a.aInfo.sign} {a.aInfo.degOnlyText}){" "}
-        <span style={{ color, fontWeight: 700 }}>↔</span>{" "}
-        {a.bInfo.nameHe} ({a.bInfo.glyph} {a.bInfo.sign} {a.bInfo.degOnlyText}) —{" "}
+        <span style={{ color, fontWeight: 700 }}>↔</span> {a.bInfo.nameHe} (
+        {a.bInfo.glyph} {a.bInfo.sign} {a.bInfo.degOnlyText}) —{" "}
         <b style={{ color }}>
-          {labelAspect(a.type)}{a.type === "conjunction" ? " (0°)" : ""}
+          {labelAspect(a.type)}
+          {a.type === "conjunction" ? " (0°)" : ""}
         </b>
         {a.mode === "degree" ? ` (אורב ${a.orb}°)` : ""}
       </li>
@@ -122,71 +157,168 @@ export default function AstroPage() {
 
   const Bar = ({ color, percent, label, count }) => (
     <div style={{ marginBottom: 8 }}>
-      <div style={{ display:"flex", justifyContent:"space-between", fontSize:13, marginBottom:4 }}>
-        <span>{label}</span><span>{count} • {percent}%</span>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          fontSize: 13,
+          marginBottom: 4,
+        }}
+      >
+        <span>{label}</span>
+        <span>
+          {count} • {percent}%
+        </span>
       </div>
-      <div style={{ height:8, background:"#f3f4f6", borderRadius:999 }}>
-        <div style={{ width:`${percent}%`, height:"100%", background:color, borderRadius:999 }} />
+      <div style={{ height: 8, background: "#f3f4f6", borderRadius: 999 }}>
+        <div
+          style={{
+            width: `${percent}%`,
+            height: "100%",
+            background: color,
+            borderRadius: 999,
+          }}
+        />
       </div>
     </div>
   );
 
   return (
-    <main dir="rtl" style={{ padding: 24, maxWidth: 880, margin: "0 auto", fontFamily: "system-ui, sans-serif" }}>
+    <main
+      dir="rtl"
+      style={{
+        padding: 24,
+        maxWidth: 880,
+        margin: "0 auto",
+        fontFamily: "system-ui, sans-serif",
+      }}
+    >
       <h1 style={{ marginBottom: 12 }}>מחשבון מזלות + היבטים 💫</h1>
+
+      <Counter />
 
       {/* בחירת עיר */}
       <div style={{ marginBottom: 12 }}>
-        <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>בחר/י עיר</label>
+        <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
+          בחר/י עיר
+        </label>
         <CityCombobox
           language="he"
           limit={8}
-          onSelect={(place) => setForm((f) => ({ ...f, lat: place.lat, lon: place.lon }))}
+          onSelect={(place) =>
+            setForm((f) => ({ ...f, lat: place.lat, lon: place.lon }))
+          }
         />
       </div>
 
       {/* טופס */}
-      <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr", alignItems: "center" }}>
-        <label>תאריך לידה
-          <input name="date" type="date" value={form.date} onChange={onChange} style={{ width: "100%" }}/>
+      <div
+        style={{
+          display: "grid",
+          gap: 10,
+          gridTemplateColumns: "1fr 1fr",
+          alignItems: "center",
+        }}
+      >
+        <label>
+          תאריך לידה
+          <input
+            name="date"
+            type="date"
+            value={form.date}
+            onChange={onChange}
+            style={{ width: "100%" }}
+          />
         </label>
-        <label>שעת לידה
-          <input name="time" type="time" value={form.time} onChange={onChange} style={{ width: "100%" }}/>
+        <label>
+          שעת לידה
+          <input
+            name="time"
+            type="time"
+            value={form.time}
+            onChange={onChange}
+            style={{ width: "100%" }}
+          />
         </label>
-        <label>קו רוחב
-          <input name="lat" type="number" step="0.0001" value={form.lat} onChange={onChangeNum} style={{ width: "100%" }}/>
+        <label>
+          קו רוחב
+          <input
+            name="lat"
+            type="number"
+            step="0.0001"
+            value={form.lat}
+            onChange={onChangeNum}
+            style={{ width: "100%" }}
+          />
         </label>
-        <label>קו אורך
-          <input name="lon" type="number" step="0.0001" value={form.lon} onChange={onChangeNum} style={{ width: "100%" }}/>
+        <label>
+          קו אורך
+          <input
+            name="lon"
+            type="number"
+            step="0.0001"
+            value={form.lon}
+            onChange={onChangeNum}
+            style={{ width: "100%" }}
+          />
         </label>
-        <label>שיטת בתים
-          <select name="houseSystem" value={form.houseSystem} onChange={onChange} style={{ width: "100%" }}>
+        <label>
+          שיטת בתים
+          <select
+            name="houseSystem"
+            value={form.houseSystem}
+            onChange={onChange}
+            style={{ width: "100%" }}
+          >
             <option value="placidus">Placidus</option>
             <option value="koch">Koch</option>
             <option value="equal-house">Equal</option>
             <option value="whole-sign">Whole Sign</option>
           </select>
         </label>
-        <label>זודיאק
-          <select name="zodiac" value={form.zodiac} onChange={onChange} style={{ width: "100%" }}>
+        <label>
+          זודיאק
+          <select
+            name="zodiac"
+            value={form.zodiac}
+            onChange={onChange}
+            style={{ width: "100%" }}
+          >
             <option value="tropical">Tropical</option>
             <option value="sidereal">Sidereal</option>
           </select>
         </label>
 
-        <label>מצב היבטים
-          <select value={aspectMode} onChange={(e) => setAspectMode(e.target.value)} style={{ width: "100%" }}>
+        <label>
+          מצב היבטים
+          <select
+            value={aspectMode}
+            onChange={(e) => setAspectMode(e.target.value)}
+            style={{ width: "100%" }}
+          >
             <option value="degree">לפי מעלות (עם אורב)</option>
             <option value="sign">לפי מזלות בלבד</option>
             <option value="none">ללא היבטים</option>
           </select>
         </label>
-        <label>אורב (מעלות) {aspectMode !== "degree" ? "— לא בשימוש" : ""}
-          <input type="number" step="0.1" value={orb} onChange={(e) => setOrb(parseFloat(e.target.value))}
-                 disabled={aspectMode !== "degree"} style={{ width: "100%" }}/>
+        <label>
+          אורב (מעלות) {aspectMode !== "degree" ? "— לא בשימוש" : ""}
+          <input
+            type="number"
+            step="0.1"
+            value={orb}
+            onChange={(e) => setOrb(parseFloat(e.target.value))}
+            disabled={aspectMode !== "degree"}
+            style={{ width: "100%" }}
+          />
         </label>
-        <label>פורמט בתים
-          <select value={houseFormat} onChange={(e) => setHouseFormat(e.target.value)} style={{ width: "100%" }}>
+        <label>
+          פורמט בתים
+          <select
+            value={houseFormat}
+            onChange={(e) => setHouseFormat(e.target.value)}
+            style={{ width: "100%" }}
+          >
             <option value="arabic">מספרים רגילים (1, 2, 3...)</option>
             <option value="roman">ספרות רומיות (I, II, III...)</option>
           </select>
@@ -194,19 +326,53 @@ export default function AstroPage() {
       </div>
 
       {/* בחירת פלנטות לפרופיל יסודות/איכויות */}
-      <div style={{ marginTop: 16, border:"1px solid #eee", borderRadius:12, padding:12 }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:8 }}>
-          <h3 style={{ margin:0 }}>פלנטות לחישוב יסודות/איכויות</h3>
-          <div style={{ display:"flex", gap:8 }}>
-            <button onClick={setDefault} style={{ padding:"6px 10px" }}>ברירת מחדל (5 אישיות)</button>
-            <button onClick={selectAll} style={{ padding:"6px 10px" }}>בחר הכל</button>
-            <button onClick={clearAll} style={{ padding:"6px 10px" }}>נקה הכל</button>
+      <div
+        style={{
+          marginTop: 16,
+          border: "1px solid #eee",
+          borderRadius: 12,
+          padding: 12,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <h3 style={{ margin: 0 }}>פלנטות לחישוב יסודות/איכויות</h3>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={setDefault} style={{ padding: "6px 10px" }}>
+              ברירת מחדל (5 אישיות)
+            </button>
+            <button onClick={selectAll} style={{ padding: "6px 10px" }}>
+              בחר הכל
+            </button>
+            <button onClick={clearAll} style={{ padding: "6px 10px" }}>
+              נקה הכל
+            </button>
           </div>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(5, minmax(120px,1fr))", gap:8, marginTop:10 }}>
-          {PROFILE_ALL_KEYS.map(k => (
-            <label key={k} style={{ display:"flex", gap:6, alignItems:"center" }}>
-              <input type="checkbox" checked={profileKeys.includes(k)} onChange={() => toggleKey(k)} />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(5, minmax(120px,1fr))",
+            gap: 8,
+            marginTop: 10,
+          }}
+        >
+          {PROFILE_ALL_KEYS.map((k) => (
+            <label
+              key={k}
+              style={{ display: "flex", gap: 6, alignItems: "center" }}
+            >
+              <input
+                type="checkbox"
+                checked={profileKeys.includes(k)}
+                onChange={() => toggleKey(k)}
+              />
               <span>{PLANET_NAMES_HE[k]}</span>
             </label>
           ))}
@@ -214,7 +380,11 @@ export default function AstroPage() {
       </div>
 
       <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
-        <button onClick={run} disabled={loading} style={{ padding: "10px 14px", fontWeight: 600 }}>
+        <button
+          onClick={run}
+          disabled={loading}
+          style={{ padding: "10px 14px", fontWeight: 600 }}
+        >
           {loading ? "מחשב/ת…" : "חשב/י מפה 🚀"}
         </button>
         {error && <span style={{ color: "crimson" }}>⚠️ {error}</span>}
@@ -224,20 +394,38 @@ export default function AstroPage() {
         <section style={{ marginTop: 24 }}>
           <h2>תוצאות ✨</h2>
 
-          <p><b>אופק (ASC):</b> {result.angles.ascendant.signGlyph} {result.angles.ascendant.signName} {result.angles.ascendant.degOnlyText}</p>
-          <p><b>MC:</b> {result.angles.midheaven.signGlyph} {result.angles.midheaven.signName} {result.angles.midheaven.degOnlyText}</p>
+          <p>
+            <b>אופק (ASC):</b> {result.angles.ascendant.signGlyph}{" "}
+            {result.angles.ascendant.signName}{" "}
+            {result.angles.ascendant.degOnlyText}
+          </p>
+          <p>
+            <b>MC:</b> {result.angles.midheaven.signGlyph}{" "}
+            {result.angles.midheaven.signName}{" "}
+            {result.angles.midheaven.degOnlyText}
+          </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginTop: 16 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 24,
+              marginTop: 16,
+            }}
+          >
             <div>
               <h3 style={{ marginTop: 0 }}>כוכבים</h3>
               <ul style={{ marginTop: 8 }}>
                 {result.planets.map((p) => {
-                  const houseDisplay = houseFormat === "roman" 
-                    ? toRoman(p.house || 1) 
-                    : `בבית ${p.house || "?"}`;
+                  const houseDisplay =
+                    houseFormat === "roman"
+                      ? toRoman(p.house || 1)
+                      : `בבית ${p.house || "?"}`;
                   return (
                     <li key={p.key}>
-                      {p.nameHe}: {p.signGlyph} {p.signName} {p.degOnlyText} {houseDisplay}{p.retro ? " ℞" : ""}
+                      {p.nameHe}: {p.signGlyph} {p.signName} {p.degOnlyText}{" "}
+                      {houseDisplay}
+                      {p.retro ? " ℞" : ""}
                     </li>
                   );
                 })}
@@ -248,9 +436,13 @@ export default function AstroPage() {
               <h3 style={{ marginTop: 0 }}>בתים</h3>
               <ul style={{ marginTop: 8 }}>
                 {result.houses.map((h) => {
-                  const houseDisplay = houseFormat === "roman" ? toRoman(h.house) : h.house;
+                  const houseDisplay =
+                    houseFormat === "roman" ? toRoman(h.house) : h.house;
                   return (
-                    <li key={h.house}>בית {houseDisplay}: {h.signGlyph} {h.signName} {h.degOnlyText}</li>
+                    <li key={h.house}>
+                      בית {houseDisplay}: {h.signGlyph} {h.signName}{" "}
+                      {h.degOnlyText}
+                    </li>
                   );
                 })}
               </ul>
@@ -259,13 +451,32 @@ export default function AstroPage() {
 
           {/* יסודות ואיכויות */}
           <div style={{ marginTop: 24 }}>
-            <h3>יסודות ואיכויות (נלקחו בחשבון: {result.profile.considered.map(k => PLANET_NAMES_HE[k]).join(", ") || "—"})</h3>
+            <h3>
+              יסודות ואיכויות (נלקחו בחשבון:{" "}
+              {result.profile.considered
+                .map((k) => PLANET_NAMES_HE[k])
+                .join(", ") || "—"}
+              )
+            </h3>
 
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginTop:8 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 16,
+                marginTop: 8,
+              }}
+            >
               {/* יסודות */}
-              <div style={{ border:"1px solid #eee", borderRadius:12, padding:12 }}>
-                <h4 style={{ marginTop:0, marginBottom:8 }}>יסודות</h4>
-                {ELEMENT_KEYS.map(k => (
+              <div
+                style={{
+                  border: "1px solid #eee",
+                  borderRadius: 12,
+                  padding: 12,
+                }}
+              >
+                <h4 style={{ marginTop: 0, marginBottom: 8 }}>יסודות</h4>
+                {ELEMENT_KEYS.map((k) => (
                   <Bar
                     key={k}
                     color={ELEMENT_COLORS[k]}
@@ -275,16 +486,25 @@ export default function AstroPage() {
                   />
                 ))}
                 {result.profile.elements.missing.length > 0 && (
-                  <div style={{ marginTop:8, fontSize:13, color:"#991b1b" }}>
-                    חסרים: {result.profile.elements.missing.map(k => ELEMENT_NAMES[k]).join(" · ")}
+                  <div style={{ marginTop: 8, fontSize: 13, color: "#991b1b" }}>
+                    חסרים:{" "}
+                    {result.profile.elements.missing
+                      .map((k) => ELEMENT_NAMES[k])
+                      .join(" · ")}
                   </div>
                 )}
               </div>
 
               {/* איכויות */}
-              <div style={{ border:"1px solid #eee", borderRadius:12, padding:12 }}>
-                <h4 style={{ marginTop:0, marginBottom:8 }}>איכויות</h4>
-                {QUALITY_KEYS.map(k => (
+              <div
+                style={{
+                  border: "1px solid #eee",
+                  borderRadius: 12,
+                  padding: 12,
+                }}
+              >
+                <h4 style={{ marginTop: 0, marginBottom: 8 }}>איכויות</h4>
+                {QUALITY_KEYS.map((k) => (
                   <Bar
                     key={k}
                     color={QUALITY_COLORS[k]}
@@ -294,14 +514,17 @@ export default function AstroPage() {
                   />
                 ))}
                 {result.profile.qualities.missing.length > 0 && (
-                  <div style={{ marginTop:8, fontSize:13, color:"#991b1b" }}>
-                    חסרים: {result.profile.qualities.missing.map(k => QUALITY_NAMES[k]).join(" · ")}
+                  <div style={{ marginTop: 8, fontSize: 13, color: "#991b1b" }}>
+                    חסרים:{" "}
+                    {result.profile.qualities.missing
+                      .map((k) => QUALITY_NAMES[k])
+                      .join(" · ")}
                   </div>
                 )}
               </div>
             </div>
 
-            <div style={{ marginTop:8, fontSize:12, color:"#6b7280" }}>
+            <div style={{ marginTop: 8, fontSize: 12, color: "#6b7280" }}>
               * ברירת מחדל לחישוב: 5 הפלנטות האישיות (ניתן לשנות למעלה).
             </div>
           </div>
@@ -311,7 +534,9 @@ export default function AstroPage() {
             <>
               {groupedAspects.personalsInvolved.length > 0 && (
                 <>
-                  <h3 style={{ marginTop: 24 }}>היבטים – פלנטות אישיות (מול כולן)</h3>
+                  <h3 style={{ marginTop: 24 }}>
+                    היבטים – פלנטות אישיות (מול כולן)
+                  </h3>
                   <ul style={{ marginTop: 8 }}>
                     {groupedAspects.personalsInvolved.map((a, idx) => (
                       <AspectItem a={a} key={`pers-${idx}`} />
@@ -321,7 +546,9 @@ export default function AstroPage() {
               )}
               {groupedAspects.generationalOnly.length > 0 && (
                 <>
-                  <h3 style={{ marginTop: 16 }}>היבטים – פלנטות דוריות עם עצמן (צדק ומעלה)</h3>
+                  <h3 style={{ marginTop: 16 }}>
+                    היבטים – פלנטות דוריות עם עצמן (צדק ומעלה)
+                  </h3>
                   <ul style={{ marginTop: 8 }}>
                     {groupedAspects.generationalOnly.map((a, idx) => (
                       <AspectItem a={a} key={`gen-${idx}`} />
