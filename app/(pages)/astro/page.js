@@ -1,4 +1,3 @@
-// app/astro/page.jsx
 "use client";
 
 import { useMemo, useState } from "react";
@@ -19,6 +18,8 @@ import { watch, store as createStore } from "hyperactiv/react";
 const store = createStore({ counter: 0 });
 
 const Counter = watch(() => {
+  console.log("store🔴: ", store);
+
   return (
     <div>
       <h1>Counter: {store.counter}</h1>
