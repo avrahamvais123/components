@@ -227,29 +227,35 @@ export default function AstroPage() {
           <p><b>אופק (ASC):</b> {result.angles.ascendant.signGlyph} {result.angles.ascendant.signName} {result.angles.ascendant.degOnlyText}</p>
           <p><b>MC:</b> {result.angles.midheaven.signGlyph} {result.angles.midheaven.signName} {result.angles.midheaven.degOnlyText}</p>
 
-          <h3 style={{ marginTop: 16 }}>בתים</h3>
-          <ul style={{ columns: 2, marginTop: 8 }}>
-            {result.houses.map((h) => {
-              const houseDisplay = houseFormat === "roman" ? toRoman(h.house) : h.house;
-              return (
-                <li key={h.house}>בית {houseDisplay}: {h.signGlyph} {h.signName} {h.degOnlyText}</li>
-              );
-            })}
-          </ul>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginTop: 16 }}>
+            <div>
+              <h3 style={{ marginTop: 0 }}>כוכבים</h3>
+              <ul style={{ marginTop: 8 }}>
+                {result.planets.map((p) => {
+                  const houseDisplay = houseFormat === "roman" 
+                    ? toRoman(p.house || 1) 
+                    : `בבית ${p.house || "?"}`;
+                  return (
+                    <li key={p.key}>
+                      {p.nameHe}: {p.signGlyph} {p.signName} {p.degOnlyText} {houseDisplay}{p.retro ? " ℞" : ""}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
 
-          <h3 style={{ marginTop: 16 }}>כוכבים</h3>
-          <ul style={{ columns: 2, marginTop: 8 }}>
-            {result.planets.map((p) => {
-              const houseDisplay = houseFormat === "roman" 
-                ? toRoman(p.house || 1) 
-                : `בבית ${p.house || "?"}`;
-              return (
-                <li key={p.key}>
-                  {p.nameHe}: {p.signGlyph} {p.signName} {p.degOnlyText} {houseDisplay}{p.retro ? " ℞" : ""}
-                </li>
-              );
-            })}
-          </ul>
+            <div>
+              <h3 style={{ marginTop: 0 }}>בתים</h3>
+              <ul style={{ marginTop: 8 }}>
+                {result.houses.map((h) => {
+                  const houseDisplay = houseFormat === "roman" ? toRoman(h.house) : h.house;
+                  return (
+                    <li key={h.house}>בית {houseDisplay}: {h.signGlyph} {h.signName} {h.degOnlyText}</li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
 
           {/* יסודות ואיכויות */}
           <div style={{ marginTop: 24 }}>
