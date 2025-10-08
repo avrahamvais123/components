@@ -187,18 +187,49 @@ const normalizePlanetKey = (k) =>
     .trim()
     .toLowerCase();
 
+// חישוב בית של פלנטה
+function findHouseForPlanet(planetDeg, houses) {
+  if (!houses || houses.length === 0) return null;
+  
+  for (let i = 0; i < houses.length; i++) {
+    const currentHouse = houses[i];
+    const nextHouse = houses[(i + 1) % houses.length];
+    
+    const start = currentHouse.deg;
+    let end = nextHouse.deg;
+    
+    // טיפול במעבר דרך 0 מעלות
+    if (end < start) {
+      end += 360;
+    }
+    
+    let normalizedPlanetDeg = planetDeg;
+    if (planetDeg < start && end > 360) {
+      normalizedPlanetDeg += 360;
+    }
+    
+    if (normalizedPlanetDeg >= start && normalizedPlanetDeg < end) {
+      return currentHouse.house;
+    }
+  }
+  
+  return 1; // ברירת מחדל לבית 1 אם לא נמצא
+}
+
 // פלנטות
-function extractPlanets(horoscope) {
+function extractPlanets(horoscope, houses = []) {
   const all = horoscope?.CelestialBodies?.all;
   if (Array.isArray(all) && all.length) {
     return all.map((b) => {
       const deg = readDegrees(b) ?? 0;
       const keyNorm = normalizePlanetKey(b.key || b.name || "body");
       const nameHe = PLANET_NAMES_HE[keyNorm] || b.key || b.name || "פלנטה";
+      const house = findHouseForPlanet(deg, houses);
       return {
         key: keyNorm,
         nameHe,
         deg,
+        house,
         signIndex: signIndex(deg),
         signName: signNameOf(deg),
         signGlyph: signGlyphOf(deg),
@@ -222,10 +253,12 @@ function extractPlanets(horoscope) {
       readDegrees(body) ??
       (typeof body?.longitude === "number" ? body.longitude : 0);
     const retro = !!(body?.isRetrograde || body?.retrograde);
+    const house = findHouseForPlanet(deg, houses);
     return {
       key,
       nameHe: PLANET_NAMES_HE[key] || key,
       deg,
+      house,
       signIndex: signIndex(deg),
       signName: signNameOf(deg),
       signGlyph: signGlyphOf(deg),
@@ -492,7 +525,7 @@ export default function useAstroCalc() {
 
         const angles = extractAngles(horoscope);
         const houses = extractHouses(horoscope);
-        const planets = extractPlanets(horoscope);
+        const planets = extractPlanets(horoscope, houses);
 
         let aspectsOut = [];
         if (aspectMode === "degree")

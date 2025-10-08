@@ -30,6 +30,31 @@ const ASPECT_COLORS = {
 const PERSONAL = new Set(["sun","moon","mercury","venus","mars"]);
 const GENERATIONAL = new Set(["jupiter","saturn","uranus","neptune","pluto"]);
 
+// המרת מספרים לספרות רומיות
+function toRoman(num) {
+  const romanNumerals = [
+    { value: 12, symbol: 'XII' },
+    { value: 11, symbol: 'XI' },
+    { value: 10, symbol: 'X' },
+    { value: 9, symbol: 'IX' },
+    { value: 8, symbol: 'VIII' },
+    { value: 7, symbol: 'VII' },
+    { value: 6, symbol: 'VI' },
+    { value: 5, symbol: 'V' },
+    { value: 4, symbol: 'IV' },
+    { value: 3, symbol: 'III' },
+    { value: 2, symbol: 'II' },
+    { value: 1, symbol: 'I' }
+  ];
+  
+  for (const numeral of romanNumerals) {
+    if (num === numeral.value) {
+      return numeral.symbol;
+    }
+  }
+  return num.toString(); // fallback
+}
+
 export default function AstroPage() {
   const [form, setForm] = useState({
     date: "2010-03-16",
@@ -42,6 +67,7 @@ export default function AstroPage() {
 
   const [aspectMode, setAspectMode] = useState("sign");
   const [orb, setOrb] = useState(7);
+  const [houseFormat, setHouseFormat] = useState("arabic"); // arabic או roman
 
   // ✅ ברירת מחדל: 5 אישיות
   const [profileKeys, setProfileKeys] = useState([...PROFILE_DEFAULT_INCLUDE]);
@@ -159,6 +185,12 @@ export default function AstroPage() {
           <input type="number" step="0.1" value={orb} onChange={(e) => setOrb(parseFloat(e.target.value))}
                  disabled={aspectMode !== "degree"} style={{ width: "100%" }}/>
         </label>
+        <label>פורמט בתים
+          <select value={houseFormat} onChange={(e) => setHouseFormat(e.target.value)} style={{ width: "100%" }}>
+            <option value="arabic">מספרים רגילים (1, 2, 3...)</option>
+            <option value="roman">ספרות רומיות (I, II, III...)</option>
+          </select>
+        </label>
       </div>
 
       {/* בחירת פלנטות לפרופיל יסודות/איכויות */}
@@ -197,18 +229,26 @@ export default function AstroPage() {
 
           <h3 style={{ marginTop: 16 }}>בתים</h3>
           <ul style={{ columns: 2, marginTop: 8 }}>
-            {result.houses.map((h) => (
-              <li key={h.house}>בית {h.house}: {h.signGlyph} {h.signName} {h.degOnlyText}</li>
-            ))}
+            {result.houses.map((h) => {
+              const houseDisplay = houseFormat === "roman" ? toRoman(h.house) : h.house;
+              return (
+                <li key={h.house}>בית {houseDisplay}: {h.signGlyph} {h.signName} {h.degOnlyText}</li>
+              );
+            })}
           </ul>
 
           <h3 style={{ marginTop: 16 }}>כוכבים</h3>
           <ul style={{ columns: 2, marginTop: 8 }}>
-            {result.planets.map((p) => (
-              <li key={p.key}>
-                {p.nameHe}: {p.signGlyph} {p.signName} {p.degOnlyText}{p.retro ? " ℞" : ""}
-              </li>
-            ))}
+            {result.planets.map((p) => {
+              const houseDisplay = houseFormat === "roman" 
+                ? toRoman(p.house || 1) 
+                : `בבית ${p.house || "?"}`;
+              return (
+                <li key={p.key}>
+                  {p.nameHe}: {p.signGlyph} {p.signName} {p.degOnlyText} {houseDisplay}{p.retro ? " ℞" : ""}
+                </li>
+              );
+            })}
           </ul>
 
           {/* יסודות ואיכויות */}
