@@ -15,7 +15,7 @@ import useAstroCalc, {
 import CityCombobox from "./components/CityCombobox";
 import { watch, store as createStore } from "hyperactiv/react";
 
-const store = createStore({ counter: 0 });
+const store = createStore({ counter: 0, test: "test" });
 
 const Counter = watch(() => {
   console.log("store🔴: ", store);
