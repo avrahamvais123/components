@@ -20,7 +20,7 @@ export default function HousesTable({
           const house = getValue();
           const houseDisplay = houseFormat === "roman" ? toRoman(house) : house;
           return (
-            <span style={{ fontWeight: 500 }}>בית {houseDisplay}</span>
+            <span className="font-medium">בית {houseDisplay}</span>
           );
         },
       },
@@ -28,9 +28,9 @@ export default function HousesTable({
         accessorKey: 'sign',
         header: 'מזל',
         cell: ({ row }) => (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-            <span style={{ fontSize: 16 }}>{row.original.signGlyph}</span>
-            <span style={{ fontSize: 14 }}>{row.original.signName}</span>
+          <div className="flex items-center justify-center gap-1">
+            <span className="text-base">{row.original.signGlyph}</span>
+            <span className="text-sm">{row.original.signName}</span>
           </div>
         ),
       },
@@ -38,9 +38,7 @@ export default function HousesTable({
         accessorKey: 'degOnlyText',
         header: 'מעלות',
         cell: ({ getValue }) => (
-          <span style={{ 
-            fontFamily: 'monospace'
-          }}>
+          <span className="font-mono text-sm">
             {getValue()}
           </span>
         ),

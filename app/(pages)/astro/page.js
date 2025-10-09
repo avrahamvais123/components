@@ -75,27 +75,19 @@ export default function AstroPage() {
   }, [result]);
 
   const Bar = ({ color, percent, label, count }) => (
-    <div style={{ marginBottom: 8 }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: 13,
-          marginBottom: 4,
-        }}
-      >
+    <div className="mb-2">
+      <div className="flex justify-between text-xs mb-1">
         <span>{label}</span>
         <span>
           {count} • {percent}%
         </span>
       </div>
-      <div style={{ height: 8, background: "#f3f4f6", borderRadius: 999 }}>
+      <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full">
         <div
+          className="h-full rounded-full transition-all duration-300"
           style={{
             width: `${percent}%`,
-            height: "100%",
-            background: color,
-            borderRadius: 999,
+            backgroundColor: color,
           }}
         />
       </div>
@@ -105,14 +97,11 @@ export default function AstroPage() {
   return (
     <main
       dir="rtl"
-      style={{
-        padding: 24,
-        maxWidth: 880,
-        margin: "0 auto",
-        fontFamily: "system-ui, sans-serif",
-      }}
+      className="p-6 max-w-4xl mx-auto font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200"
     >
-      <h1 style={{ marginBottom: 12 }}>מחשבון מזלות + היבטים 💫</h1>
+      <h1 className="mb-3 text-3xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        מחשבון מזלות + היבטים 💫
+      </h1>
 
       <AstroForm
         form={form}
@@ -131,28 +120,25 @@ export default function AstroPage() {
       />
 
       {result && (
-        <section style={{ marginTop: 24 }}>
-          <h2>תוצאות ✨</h2>
+        <section className="mt-6">
+          <h2 className="text-2xl font-bold mb-4 text-center">תוצאות ✨</h2>
 
-          <p>
-            <b>אופק (ASC):</b> {result.angles.ascendant.signGlyph}{" "}
-            {result.angles.ascendant.signName}{" "}
-            {result.angles.ascendant.degOnlyText}
-          </p>
-          <p>
-            <b>MC:</b> {result.angles.midheaven.signGlyph}{" "}
-            {result.angles.midheaven.signName}{" "}
-            {result.angles.midheaven.degOnlyText}
-          </p>
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-4 rounded-lg mb-4 border border-blue-200 dark:border-blue-700">
+            <p className="mb-2">
+              <span className="font-bold text-blue-700 dark:text-blue-300">אופק (ASC):</span>{" "}
+              <span className="font-mono">{result.angles.ascendant.signGlyph}</span>{" "}
+              {result.angles.ascendant.signName}{" "}
+              {result.angles.ascendant.degOnlyText}
+            </p>
+            <p>
+              <span className="font-bold text-purple-700 dark:text-purple-300">MC:</span>{" "}
+              <span className="font-mono">{result.angles.midheaven.signGlyph}</span>{" "}
+              {result.angles.midheaven.signName}{" "}
+              {result.angles.midheaven.degOnlyText}
+            </p>
+          </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 24,
-              marginTop: 16,
-            }}
-          >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
             <PlanetsTable
               planets={result.planets}
               houseFormat={houseFormat}
@@ -167,32 +153,23 @@ export default function AstroPage() {
           </div>
 
           {/* יסודות ואיכויות */}
-          <div style={{ marginTop: 24 }}>
-            <h3>
-              יסודות ואיכויות (נלקחו בחשבון:{" "}
-              {result.profile.considered
-                .map((k) => PLANET_NAMES_HE[k])
-                .join(", ") || "—"}
-              )
+          <div className="mt-6">
+            <h3 className="text-xl font-bold mb-4 text-center">
+              יסודות ואיכויות 🌟
+              <span className="block text-sm font-normal text-gray-600 dark:text-gray-400 mt-1">
+                נלקחו בחשבון:{" "}
+                {result.profile.considered
+                  .map((k) => PLANET_NAMES_HE[k])
+                  .join(", ") || "—"}
+              </span>
             </h3>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 16,
-                marginTop: 8,
-              }}
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
               {/* יסודות */}
-              <div
-                style={{
-                  border: "1px solid #eee",
-                  borderRadius: 12,
-                  padding: 12,
-                }}
-              >
-                <h4 style={{ marginTop: 0, marginBottom: 8 }}>יסודות</h4>
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                <h4 className="mt-0 mb-3 text-lg font-semibold flex items-center gap-2">
+                  🔥 יסודות
+                </h4>
                 {ELEMENT_KEYS.map((k) => (
                   <Bar
                     key={k}
@@ -203,8 +180,8 @@ export default function AstroPage() {
                   />
                 ))}
                 {result.profile.elements.missing.length > 0 && (
-                  <div style={{ marginTop: 8, fontSize: 13, color: "#991b1b" }}>
-                    חסרים:{" "}
+                  <div className="mt-3 text-xs text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded-lg">
+                    ❌ חסרים:{" "}
                     {result.profile.elements.missing
                       .map((k) => ELEMENT_NAMES[k])
                       .join(" · ")}
@@ -213,14 +190,10 @@ export default function AstroPage() {
               </div>
 
               {/* איכויות */}
-              <div
-                style={{
-                  border: "1px solid #eee",
-                  borderRadius: 12,
-                  padding: 12,
-                }}
-              >
-                <h4 style={{ marginTop: 0, marginBottom: 8 }}>איכויות</h4>
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                <h4 className="mt-0 mb-3 text-lg font-semibold flex items-center gap-2">
+                  ⚡ איכויות
+                </h4>
                 {QUALITY_KEYS.map((k) => (
                   <Bar
                     key={k}
@@ -231,8 +204,8 @@ export default function AstroPage() {
                   />
                 ))}
                 {result.profile.qualities.missing.length > 0 && (
-                  <div style={{ marginTop: 8, fontSize: 13, color: "#991b1b" }}>
-                    חסרים:{" "}
+                  <div className="mt-3 text-xs text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded-lg">
+                    ❌ חסרים:{" "}
                     {result.profile.qualities.missing
                       .map((k) => QUALITY_NAMES[k])
                       .join(" · ")}
@@ -241,8 +214,8 @@ export default function AstroPage() {
               </div>
             </div>
 
-            <div style={{ marginTop: 8, fontSize: 12, color: "#6b7280" }}>
-              * ברירת מחדל לחישוב: 5 הפלנטות האישיות (ניתן לשנות למעלה).
+            <div className="mt-3 text-xs text-gray-600 dark:text-gray-400 text-center bg-gray-50 dark:bg-gray-800/50 p-2 rounded-lg">
+              💡 ברירת מחדל לחישוב: 5 הפלנטות האישיות (ניתן לשנות למעלה)
             </div>
           </div>
 

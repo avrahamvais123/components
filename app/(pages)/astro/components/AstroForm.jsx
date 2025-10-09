@@ -32,79 +32,15 @@ export default function AstroForm({
   const clearAll = () => setProfileKeys([]);
   const setDefault = () => setProfileKeys([...PROFILE_DEFAULT_INCLUDE]);
 
-  // סגנונות דינמיים
-  const formStyles = {
-    container: {
-      background: isDark ? "#1f2937" : "#ffffff",
-      border: `1px solid ${tableColors.border}`,
-      borderRadius: 16,
-      padding: 20,
-      boxShadow: tableColors.boxShadow,
-      marginBottom: 20,
-    },
-    label: {
-      display: "block",
-      marginBottom: 8,
-      fontWeight: 600,
-      fontSize: 14,
-      color: tableColors.textPrimary,
-    },
-    input: {
-      width: "100%",
-      padding: "12px 16px",
-      border: `2px solid ${isDark ? "#374151" : "#e5e7eb"}`,
-      borderRadius: 12,
-      fontSize: 14,
-      backgroundColor: isDark ? "#111827" : "#ffffff",
-      color: tableColors.textPrimary,
-      transition: "all 0.2s ease",
-      outline: "none",
-    },
-    inputFocus: {
-      borderColor: isDark ? "#6366f1" : "#3b82f6",
-      boxShadow: `0 0 0 3px ${isDark ? "rgba(99, 102, 241, 0.1)" : "rgba(59, 130, 246, 0.1)"}`,
-    },
-    select: {
-      width: "100%",
-      padding: "12px 16px",
-      border: `2px solid ${isDark ? "#374151" : "#e5e7eb"}`,
-      borderRadius: 12,
-      fontSize: 14,
-      backgroundColor: isDark ? "#111827" : "#ffffff",
-      color: tableColors.textPrimary,
-      cursor: "pointer",
-      outline: "none",
-    },
-    gridContainer: {
-      display: "grid",
-      gap: 16,
-      gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    },
-    sectionTitle: {
-      margin: 0,
-      marginBottom: 16,
-      fontSize: 18,
-      fontWeight: 700,
-      color: tableColors.textPrimary,
-      borderBottom: `2px solid ${isDark ? "#374151" : "#e5e7eb"}`,
-      paddingBottom: 8,
-    },
-    citySection: {
-      background: isDark ? "#111827" : "#f8fafc",
-      border: `1px solid ${tableColors.border}`,
-      borderRadius: 12,
-      padding: 16,
-      marginBottom: 20,
-    }
-  };
-
   return (
-    <div style={formStyles.container}>
-      <h2 style={formStyles.sectionTitle}>⚙️ הגדרות חישוב</h2>
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-lg dark:shadow-2xl mb-6 transition-all duration-200">
+      <h2 className="text-xl font-bold mb-4 pb-2 border-b-2 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100">
+        ⚙️ הגדרות חישוב
+      </h2>
       
       {/* בחירת עיר */}
-      <div style={formStyles.citySection}>
-        <label style={formStyles.label}>
+      <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-6">
+        <label className="block mb-2 font-semibold text-sm text-gray-900 dark:text-gray-100">
           📍 בחר/י עיר
         </label>
         <CityCombobox
@@ -117,82 +53,84 @@ export default function AstroForm({
       </div>
 
       {/* נתונים בסיסיים */}
-      <div style={{ marginBottom: 24 }}>
-        <h3 style={{ ...formStyles.sectionTitle, fontSize: 16, marginBottom: 12 }}>
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">
           📅 נתונים בסיסיים
         </h3>
-        <div style={formStyles.gridContainer}>
-          <label style={formStyles.label}>
-            🗓️ תאריך לידה
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <label className="block">
+            <span className="block mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
+              🗓️ תאריך לידה
+            </span>
             <input
               name="date"
               type="date"
               value={form.date}
               onChange={onChange}
-              style={formStyles.input}
-              onFocus={(e) => Object.assign(e.target.style, formStyles.inputFocus)}
-              onBlur={(e) => Object.assign(e.target.style, formStyles.input)}
+              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-all duration-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
             />
           </label>
           
-          <label style={formStyles.label}>
-            🕐 שעת לידה
+          <label className="block">
+            <span className="block mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
+              🕐 שעת לידה
+            </span>
             <input
               name="time"
               type="time"
               value={form.time}
               onChange={onChange}
-              style={formStyles.input}
-              onFocus={(e) => Object.assign(e.target.style, formStyles.inputFocus)}
-              onBlur={(e) => Object.assign(e.target.style, formStyles.input)}
+              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-all duration-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
             />
           </label>
           
-          <label style={formStyles.label}>
-            🌍 קו רוחב
+          <label className="block">
+            <span className="block mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
+              🌍 קו רוחב
+            </span>
             <input
               name="lat"
               type="number"
               step="0.0001"
               value={form.lat}
               onChange={onChangeNum}
-              style={formStyles.input}
               placeholder="32.0853"
-              onFocus={(e) => Object.assign(e.target.style, formStyles.inputFocus)}
-              onBlur={(e) => Object.assign(e.target.style, formStyles.input)}
+              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-all duration-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
             />
           </label>
           
-          <label style={formStyles.label}>
-            🗺️ קו אורך
+          <label className="block">
+            <span className="block mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
+              🗺️ קו אורך
+            </span>
             <input
               name="lon"
               type="number"
               step="0.0001"
               value={form.lon}
               onChange={onChangeNum}
-              style={formStyles.input}
               placeholder="34.7818"
-              onFocus={(e) => Object.assign(e.target.style, formStyles.inputFocus)}
-              onBlur={(e) => Object.assign(e.target.style, formStyles.input)}
+              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-all duration-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
             />
           </label>
         </div>
       </div>
 
       {/* הגדרות מתקדמות */}
-      <div style={{ marginBottom: 24 }}>
-        <h3 style={{ ...formStyles.sectionTitle, fontSize: 16, marginBottom: 12 }}>
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">
           ⚙️ הגדרות מתקדמות
         </h3>
-        <div style={formStyles.gridContainer}>
-          <label style={formStyles.label}>
-            🏠 שיטת בתים
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <label className="block">
+            <span className="block mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
+              🏠 שיטת בתים
+            </span>
             <select
               name="houseSystem"
               value={form.houseSystem}
               onChange={onChange}
-              style={formStyles.select}
+              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 cursor-pointer outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
             >
               <option value="placidus">Placidus</option>
               <option value="koch">Koch</option>
@@ -201,25 +139,29 @@ export default function AstroForm({
             </select>
           </label>
           
-          <label style={formStyles.label}>
-            ♈ זודיאק
+          <label className="block">
+            <span className="block mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
+              ♈ זודיאק
+            </span>
             <select
               name="zodiac"
               value={form.zodiac}
               onChange={onChange}
-              style={formStyles.select}
+              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 cursor-pointer outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
             >
               <option value="tropical">Tropical</option>
               <option value="sidereal">Sidereal</option>
             </select>
           </label>
           
-          <label style={formStyles.label}>
-            🔗 מצב היבטים
+          <label className="block">
+            <span className="block mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
+              🔗 מצב היבטים
+            </span>
             <select
               value={aspectMode}
               onChange={(e) => setAspectMode(e.target.value)}
-              style={formStyles.select}
+              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 cursor-pointer outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
             >
               <option value="degree">לפי מעלות (עם אורב)</option>
               <option value="sign">לפי מזלות בלבד</option>
@@ -227,31 +169,33 @@ export default function AstroForm({
             </select>
           </label>
           
-          <label style={formStyles.label}>
-            📐 אורב (מעלות) {aspectMode !== "degree" ? "— לא בשימוש" : ""}
+          <label className="block">
+            <span className="block mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
+              📐 אורב (מעלות) {aspectMode !== "degree" ? "— לא בשימוש" : ""}
+            </span>
             <input
               type="number"
               step="0.1"
               value={orb}
               onChange={(e) => setOrb(parseFloat(e.target.value))}
               disabled={aspectMode !== "degree"}
-              style={{
-                ...formStyles.input,
-                opacity: aspectMode !== "degree" ? 0.5 : 1,
-                cursor: aspectMode !== "degree" ? "not-allowed" : "text"
-              }}
               placeholder="7.0"
-              onFocus={(e) => aspectMode === "degree" && Object.assign(e.target.style, formStyles.inputFocus)}
-              onBlur={(e) => Object.assign(e.target.style, formStyles.input)}
+              className={`w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-all duration-200 outline-none ${
+                aspectMode !== "degree" 
+                  ? "opacity-50 cursor-not-allowed" 
+                  : "focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 cursor-text"
+              }`}
             />
           </label>
           
-          <label style={formStyles.label}>
-            🔢 פורמט בתים
+          <label className="block">
+            <span className="block mb-2 font-medium text-sm text-gray-700 dark:text-gray-300">
+              🔢 פורמט בתים
+            </span>
             <select
               value={houseFormat}
               onChange={(e) => setHouseFormat(e.target.value)}
-              style={formStyles.select}
+              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 cursor-pointer outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
             >
               <option value="arabic">מספרים רגילים (1, 2, 3...)</option>
               <option value="roman">ספרות רומיות (I, II, III...)</option>
@@ -261,153 +205,54 @@ export default function AstroForm({
       </div>
 
       {/* בחירת פלנטות לפרופיל יסודות/איכויות */}
-      <div style={{ marginBottom: 24 }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 16,
-          }}
-        >
-          <h3 style={{ ...formStyles.sectionTitle, fontSize: 16, margin: 0, border: "none", padding: 0 }}>
+      <div className="mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             🪐 פלנטות לחישוב יסודות/איכויות
           </h3>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div className="flex flex-wrap gap-2">
             <button 
               onClick={setDefault} 
-              style={{
-                padding: "8px 12px",
-                borderRadius: 8,
-                border: `1px solid ${isDark ? "#374151" : "#d1d5db"}`,
-                backgroundColor: isDark ? "#374151" : "#f9fafb",
-                color: tableColors.textPrimary,
-                cursor: "pointer",
-                fontSize: 12,
-                fontWeight: 500,
-                transition: "all 0.2s ease",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.backgroundColor = isDark ? "#4b5563" : "#f3f4f6";
-                e.target.style.transform = "translateY(-1px)";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.backgroundColor = isDark ? "#374151" : "#f9fafb";
-                e.target.style.transform = "translateY(0)";
-              }}
+              className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer text-xs font-medium transition-all duration-200 hover:bg-gray-200 dark:hover:bg-gray-600 hover:-translate-y-0.5 active:translate-y-0"
             >
               ⭐ ברירת מחדל
             </button>
             <button 
               onClick={selectAll} 
-              style={{
-                padding: "8px 12px",
-                borderRadius: 8,
-                border: `1px solid ${isDark ? "#059669" : "#10b981"}`,
-                backgroundColor: isDark ? "#059669" : "#10b981",
-                color: "#ffffff",
-                cursor: "pointer",
-                fontSize: 12,
-                fontWeight: 500,
-                transition: "all 0.2s ease",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.backgroundColor = isDark ? "#047857" : "#059669";
-                e.target.style.transform = "translateY(-1px)";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.backgroundColor = isDark ? "#059669" : "#10b981";
-                e.target.style.transform = "translateY(0)";
-              }}
+              className="px-3 py-2 rounded-lg border border-emerald-500 bg-emerald-500 text-white cursor-pointer text-xs font-medium transition-all duration-200 hover:bg-emerald-600 hover:-translate-y-0.5 active:translate-y-0"
             >
               ✅ בחר הכל
             </button>
             <button 
               onClick={clearAll} 
-              style={{
-                padding: "8px 12px",
-                borderRadius: 8,
-                border: `1px solid ${isDark ? "#dc2626" : "#ef4444"}`,
-                backgroundColor: isDark ? "#dc2626" : "#ef4444",
-                color: "#ffffff",
-                cursor: "pointer",
-                fontSize: 12,
-                fontWeight: 500,
-                transition: "all 0.2s ease",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.backgroundColor = isDark ? "#b91c1c" : "#dc2626";
-                e.target.style.transform = "translateY(-1px)";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.backgroundColor = isDark ? "#dc2626" : "#ef4444";
-                e.target.style.transform = "translateY(0)";
-              }}
+              className="px-3 py-2 rounded-lg border border-red-500 bg-red-500 text-white cursor-pointer text-xs font-medium transition-all duration-200 hover:bg-red-600 hover:-translate-y-0.5 active:translate-y-0"
             >
               ❌ נקה הכל
             </button>
           </div>
         </div>
         
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-            gap: 12,
-            background: isDark ? "#111827" : "#f8fafc",
-            border: `1px solid ${tableColors.border}`,
-            borderRadius: 12,
-            padding: 16,
-          }}
-        >
+        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
           {PROFILE_ALL_KEYS.map((k) => (
             <label
               key={k}
-              style={{ 
-                display: "flex", 
-                gap: 8, 
-                alignItems: "center",
-                padding: "8px 12px",
-                borderRadius: 8,
-                backgroundColor: profileKeys.includes(k) 
-                  ? (isDark ? "#1f2937" : "#ffffff")
-                  : "transparent",
-                border: profileKeys.includes(k)
-                  ? `2px solid ${isDark ? "#3b82f6" : "#2563eb"}`
-                  : `2px solid transparent`,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                userSelect: "none",
-              }}
-              onMouseOver={(e) => {
-                if (!profileKeys.includes(k)) {
-                  e.target.style.backgroundColor = isDark ? "#1f2937" : "#ffffff";
-                  e.target.style.borderColor = isDark ? "#4b5563" : "#d1d5db";
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!profileKeys.includes(k)) {
-                  e.target.style.backgroundColor = "transparent";
-                  e.target.style.borderColor = "transparent";
-                }
-              }}
+              className={`flex gap-2 items-center p-2 rounded-lg cursor-pointer transition-all duration-200 select-none
+                ${profileKeys.includes(k) 
+                  ? "bg-white dark:bg-gray-800 border-2 border-blue-500 shadow-sm" 
+                  : "border-2 border-transparent hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600"
+                }`}
             >
               <input
                 type="checkbox"
                 checked={profileKeys.includes(k)}
                 onChange={() => toggleKey(k)}
-                style={{
-                  width: 16,
-                  height: 16,
-                  accentColor: isDark ? "#3b82f6" : "#2563eb",
-                  cursor: "pointer"
-                }}
+                className="w-4 h-4 accent-blue-500 cursor-pointer"
               />
-              <span style={{ 
-                fontSize: 14, 
-                fontWeight: profileKeys.includes(k) ? 600 : 400,
-                color: tableColors.textPrimary
-              }}>
+              <span className={`text-sm transition-colors duration-200 ${
+                profileKeys.includes(k) 
+                  ? "font-semibold text-gray-900 dark:text-gray-100" 
+                  : "font-normal text-gray-700 dark:text-gray-300"
+              }`}>
                 {PLANET_NAMES_HE[k]}
               </span>
             </label>
@@ -415,15 +260,23 @@ export default function AstroForm({
         </div>
       </div>
 
-      <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
+      <div className="mt-4 flex flex-col sm:flex-row gap-3">
         <button
           onClick={onSubmit}
           disabled={loading}
-          style={{ padding: "10px 14px", fontWeight: 600 }}
+          className={`px-6 py-3 font-semibold rounded-xl transition-all duration-200 ${
+            loading
+              ? "bg-gray-400 dark:bg-gray-600 text-gray-100 cursor-not-allowed"
+              : "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+          }`}
         >
-          {loading ? "מחשב/ת…" : "חשב/י מפה 🚀"}
+          {loading ? "מחשב/ת… ⏳" : "חשב/י מפה 🚀"}
         </button>
-        {error && <span style={{ color: "crimson" }}>⚠️ {error}</span>}
+        {error && (
+          <div className="flex items-center px-4 py-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm">
+            ⚠️ {error}
+          </div>
+        )}
       </div>
     </div>
   );
