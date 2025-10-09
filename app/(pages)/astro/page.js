@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import useAstroCalc, {
   ELEMENT_KEYS,
   ELEMENT_NAMES,
@@ -8,14 +8,18 @@ import useAstroCalc, {
   QUALITY_KEYS,
   QUALITY_NAMES,
   QUALITY_COLORS,
-  PROFILE_ALL_KEYS,
   PROFILE_DEFAULT_INCLUDE,
   PLANET_NAMES_HE,
 } from "./hooks/useAstroCalc";
-import CityCombobox from "./components/CityCombobox";
 import { watch, store as createStore } from "hyperactiv/react";
+import { useTheme } from "./hooks/useTheme";
+import { PERSONAL, GENERATIONAL } from "./utils/constants";
+import AstroForm from "./components/AstroForm";
+import PlanetsTable from "./components/PlanetsTable";
+import HousesTable from "./components/HousesTable";
+import AspectsTable from "./components/AspectsTable";
 
-const store = createStore({ counter: 0, test: "test" });
+/* const store = createStore({ counter: 0, test: "test" });
 
 const Counter = watch(() => {
   console.log("store🔴: ", store);
@@ -26,67 +30,10 @@ const Counter = watch(() => {
       <button onClick={() => (store.counter += 1)}>Click me</button>
     </div>
   );
-});
-
-function labelAspect(type) {
-  const map = {
-    conjunction: "צמידות",
-    semisextile: "חצי־שישית (30°)",
-    sextile: "שישית (60°)",
-    square: "ריבוע (90°)",
-    trine: "טריין (120°)",
-    quincunx: "קווינקנקס (150°)",
-    opposition: "מולות (180°)",
-  };
-  return map[type] || type;
-}
-
-const ASPECT_COLORS = {
-  conjunction: "#6b7280",
-  semisextile: "#f59e0b",
-  sextile: "#16a34a",
-  square: "#ef4444",
-  trine: "#0ea5e9",
-  quincunx: "#14b8a6",
-  opposition: "#8b5cf6",
-};
-
-const PERSONAL = new Set(["sun", "moon", "mercury", "venus", "mars"]);
-const GENERATIONAL = new Set([
-  "jupiter",
-  "saturn",
-  "uranus",
-  "neptune",
-  "pluto",
-]);
-
-// המרת מספרים לספרות רומיות
-function toRoman(num) {
-  const romanNumerals = [
-    { value: 12, symbol: "XII" },
-    { value: 11, symbol: "XI" },
-    { value: 10, symbol: "X" },
-    { value: 9, symbol: "IX" },
-    { value: 8, symbol: "VIII" },
-    { value: 7, symbol: "VII" },
-    { value: 6, symbol: "VI" },
-    { value: 5, symbol: "V" },
-    { value: 4, symbol: "IV" },
-    { value: 3, symbol: "III" },
-    { value: 2, symbol: "II" },
-    { value: 1, symbol: "I" },
-  ];
-
-  for (const numeral of romanNumerals) {
-    if (num === numeral.value) {
-      return numeral.symbol;
-    }
-  }
-  return num.toString(); // fallback
-}
+}); */
 
 export default function AstroPage() {
-  console.log("store: ", store);
+  const { isDark, tableColors } = useTheme();
 
   const [form, setForm] = useState({
     date: "2010-03-16",
@@ -105,19 +52,6 @@ export default function AstroPage() {
   const [profileKeys, setProfileKeys] = useState([...PROFILE_DEFAULT_INCLUDE]);
 
   const { calc, loading, error, result } = useAstroCalc();
-
-  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const onChangeNum = (e) =>
-    setForm({ ...form, [e.target.name]: parseFloat(e.target.value) });
-
-  const toggleKey = (k) => {
-    setProfileKeys((prev) =>
-      prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]
-    );
-  };
-  const selectAll = () => setProfileKeys([...PROFILE_ALL_KEYS]);
-  const clearAll = () => setProfileKeys([]);
-  const setDefault = () => setProfileKeys([...PROFILE_DEFAULT_INCLUDE]);
 
   const run = () =>
     calc(form, {
@@ -139,22 +73,6 @@ export default function AstroPage() {
     }
     return { personalsInvolved, generationalOnly };
   }, [result]);
-
-  const AspectItem = ({ a }) => {
-    const color = ASPECT_COLORS[a.type] || "#000";
-    return (
-      <li>
-        {a.aInfo.nameHe} ({a.aInfo.glyph} {a.aInfo.sign} {a.aInfo.degOnlyText}){" "}
-        <span style={{ color, fontWeight: 700 }}>↔</span> {a.bInfo.nameHe} (
-        {a.bInfo.glyph} {a.bInfo.sign} {a.bInfo.degOnlyText}) —{" "}
-        <b style={{ color }}>
-          {labelAspect(a.type)}
-          {a.type === "conjunction" ? " (0°)" : ""}
-        </b>
-        {a.mode === "degree" ? ` (אורב ${a.orb}°)` : ""}
-      </li>
-    );
-  };
 
   const Bar = ({ color, percent, label, count }) => (
     <div style={{ marginBottom: 8 }}>
@@ -196,200 +114,21 @@ export default function AstroPage() {
     >
       <h1 style={{ marginBottom: 12 }}>מחשבון מזלות + היבטים 💫</h1>
 
-      <Counter />
-
-      {/* בחירת עיר */}
-      <div style={{ marginBottom: 12 }}>
-        <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
-          בחר/י עיר
-        </label>
-        <CityCombobox
-          language="he"
-          limit={8}
-          onSelect={(place) =>
-            setForm((f) => ({ ...f, lat: place.lat, lon: place.lon }))
-          }
-        />
-      </div>
-
-      {/* טופס */}
-      <div
-        style={{
-          display: "grid",
-          gap: 10,
-          gridTemplateColumns: "1fr 1fr",
-          alignItems: "center",
-        }}
-      >
-        <label>
-          תאריך לידה
-          <input
-            name="date"
-            type="date"
-            value={form.date}
-            onChange={onChange}
-            style={{ width: "100%" }}
-          />
-        </label>
-        <label>
-          שעת לידה
-          <input
-            name="time"
-            type="time"
-            value={form.time}
-            onChange={onChange}
-            style={{ width: "100%" }}
-          />
-        </label>
-        <label>
-          קו רוחב
-          <input
-            name="lat"
-            type="number"
-            step="0.0001"
-            value={form.lat}
-            onChange={onChangeNum}
-            style={{ width: "100%" }}
-          />
-        </label>
-        <label>
-          קו אורך
-          <input
-            name="lon"
-            type="number"
-            step="0.0001"
-            value={form.lon}
-            onChange={onChangeNum}
-            style={{ width: "100%" }}
-          />
-        </label>
-        <label>
-          שיטת בתים
-          <select
-            name="houseSystem"
-            value={form.houseSystem}
-            onChange={onChange}
-            style={{ width: "100%" }}
-          >
-            <option value="placidus">Placidus</option>
-            <option value="koch">Koch</option>
-            <option value="equal-house">Equal</option>
-            <option value="whole-sign">Whole Sign</option>
-          </select>
-        </label>
-        <label>
-          זודיאק
-          <select
-            name="zodiac"
-            value={form.zodiac}
-            onChange={onChange}
-            style={{ width: "100%" }}
-          >
-            <option value="tropical">Tropical</option>
-            <option value="sidereal">Sidereal</option>
-          </select>
-        </label>
-
-        <label>
-          מצב היבטים
-          <select
-            value={aspectMode}
-            onChange={(e) => setAspectMode(e.target.value)}
-            style={{ width: "100%" }}
-          >
-            <option value="degree">לפי מעלות (עם אורב)</option>
-            <option value="sign">לפי מזלות בלבד</option>
-            <option value="none">ללא היבטים</option>
-          </select>
-        </label>
-        <label>
-          אורב (מעלות) {aspectMode !== "degree" ? "— לא בשימוש" : ""}
-          <input
-            type="number"
-            step="0.1"
-            value={orb}
-            onChange={(e) => setOrb(parseFloat(e.target.value))}
-            disabled={aspectMode !== "degree"}
-            style={{ width: "100%" }}
-          />
-        </label>
-        <label>
-          פורמט בתים
-          <select
-            value={houseFormat}
-            onChange={(e) => setHouseFormat(e.target.value)}
-            style={{ width: "100%" }}
-          >
-            <option value="arabic">מספרים רגילים (1, 2, 3...)</option>
-            <option value="roman">ספרות רומיות (I, II, III...)</option>
-          </select>
-        </label>
-      </div>
-
-      {/* בחירת פלנטות לפרופיל יסודות/איכויות */}
-      <div
-        style={{
-          marginTop: 16,
-          border: "1px solid #eee",
-          borderRadius: 12,
-          padding: 12,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <h3 style={{ margin: 0 }}>פלנטות לחישוב יסודות/איכויות</h3>
-          <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={setDefault} style={{ padding: "6px 10px" }}>
-              ברירת מחדל (5 אישיות)
-            </button>
-            <button onClick={selectAll} style={{ padding: "6px 10px" }}>
-              בחר הכל
-            </button>
-            <button onClick={clearAll} style={{ padding: "6px 10px" }}>
-              נקה הכל
-            </button>
-          </div>
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(5, minmax(120px,1fr))",
-            gap: 8,
-            marginTop: 10,
-          }}
-        >
-          {PROFILE_ALL_KEYS.map((k) => (
-            <label
-              key={k}
-              style={{ display: "flex", gap: 6, alignItems: "center" }}
-            >
-              <input
-                type="checkbox"
-                checked={profileKeys.includes(k)}
-                onChange={() => toggleKey(k)}
-              />
-              <span>{PLANET_NAMES_HE[k]}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
-        <button
-          onClick={run}
-          disabled={loading}
-          style={{ padding: "10px 14px", fontWeight: 600 }}
-        >
-          {loading ? "מחשב/ת…" : "חשב/י מפה 🚀"}
-        </button>
-        {error && <span style={{ color: "crimson" }}>⚠️ {error}</span>}
-      </div>
+      <AstroForm
+        form={form}
+        setForm={setForm}
+        aspectMode={aspectMode}
+        setAspectMode={setAspectMode}
+        orb={orb}
+        setOrb={setOrb}
+        houseFormat={houseFormat}
+        setHouseFormat={setHouseFormat}
+        profileKeys={profileKeys}
+        setProfileKeys={setProfileKeys}
+        loading={loading}
+        error={error}
+        onSubmit={run}
+      />
 
       {result && (
         <section style={{ marginTop: 24 }}>
@@ -414,40 +153,17 @@ export default function AstroPage() {
               marginTop: 16,
             }}
           >
-            <div>
-              <h3 style={{ marginTop: 0 }}>כוכבים</h3>
-              <ul style={{ marginTop: 8 }}>
-                {result.planets.map((p) => {
-                  const houseDisplay =
-                    houseFormat === "roman"
-                      ? toRoman(p.house || 1)
-                      : `בבית ${p.house || "?"}`;
-                  return (
-                    <li key={p.key}>
-                      {p.nameHe}: {p.signGlyph} {p.signName} {p.degOnlyText}{" "}
-                      {houseDisplay}
-                      {p.retro ? " ℞" : ""}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            <div>
-              <h3 style={{ marginTop: 0 }}>בתים</h3>
-              <ul style={{ marginTop: 8 }}>
-                {result.houses.map((h) => {
-                  const houseDisplay =
-                    houseFormat === "roman" ? toRoman(h.house) : h.house;
-                  return (
-                    <li key={h.house}>
-                      בית {houseDisplay}: {h.signGlyph} {h.signName}{" "}
-                      {h.degOnlyText}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+            <PlanetsTable
+              planets={result.planets}
+              houseFormat={houseFormat}
+              tableColors={tableColors}
+              isDark={isDark}
+            />
+            <HousesTable
+              houses={result.houses}
+              houseFormat={houseFormat}
+              tableColors={tableColors}
+            />
           </div>
 
           {/* יסודות ואיכויות */}
@@ -533,30 +249,18 @@ export default function AstroPage() {
           {/* היבטים */}
           {result.aspects?.length > 0 && (
             <>
-              {groupedAspects.personalsInvolved.length > 0 && (
-                <>
-                  <h3 style={{ marginTop: 24 }}>
-                    היבטים – פלנטות אישיות (מול כולן)
-                  </h3>
-                  <ul style={{ marginTop: 8 }}>
-                    {groupedAspects.personalsInvolved.map((a, idx) => (
-                      <AspectItem a={a} key={`pers-${idx}`} />
-                    ))}
-                  </ul>
-                </>
-              )}
-              {groupedAspects.generationalOnly.length > 0 && (
-                <>
-                  <h3 style={{ marginTop: 16 }}>
-                    היבטים – פלנטות דוריות עם עצמן (צדק ומעלה)
-                  </h3>
-                  <ul style={{ marginTop: 8 }}>
-                    {groupedAspects.generationalOnly.map((a, idx) => (
-                      <AspectItem a={a} key={`gen-${idx}`} />
-                    ))}
-                  </ul>
-                </>
-              )}
+              <AspectsTable
+                aspects={groupedAspects.personalsInvolved}
+                title="היבטים – פלנטות אישיות (מול כולן)"
+                tableColors={tableColors}
+                isDark={isDark}
+              />
+              <AspectsTable
+                aspects={groupedAspects.generationalOnly}
+                title="היבטים – פלנטות דוריות עם עצמן (צדק ומעלה)"
+                tableColors={tableColors}
+                isDark={isDark}
+              />
             </>
           )}
         </section>
