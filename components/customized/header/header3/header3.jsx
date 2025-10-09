@@ -8,11 +8,17 @@ import MegaMenu3 from "./MegaMenu3";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import CartModal from "../cart/CartModal";
+import { watch } from "hyperactiv/react";
 
-export default function Header3() {
+function Header3() {
   const control = useHaederControl();
-  const { isOpen, openIndex, openPanel, scheduleClose, clearCloseTimer } =
-    control;
+  const {
+    isOpen,
+    openIndex,
+    openPanel,
+    scheduleClose,
+    clearCloseTimer,
+  } = control;
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-neutral-900">
@@ -58,3 +64,5 @@ export default function Header3() {
     </header>
   );
 }
+
+export default watch(Header3);

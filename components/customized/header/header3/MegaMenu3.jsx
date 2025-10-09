@@ -5,8 +5,9 @@ import { panelVariants } from "./animationConfig";
 import { cn } from "@/lib/utils";
 import MegaMenuImage from "./MegaMenuImage";
 import MegaMenueItems from "./MegaMenueItems";
+import { watch } from "hyperactiv/react";
 
-export default function MegaMenu3({ control }) {
+function MegaMenu3Component({ control }) {
   const { isOpen, setIsOpen, current, scheduleClose, clearCloseTimer } =
     control;
   const hasMenu = current?.submenu || (current?.items?.length ?? 0) > 0;
@@ -50,3 +51,5 @@ export default function MegaMenu3({ control }) {
     </AnimatePresence>
   );
 }
+
+export default watch(MegaMenu3Component);

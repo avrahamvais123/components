@@ -1,34 +1,37 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { navigationLinks } from "./navigationLinks";
+import { store as createStore } from "hyperactiv/react";
+
+const control = createStore({
+  openIndex: null,
+  isOpen: false,
+  closeTimer: null,
+});
 
 const useHaederControl = () => {
-  const [openIndex, setOpenIndex] = useState(null); // איזה טאב פתוח
-  const [isOpen, setIsOpen] = useState(false); // האם הפאנל פתוח
-  const closeTimer = useRef(null);
-
   // ביטול טיימר אם עברנו שוב
   const clearCloseTimer = () => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
+    if (control.closeTimer) {
+      clearTimeout(control.closeTimer);
+      control.closeTimer = null;
     }
   };
 
   const openPanel = (index) => {
     clearCloseTimer();
-    setOpenIndex(index);
-    setIsOpen(true);
+    control.openIndex = index;
+    control.isOpen = true;
   };
 
   // נסגר בעדינות אחרי דיליי קצר כדי למנוע "ריצודים"
   const scheduleClose = () => {
     clearCloseTimer();
-    closeTimer.current = setTimeout(() => {
-      setIsOpen(false);
+    control.closeTimer = setTimeout(() => {
+      control.isOpen = false;
       // משאירים את openIndex כדי שאם חוזרים מהר יישאר אותו תוכן; אפשר גם לאפס:
-      // setOpenIndex(null);
+      // control.openIndex = null;
     }, 140);
   };
 
@@ -36,12 +39,15 @@ const useHaederControl = () => {
     return () => clearCloseTimer();
   }, []);
 
-  const current = openIndex != null ? navigationLinks[openIndex] : null;
+  const current =
+    control.openIndex != null ? navigationLinks[control.openIndex] : null;
 
   return {
-    isOpen,
-    setIsOpen,
-    openIndex,
+    isOpen: control.isOpen,
+    setIsOpen: (value) => {
+      control.isOpen = value;
+    },
+    openIndex: control.openIndex,
     current,
     openPanel,
     scheduleClose,

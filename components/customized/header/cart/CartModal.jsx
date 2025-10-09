@@ -16,7 +16,6 @@ import {
   useSignals,
   useSignalEffect,
 } from "@preact/signals-react/runtime";
-import { deepSignal } from "deepsignal/react";
 import { ShoppingCart, Minus, Plus, Trash2, X as XIcon } from "lucide-react";
 import React from "react";
 import { signal } from "@preact/signals-react";
