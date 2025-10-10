@@ -11,6 +11,7 @@ import useAstroCalc, {
   PROFILE_DEFAULT_INCLUDE,
   PLANET_NAMES_HE,
 } from "./hooks/useAstroCalc";
+import useAstroAPI from "./hooks/useAstroAPI";
 import { watch, store as createStore } from "hyperactiv/react";
 import { useTheme } from "./hooks/useTheme";
 import { PERSONAL, GENERATIONAL } from "./utils/constants";
@@ -20,6 +21,12 @@ import HousesTable from "./components/HousesTable";
 import AspectsTable from "./components/AspectsTable";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 /* const store = createStore({ counter: 0, test: "test" });
 
@@ -33,6 +40,52 @@ const Counter = watch(() => {
     </div>
   );
 }); */
+
+const calculateChart = async () => {
+  try {
+    const response = await fetch('/api/astro/calculate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        // נתונים חובה
+        date: "2010-03-16",           // פורמט: YYYY-MM-DD
+        time: "10:00",               // פורמט: HH:MM
+        lat: 32.0853,                // קו רוחב (מספר)
+        lon: 34.7818,                // קו אורך (מספר)
+        
+        // הגדרות אופציונליות
+        houseSystem: "placidus",     // placidus, koch, equal-house, whole-sign
+        zodiac: "tropical",          // tropical, sidereal
+        aspectMode: "degree",        // none, sign, degree
+        orb: 7,                      // אורב במעלות (רק עבור aspectMode: "degree")
+        aspects: [                   // סוגי היבטים לחישוב
+          "conjunction", 
+          "sextile", 
+          "square", 
+          "trine", 
+          "opposition"
+        ],
+        profileIncludeKeys: [        // פלנטות לכלול בפרופיל
+          "sun", "moon", "mercury", "venus", "mars"
+        ]
+      }),
+    });
+
+    const data = await response.json();
+    
+    if (data.success) {
+      console.log('תוצאות המפה:', data.data);
+      return data.data;
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('שגיאה בחישוב:', error);
+    throw error;
+  }
+};
 
 export default function AstroPage() {
   const { isDark, tableColors } = useTheme();
@@ -49,11 +102,16 @@ export default function AstroPage() {
   const [aspectMode, setAspectMode] = useState("sign");
   const [orb, setOrb] = useState(7);
   const [houseFormat, setHouseFormat] = useState("arabic"); // arabic או roman
+  const [useAPI, setUseAPI] = useState(false); // בחירה בין API לחישוב מקומי
 
   // ✅ ברירת מחדל: 5 אישיות
   const [profileKeys, setProfileKeys] = useState([...PROFILE_DEFAULT_INCLUDE]);
 
-  const { calc, loading, error, result } = useAstroCalc();
+  const localCalc = useAstroCalc();
+  const apiCalc = useAstroAPI();
+  
+  // בחירה דינמית בין החישובים
+  const { calc, loading, error, result } = useAPI ? apiCalc : localCalc;
 
   const run = () =>
     calc(form, {
@@ -101,13 +159,38 @@ export default function AstroPage() {
       dir="rtl"
       className="container mx-auto p-6 max-w-5xl space-y-6"
     >
-      <div className="text-center space-y-2">
+      <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-emerald-600 bg-clip-text text-transparent">
           מחשבון מזלות + היבטים 💫
         </h1>
         <p className="text-muted-foreground">
           חישוב מפה אסטרולוגית מלאה עם היבטים ופרופיל יסודות
         </p>
+
+        <Button onClick={calculateChart}>חשב מפה אסטרולוגית</Button>
+
+        {/* בחירת מצב חישוב */}
+        <Card className="max-w-md mx-auto">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between gap-4">
+              <div className="space-y-1">
+                <Label htmlFor="api-mode" className="text-sm font-medium">
+                  {useAPI ? "🌐 חישוב בשרת (API)" : "💻 חישוב מקומי"}
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  {useAPI 
+                    ? "שליחת הנתונים לשרת לחישוב" 
+                    : "חישוב בדפדפן (מהיר יותר)"}
+                </p>
+              </div>
+              <Switch
+                id="api-mode"
+                checked={useAPI}
+                onCheckedChange={setUseAPI}
+              />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <AstroForm
@@ -126,8 +209,39 @@ export default function AstroPage() {
         onSubmit={run}
       />
 
+      {error && (
+        <Alert className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">⚠️</span>
+            <div>
+              <AlertTitle className="text-red-800 dark:text-red-200">
+                שגיאה בחישוב
+              </AlertTitle>
+              <AlertDescription className="text-red-700 dark:text-red-300">
+                {error}
+              </AlertDescription>
+            </div>
+          </div>
+        </Alert>
+      )}
+
       {result && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {/* התראה לגבי מצב החישוב */}
+          <Alert className={useAPI ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950" : "border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950"}>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{useAPI ? "🌐" : "💻"}</span>
+              <div>
+                <AlertTitle className={useAPI ? "text-green-800 dark:text-green-200" : "text-blue-800 dark:text-blue-200"}>
+                  {useAPI ? "חישוב באמצעות שרת API" : "חישוב מקומי"}
+                </AlertTitle>
+                <AlertDescription className={useAPI ? "text-green-700 dark:text-green-300" : "text-blue-700 dark:text-blue-300"}>
+                  {useAPI ? "הנתונים חושבו על השרת באמצעות API מאובטח" : "הנתונים חושבו מקומית בדפדפן שלך"}
+                </AlertDescription>
+              </div>
+            </div>
+          </Alert>
+
           <Card className="transition-all duration-300 hover:shadow-lg">
             <CardHeader>
               <CardTitle className="text-center flex items-center justify-center gap-2">
@@ -158,19 +272,68 @@ export default function AstroPage() {
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
-            <PlanetsTable
-              planets={result.planets}
-              houseFormat={houseFormat}
-              tableColors={tableColors}
-              isDark={isDark}
-            />
-            <HousesTable
-              houses={result.houses}
-              houseFormat={houseFormat}
-              tableColors={tableColors}
-            />
-          </div>
+          <Tabs defaultValue="planets" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="planets" className="flex items-center gap-2">
+                🪐 פלנטות
+                <Badge variant="secondary" className="ml-1">
+                  {result.planets?.length || 0}
+                </Badge>
+              </TabsTrigger>
+              <TabsTrigger value="houses" className="flex items-center gap-2">
+                🏠 בתים
+                <Badge variant="secondary" className="ml-1">
+                  {result.houses?.length || 0}
+                </Badge>
+              </TabsTrigger>
+              <TabsTrigger value="aspects" className="flex items-center gap-2">
+                🔗 היבטים
+                <Badge variant="secondary" className="ml-1">
+                  {result.aspects?.length || 0}
+                </Badge>
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="planets" className="mt-4">
+              <PlanetsTable
+                planets={result.planets}
+                houseFormat={houseFormat}
+                tableColors={tableColors}
+                isDark={isDark}
+              />
+            </TabsContent>
+            <TabsContent value="houses" className="mt-4">
+              <HousesTable
+                houses={result.houses}
+                houseFormat={houseFormat}
+                tableColors={tableColors}
+              />
+            </TabsContent>
+            <TabsContent value="aspects" className="mt-4">
+              {result.aspects?.length > 0 ? (
+                <div className="space-y-4">
+                  <AspectsTable
+                    aspects={groupedAspects.personalsInvolved}
+                    title="⭐ היבטים – פלנטות אישיות (מול כולן)"
+                    tableColors={tableColors}
+                    isDark={isDark}
+                  />
+                  <AspectsTable
+                    aspects={groupedAspects.generationalOnly}
+                    title="🌌 היבטים – פלנטות דוריות עם עצמן (צדק ומעלה)"
+                    tableColors={tableColors}
+                    isDark={isDark}
+                  />
+                </div>
+              ) : (
+                <Alert>
+                  <AlertTitle>אין היבטים להצגה</AlertTitle>
+                  <AlertDescription>
+                    לא נמצאו היבטים בהגדרות הנוכחיות. נסה לשנות את הגדרות ההיבטים בטופס.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </TabsContent>
+          </Tabs>
 
           {/* יסודות ואיכויות */}
           <Card className="transition-all duration-300 hover:shadow-lg">
@@ -242,23 +405,7 @@ export default function AstroPage() {
             </CardContent>
           </Card>
 
-          {/* היבטים */}
-          {result.aspects?.length > 0 && (
-            <>
-              <AspectsTable
-                aspects={groupedAspects.personalsInvolved}
-                title="⭐ היבטים – פלנטות אישיות (מול כולן)"
-                tableColors={tableColors}
-                isDark={isDark}
-              />
-              <AspectsTable
-                aspects={groupedAspects.generationalOnly}
-                title="🌌 היבטים – פלנטות דוריות עם עצמן (צדק ומעלה)"
-                tableColors={tableColors}
-                isDark={isDark}
-              />
-            </>
-          )}
+
         </div>
       )}
     </main>
