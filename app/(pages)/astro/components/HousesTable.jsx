@@ -5,6 +5,7 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import { toRoman } from '../utils/constants';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 export default function HousesTable({ 
   houses, 
@@ -54,70 +55,62 @@ export default function HousesTable({
   });
 
   return (
-    <div>
-      <h3 style={{ marginTop: 0, marginBottom: 16 }}>בתים</h3>
-      <div style={{ 
-        border: `1px solid ${tableColors.border}`, 
-        borderRadius: 12, 
-        overflow: "hidden",
-        boxShadow: tableColors.boxShadow
-      }}>
-        <table style={{ 
-          width: "100%", 
-          borderCollapse: "collapse",
-          fontSize: 14
-        }}>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id} style={{ backgroundColor: tableColors.headerBg }}>
-                {headerGroup.headers.map(header => (
-                  <th
-                    key={header.id}
-                    style={{ 
-                      padding: "12px 16px", 
-                      textAlign: header.id === 'house' ? 'right' : 'center',
-                      fontWeight: 600,
-                      borderBottom: `1px solid ${tableColors.border}`,
-                      color: tableColors.headerText
-                    }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+    <Card className="transition-all duration-300 hover:shadow-lg">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          🏠 בתים
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="overflow-hidden">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id} className="bg-muted/50">
+                  {headerGroup.headers.map(header => (
+                    <th
+                      key={header.id}
+                      className={`px-4 py-3 font-semibold border-b ${
+                        header.id === 'house' ? 'text-right' : 'text-center'
+                      }`}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
                         )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row, index) => (
-              <tr 
-                key={row.id} 
-                style={{ 
-                  backgroundColor: index % 2 === 0 ? tableColors.rowEven : tableColors.rowOdd,
-                  borderBottom: index < table.getRowModel().rows.length - 1 ? `1px solid ${tableColors.rowBorder}` : "none"
-                }}
-              >
-                {row.getVisibleCells().map(cell => (
-                  <td
-                    key={cell.id}
-                    style={{ 
-                      padding: "12px 16px", 
-                      textAlign: cell.column.id === 'house' ? 'right' : 'center',
-                      color: cell.column.id === 'degOnlyText' ? tableColors.textSecondary : tableColors.textPrimary
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row, index) => (
+                <tr 
+                  key={row.id} 
+                  className={`transition-all duration-200 hover:bg-muted/40 hover:shadow-sm ${
+                    index < table.getRowModel().rows.length - 1 ? 'border-b' : ''
+                  }`}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <td
+                      key={cell.id}
+                      className={`px-4 py-3 ${
+                        cell.column.id === 'degOnlyText' 
+                          ? 'text-muted-foreground' 
+                          : ''
+                      } ${cell.column.id === 'house' ? 'text-right' : 'text-center'}`}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

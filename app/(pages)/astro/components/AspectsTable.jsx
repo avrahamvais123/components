@@ -5,6 +5,8 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import { ASPECT_COLORS, labelAspect } from '../utils/constants';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export default function AspectsTable({ 
   aspects, 
@@ -20,10 +22,10 @@ export default function AspectsTable({
         cell: ({ getValue }) => {
           const aInfo = getValue();
           return (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 16 }}>{aInfo.glyph}</span>
-              <span style={{ fontWeight: 500 }}>{aInfo.nameHe}</span>
-              <span style={{ fontSize: 12, color: tableColors.textSecondary }}>
+            <div className="flex items-center gap-2">
+              <span className="text-base">{aInfo.glyph}</span>
+              <span className="font-medium">{aInfo.nameHe}</span>
+              <span className="text-xs text-muted-foreground">
                 {aInfo.sign} {aInfo.degOnlyText}
               </span>
             </div>
@@ -37,17 +39,17 @@ export default function AspectsTable({
           const type = getValue();
           const color = ASPECT_COLORS[type] || "#000";
           return (
-            <span style={{ 
-              color: color, 
-              fontWeight: 700,
-              fontSize: 16,
-              padding: "4px 8px",
-              backgroundColor: color + (isDark ? "25" : "15"),
-              borderRadius: 6,
-              border: `1px solid ${color}${isDark ? "40" : "30"}`
-            }}>
+            <Badge 
+              variant="outline"
+              className="font-bold"
+              style={{ 
+                color: color, 
+                backgroundColor: color + (isDark ? "25" : "15"),
+                borderColor: color + (isDark ? "40" : "30")
+              }}
+            >
               {labelAspect(type)}
-            </span>
+            </Badge>
           );
         },
       },
@@ -57,10 +59,10 @@ export default function AspectsTable({
         cell: ({ getValue }) => {
           const bInfo = getValue();
           return (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 16 }}>{bInfo.glyph}</span>
-              <span style={{ fontWeight: 500 }}>{bInfo.nameHe}</span>
-              <span style={{ fontSize: 12, color: tableColors.textSecondary }}>
+            <div className="flex items-center gap-2">
+              <span className="text-base">{bInfo.glyph}</span>
+              <span className="font-medium">{bInfo.nameHe}</span>
+              <span className="text-xs text-muted-foreground">
                 {bInfo.sign} {bInfo.degOnlyText}
               </span>
             </div>
@@ -74,11 +76,7 @@ export default function AspectsTable({
           const orb = getValue();
           const mode = row.original.mode;
           return (
-            <span style={{ 
-              fontFamily: "monospace",
-              fontSize: 13,
-              color: tableColors.textSecondary
-            }}>
+            <span className="font-mono text-xs text-muted-foreground">
               {mode === "degree" ? `${orb}°` : "—"}
             </span>
           );
@@ -97,75 +95,62 @@ export default function AspectsTable({
   if (aspects.length === 0) return null;
 
   return (
-    <>
-      <h3 style={{ marginTop: 24, marginBottom: 16 }}>
-        {title}
-      </h3>
-      <div style={{ 
-        border: `1px solid ${tableColors.border}`, 
-        borderRadius: 12, 
-        overflow: "hidden",
-        boxShadow: tableColors.boxShadow,
-        marginBottom: 16
-      }}>
-        <table style={{ 
-          width: "100%", 
-          borderCollapse: "collapse",
-          fontSize: 14
-        }}>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id} style={{ backgroundColor: tableColors.headerBg }}>
-                {headerGroup.headers.map(header => (
-                  <th
-                    key={header.id}
-                    style={{ 
-                      padding: "12px 16px", 
-                      textAlign: header.id === 'aInfo' ? 'right' : 
-                                header.id === 'bInfo' ? 'left' : 'center',
-                      fontWeight: 600,
-                      borderBottom: `1px solid ${tableColors.border}`,
-                      color: tableColors.headerText
-                    }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row, index) => (
-              <tr 
-                key={row.id} 
-                style={{ 
-                  backgroundColor: index % 2 === 0 ? tableColors.rowEven : tableColors.rowOdd,
-                  borderBottom: index < table.getRowModel().rows.length - 1 ? `1px solid ${tableColors.rowBorder}` : "none"
-                }}
-              >
-                {row.getVisibleCells().map(cell => (
-                  <td
-                    key={cell.id}
-                    style={{ 
-                      padding: "12px 16px", 
-                      textAlign: cell.column.id === 'aInfo' ? 'right' : 
-                                cell.column.id === 'bInfo' ? 'left' : 'center',
-                      color: tableColors.textPrimary
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
+    <Card className="mt-6 transition-all duration-300 hover:shadow-lg">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="overflow-hidden">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id} className="bg-muted/50">
+                  {headerGroup.headers.map(header => (
+                    <th
+                      key={header.id}
+                      className={`px-4 py-3 font-semibold border-b ${
+                        header.id === 'aInfo' ? 'text-right' : 
+                        header.id === 'bInfo' ? 'text-left' : 'text-center'
+                      }`}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row, index) => (
+                <tr 
+                  key={row.id} 
+                  className={`transition-all duration-200 hover:bg-muted/40 hover:shadow-sm ${
+                    index < table.getRowModel().rows.length - 1 ? 'border-b' : ''
+                  }`}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <td
+                      key={cell.id}
+                      className={`px-4 py-3 ${
+                        cell.column.id === 'aInfo' ? 'text-right' : 
+                        cell.column.id === 'bInfo' ? 'text-left' : 'text-center'
+                      }`}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
