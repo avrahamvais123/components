@@ -130,7 +130,6 @@ export default function AstroPage() {
   ]);
 
   const localCalc = useAstroCalc();
-  console.log("localCalc: ", localCalc);
   const apiCalc = useAstroAPI();
 
   // בחירה דינמית בין החישובים
