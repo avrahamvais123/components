@@ -43,46 +43,52 @@ const Counter = watch(() => {
 
 const calculateChart = async () => {
   try {
-    const response = await fetch('/api/astro/calculate', {
-      method: 'POST',
+    const response = await fetch("/api/astro/calculate", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         // נתונים חובה
-        date: "2010-03-16",           // פורמט: YYYY-MM-DD
-        time: "10:00",               // פורמט: HH:MM
-        lat: 32.0853,                // קו רוחב (מספר)
-        lon: 34.7818,                // קו אורך (מספר)
-        
+        date: "2010-03-16", // פורמט: YYYY-MM-DD
+        time: "10:00", // פורמט: HH:MM
+        lat: 32.0853, // קו רוחב (מספר)
+        lon: 34.7818, // קו אורך (מספר)
+
         // הגדרות אופציונליות
-        houseSystem: "placidus",     // placidus, koch, equal-house, whole-sign
-        zodiac: "tropical",          // tropical, sidereal
-        aspectMode: "degree",        // none, sign, degree
-        orb: 7,                      // אורב במעלות (רק עבור aspectMode: "degree")
-        aspects: [                   // סוגי היבטים לחישוב
-          "conjunction", 
-          "sextile", 
-          "square", 
-          "trine", 
-          "opposition"
+        houseSystem: "placidus", // placidus, koch, equal-house, whole-sign
+        zodiac: "tropical", // tropical, sidereal
+        aspectMode: "degree", // none, sign, degree
+        orb: 7, // אורב במעלות (רק עבור aspectMode: "degree")
+        aspects: [
+          // סוגי היבטים לחישוב
+          "conjunction",
+          "sextile",
+          "square",
+          "trine",
+          "opposition",
         ],
-        profileIncludeKeys: [        // פלנטות לכלול בפרופיל
-          "sun", "moon", "mercury", "venus", "mars"
-        ]
+        profileIncludeKeys: [
+          // פלנטות לכלול בפרופיל
+          "sun",
+          "moon",
+          "mercury",
+          "venus",
+          "mars",
+        ],
       }),
     });
 
     const data = await response.json();
-    
+
     if (data.success) {
-      console.log('תוצאות המפה:', data.data);
+      console.log("תוצאות המפה:", data.data);
       return data.data;
     } else {
       throw new Error(data.error);
     }
   } catch (error) {
-    console.error('שגיאה בחישוב:', error);
+    console.error("שגיאה בחישוב:", error);
     throw error;
   }
 };
@@ -107,9 +113,26 @@ export default function AstroPage() {
   // ✅ ברירת מחדל: 5 אישיות
   const [profileKeys, setProfileKeys] = useState([...PROFILE_DEFAULT_INCLUDE]);
 
+  // פלנטות להצגה - ברירת מחדל: כל הפלנטות
+  const [displayPlanets, setDisplayPlanets] = useState([
+    "sun",
+    "moon",
+    "mercury",
+    "venus",
+    "mars",
+    "jupiter",
+    "saturn",
+    "uranus",
+    "neptune",
+    "pluto",
+    "chiron",
+    "lilith",
+  ]);
+
   const localCalc = useAstroCalc();
+  console.log("localCalc: ", localCalc);
   const apiCalc = useAstroAPI();
-  
+
   // בחירה דינמית בין החישובים
   const { calc, loading, error, result } = useAPI ? apiCalc : localCalc;
 
@@ -118,6 +141,7 @@ export default function AstroPage() {
       aspectMode,
       orb,
       profileIncludeKeys: profileKeys, // ← נעביר להוק את הבחירה
+      displayPlanets, // ← פלנטות להצגה
     });
 
   // היבטים — חלוקה
@@ -155,10 +179,7 @@ export default function AstroPage() {
   );
 
   return (
-    <main
-      dir="rtl"
-      className="container mx-auto p-6 max-w-5xl space-y-6"
-    >
+    <main className="container mx-auto p-6 max-w-5xl space-y-6">
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-emerald-600 bg-clip-text text-transparent">
           מחשבון מזלות + היבטים 💫
@@ -178,8 +199,8 @@ export default function AstroPage() {
                   {useAPI ? "🌐 חישוב בשרת (API)" : "💻 חישוב מקומי"}
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  {useAPI 
-                    ? "שליחת הנתונים לשרת לחישוב" 
+                  {useAPI
+                    ? "שליחת הנתונים לשרת לחישוב"
                     : "חישוב בדפדפן (מהיר יותר)"}
                 </p>
               </div>
@@ -204,6 +225,8 @@ export default function AstroPage() {
         setHouseFormat={setHouseFormat}
         profileKeys={profileKeys}
         setProfileKeys={setProfileKeys}
+        displayPlanets={displayPlanets}
+        setDisplayPlanets={setDisplayPlanets}
         loading={loading}
         error={error}
         onSubmit={run}
@@ -228,15 +251,35 @@ export default function AstroPage() {
       {result && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* התראה לגבי מצב החישוב */}
-          <Alert className={useAPI ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950" : "border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950"}>
+          <Alert
+            className={
+              useAPI
+                ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950"
+                : "border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950"
+            }
+          >
             <div className="flex items-center gap-2">
               <span className="text-lg">{useAPI ? "🌐" : "💻"}</span>
               <div>
-                <AlertTitle className={useAPI ? "text-green-800 dark:text-green-200" : "text-blue-800 dark:text-blue-200"}>
+                <AlertTitle
+                  className={
+                    useAPI
+                      ? "text-green-800 dark:text-green-200"
+                      : "text-blue-800 dark:text-blue-200"
+                  }
+                >
                   {useAPI ? "חישוב באמצעות שרת API" : "חישוב מקומי"}
                 </AlertTitle>
-                <AlertDescription className={useAPI ? "text-green-700 dark:text-green-300" : "text-blue-700 dark:text-blue-300"}>
-                  {useAPI ? "הנתונים חושבו על השרת באמצעות API מאובטח" : "הנתונים חושבו מקומית בדפדפן שלך"}
+                <AlertDescription
+                  className={
+                    useAPI
+                      ? "text-green-700 dark:text-green-300"
+                      : "text-blue-700 dark:text-blue-300"
+                  }
+                >
+                  {useAPI
+                    ? "הנתונים חושבו על השרת באמצעות API מאובטח"
+                    : "הנתונים חושבו מקומית בדפדפן שלך"}
                 </AlertDescription>
               </div>
             </div>
@@ -251,20 +294,30 @@ export default function AstroPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg">
-                  <div className="text-2xl">{result.angles.ascendant.signGlyph}</div>
+                  <div className="text-2xl">
+                    {result.angles.ascendant.signGlyph}
+                  </div>
                   <div>
-                    <div className="font-semibold text-blue-700 dark:text-blue-300">אופק (ASC)</div>
+                    <div className="font-semibold text-blue-700 dark:text-blue-300">
+                      אופק (ASC)
+                    </div>
                     <div className="text-sm text-muted-foreground">
-                      {result.angles.ascendant.signName} {result.angles.ascendant.degOnlyText}
+                      {result.angles.ascendant.signName}{" "}
+                      {result.angles.ascendant.degOnlyText}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg">
-                  <div className="text-2xl">{result.angles.midheaven.signGlyph}</div>
+                  <div className="text-2xl">
+                    {result.angles.midheaven.signGlyph}
+                  </div>
                   <div>
-                    <div className="font-semibold text-purple-700 dark:text-purple-300">MC</div>
+                    <div className="font-semibold text-purple-700 dark:text-purple-300">
+                      MC
+                    </div>
                     <div className="text-sm text-muted-foreground">
-                      {result.angles.midheaven.signName} {result.angles.midheaven.degOnlyText}
+                      {result.angles.midheaven.signName}{" "}
+                      {result.angles.midheaven.degOnlyText}
                     </div>
                   </div>
                 </div>
@@ -277,7 +330,9 @@ export default function AstroPage() {
               <TabsTrigger value="planets" className="flex items-center gap-2">
                 🪐 פלנטות
                 <Badge variant="secondary" className="ml-1">
-                  {result.planets?.length || 0}
+                  {result.planets?.filter((planet) =>
+                    displayPlanets.includes(planet.key)
+                  ).length || 0}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value="houses" className="flex items-center gap-2">
@@ -295,7 +350,9 @@ export default function AstroPage() {
             </TabsList>
             <TabsContent value="planets" className="mt-4">
               <PlanetsTable
-                planets={result.planets}
+                planets={result.planets.filter((planet) =>
+                  displayPlanets.includes(planet.key)
+                )}
                 houseFormat={houseFormat}
                 tableColors={tableColors}
                 isDark={isDark}
@@ -328,7 +385,8 @@ export default function AstroPage() {
                 <Alert>
                   <AlertTitle>אין היבטים להצגה</AlertTitle>
                   <AlertDescription>
-                    לא נמצאו היבטים בהגדרות הנוכחיות. נסה לשנות את הגדרות ההיבטים בטופס.
+                    לא נמצאו היבטים בהגדרות הנוכחיות. נסה לשנות את הגדרות
+                    ההיבטים בטופס.
                   </AlertDescription>
                 </Alert>
               )}
@@ -339,9 +397,14 @@ export default function AstroPage() {
           <Card className="transition-all duration-300 hover:shadow-lg">
             <CardHeader>
               <CardTitle className="text-center flex flex-col items-center gap-2">
-                <span className="flex items-center gap-2">🌟 יסודות ואיכויות</span>
+                <span className="flex items-center gap-2">
+                  🌟 יסודות ואיכויות
+                </span>
                 <span className="text-sm font-normal text-muted-foreground">
-                  נלקחו בחשבון: {result.profile.considered.map((k) => PLANET_NAMES_HE[k]).join(", ") || "—"}
+                  נלקחו בחשבון:{" "}
+                  {result.profile.considered
+                    .map((k) => PLANET_NAMES_HE[k])
+                    .join(", ") || "—"}
                 </span>
               </CardTitle>
             </CardHeader>
@@ -366,7 +429,10 @@ export default function AstroPage() {
                     ))}
                     {result.profile.elements.missing.length > 0 && (
                       <div className="mt-4 text-xs text-destructive bg-destructive/10 border border-destructive/20 p-2 rounded-lg">
-                        ❌ חסרים: {result.profile.elements.missing.map((k) => ELEMENT_NAMES[k]).join(" · ")}
+                        ❌ חסרים:{" "}
+                        {result.profile.elements.missing
+                          .map((k) => ELEMENT_NAMES[k])
+                          .join(" · ")}
                       </div>
                     )}
                   </CardContent>
@@ -391,7 +457,10 @@ export default function AstroPage() {
                     ))}
                     {result.profile.qualities.missing.length > 0 && (
                       <div className="mt-4 text-xs text-destructive bg-destructive/10 border border-destructive/20 p-2 rounded-lg">
-                        ❌ חסרים: {result.profile.qualities.missing.map((k) => QUALITY_NAMES[k]).join(" · ")}
+                        ❌ חסרים:{" "}
+                        {result.profile.qualities.missing
+                          .map((k) => QUALITY_NAMES[k])
+                          .join(" · ")}
                       </div>
                     )}
                   </CardContent>
@@ -404,8 +473,6 @@ export default function AstroPage() {
               </div>
             </CardContent>
           </Card>
-
-
         </div>
       )}
     </main>

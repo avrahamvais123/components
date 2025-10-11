@@ -47,6 +47,7 @@ export const PLANET_NAMES_HE = {
   pluto: "פלוטו",
   chiron: "כירון",
   sirius: "סיריוס",
+  lilith: "לילית",
 };
 
 // רשימות עזר ל־UI
@@ -63,6 +64,7 @@ export const PROFILE_ALL_KEYS = [
   "pluto",
   "chiron",
   "sirius",
+  "lilith",
 ];
 export const PROFILE_DEFAULT_INCLUDE = [
   "sun",
@@ -190,56 +192,35 @@ const normalizePlanetKey = (k) =>
 // חישוב בית של פלנטה
 function findHouseForPlanet(planetDeg, houses) {
   if (!houses || houses.length === 0) return null;
-  
+
   for (let i = 0; i < houses.length; i++) {
     const currentHouse = houses[i];
     const nextHouse = houses[(i + 1) % houses.length];
-    
+
     const start = currentHouse.deg;
     let end = nextHouse.deg;
-    
+
     // טיפול במעבר דרך 0 מעלות
     if (end < start) {
       end += 360;
     }
-    
+
     let normalizedPlanetDeg = planetDeg;
     if (planetDeg < start && end > 360) {
       normalizedPlanetDeg += 360;
     }
-    
+
     if (normalizedPlanetDeg >= start && normalizedPlanetDeg < end) {
       return currentHouse.house;
     }
   }
-  
+
   return 1; // ברירת מחדל לבית 1 אם לא נמצא
 }
 
 // פלנטות
 function extractPlanets(horoscope, houses = []) {
-  const all = horoscope?.CelestialBodies?.all;
-  if (Array.isArray(all) && all.length) {
-    return all.map((b) => {
-      const deg = readDegrees(b) ?? 0;
-      const keyNorm = normalizePlanetKey(b.key || b.name || "body");
-      const nameHe = PLANET_NAMES_HE[keyNorm] || b.key || b.name || "פלנטה";
-      const house = findHouseForPlanet(deg, houses);
-      return {
-        key: keyNorm,
-        nameHe,
-        deg,
-        house,
-        signIndex: signIndex(deg),
-        signName: signNameOf(deg),
-        signGlyph: signGlyphOf(deg),
-        degText: fmtInSign(deg),
-        degDecText: fmtInSignDec(deg),
-        degOnlyText: fmtInSignDegOnly(deg),
-        retro: !!b.isRetrograde,
-      };
-    });
-  }
+  // נשתמש תמיד ברשימה הקבועה כדי לוודא שכל הפלנטות כלולות, כולל לילית
   const names = [...PROFILE_ALL_KEYS];
   return names.map((key) => {
     let body = null;
@@ -249,6 +230,14 @@ function extractPlanets(horoscope, houses = []) {
       } catch {}
     }
     if (!body) body = horoscope?.CelestialBodies?.[key] || null;
+    
+    // טיפול מיוחד בלילית - נקודה שמיימית
+    if (key === "lilith" && !body) {
+      try {
+        body = horoscope?._celestialPoints?.lilith;
+      } catch {}
+    }
+    
     const deg =
       readDegrees(body) ??
       (typeof body?.longitude === "number" ? body.longitude : 0);
@@ -507,6 +496,14 @@ export default function useAstroCalc() {
           throw new Error("תאריך/שעה אינם תקינים");
         if (typeof form.lat !== "number" || typeof form.lon !== "number")
           throw new Error("קו רוחב/אורך אינם תקינים");
+        
+        // ולידציה לאורב
+        if (aspectMode === "degree") {
+          const numOrb = parseFloat(orb);
+          if (isNaN(numOrb) || numOrb < 0 || numOrb > 30) {
+            throw new Error("האורב חייב להיות מספר בין 0 ל-30 מעלות");
+          }
+        }
 
         const origin = new Origin({
           year: y,

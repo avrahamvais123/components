@@ -184,7 +184,7 @@ except Exception as e:
 - `profileIncludeKeys` (array): פלנטות לכלול בחישוב פרופיל יסודות/איכויות
 - `profileExcludeKeys` (array): פלנטות להחריג מחישוב פרופיל
 
-## פלנטות זמינות
+## פלנטות ונקודות זמינות
 - `sun` - שמש
 - `moon` - ירח  
 - `mercury` - מרקורי
@@ -197,6 +197,7 @@ except Exception as e:
 - `pluto` - פלוטו
 - `chiron` - כירון
 - `sirius` - סיריוס
+- `lilith` - לילית (Black Moon Lilith)
 
 ## סוגי היבטים
 - `conjunction` - חיבור (0°)

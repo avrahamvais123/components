@@ -26,11 +26,12 @@ const PLANET_NAMES_HE = {
   pluto: "פלוטו",
   chiron: "כירון",
   sirius: "סיריוס",
+  lilith: "לילית",
 };
 
 const PROFILE_ALL_KEYS = [
   "sun", "moon", "mercury", "venus", "mars",
-  "jupiter", "saturn", "uranus", "neptune", "pluto", "chiron", "sirius",
+  "jupiter", "saturn", "uranus", "neptune", "pluto", "chiron", "sirius", "lilith",
 ];
 
 const PROFILE_DEFAULT_INCLUDE = ["sun", "moon", "mercury", "venus", "mars"];
@@ -167,29 +168,7 @@ const normalizePlanetKey = (k) =>
 
 // חילוץ פלנטות
 function extractPlanets(horoscope, houses = []) {
-  const all = horoscope?.CelestialBodies?.all;
-  if (Array.isArray(all) && all.length) {
-    return all.map((b) => {
-      const deg = readDegrees(b) ?? 0;
-      const keyNorm = normalizePlanetKey(b.key || b.name || "body");
-      const nameHe = PLANET_NAMES_HE[keyNorm] || b.key || b.name || "פלנטה";
-      const house = findHouseForPlanet(deg, houses);
-      return {
-        key: keyNorm,
-        nameHe,
-        deg,
-        house,
-        signIndex: signIndex(deg),
-        signName: signNameOf(deg),
-        signGlyph: signGlyphOf(deg),
-        degText: fmtInSign(deg),
-        degDecText: fmtInSignDec(deg),
-        degOnlyText: fmtInSignDegOnly(deg),
-        retro: !!b.isRetrograde,
-      };
-    });
-  }
-
+  // נשתמש תמיד ברשימה הקבועה כדי לוודא שכל הפלנטות כלולות, כולל לילית
   const names = [...PROFILE_ALL_KEYS];
   return names.map((key) => {
     let body = null;
@@ -199,6 +178,14 @@ function extractPlanets(horoscope, houses = []) {
       } catch {}
     }
     if (!body) body = horoscope?.CelestialBodies?.[key] || null;
+    
+    // טיפול מיוחד בלילית - נקודה שמיימית
+    if (key === "lilith" && !body) {
+      try {
+        body = horoscope?._celestialPoints?.lilith;
+      } catch {}
+    }
+
     const deg =
       readDegrees(body) ??
       (typeof body?.longitude === "number" ? body.longitude : 0);
@@ -421,6 +408,21 @@ export async function POST(request) {
         },
         { status: 400 }
       );
+    }
+
+    // ולידציה לאורב
+    if (aspectMode === "degree") {
+      const numOrb = parseFloat(orb);
+      if (isNaN(numOrb) || numOrb < 0 || numOrb > 30) {
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: "אורב לא תקין",
+            details: "האורב חייב להיות מספר בין 0 ל-30 מעלות" 
+          },
+          { status: 400 }
+        );
+      }
     }
 
     // ייבוא הספרייה

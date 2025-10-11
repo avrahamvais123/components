@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
 
 export default function AstroForm({ 
   form, 
@@ -21,6 +22,8 @@ export default function AstroForm({
   setHouseFormat,
   profileKeys, 
   setProfileKeys,
+  displayPlanets,
+  setDisplayPlanets,
   loading, 
   error, 
   onSubmit 
@@ -38,6 +41,19 @@ export default function AstroForm({
   const selectAll = () => setProfileKeys([...PROFILE_ALL_KEYS]);
   const clearAll = () => setProfileKeys([]);
   const setDefault = () => setProfileKeys([...PROFILE_DEFAULT_INCLUDE]);
+
+  // פונקציות לניהול פלנטות התצוגה
+  const toggleDisplayPlanet = (k) => {
+    setDisplayPlanets((prev) =>
+      prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]
+    );
+  };
+
+  const selectAllDisplay = () => setDisplayPlanets([...PROFILE_ALL_KEYS]);
+  const clearAllDisplay = () => setDisplayPlanets([]);
+  const setMainPlanetsDisplay = () => setDisplayPlanets([
+    "sun", "moon", "mercury", "venus", "mars", "jupiter", "saturn"
+  ]);
 
   return (
     <TooltipProvider>
@@ -206,18 +222,31 @@ export default function AstroForm({
                   </Label>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>הטווח המקסימלי בו היבט נחשב תקף. ברירת מחדל: 7 מעלות</p>
+                  <p>הטווח המקסימלי בו היבט נחשב תקף בין שתי פלנטות</p>
+                  <p>טווח: 0-30 מעלות | ברירת מחדל: 7 מעלות</p>
                 </TooltipContent>
               </Tooltip>
               <Input
                 type="number"
-                step="0.1"
+                min="0"
+                max="30"
+                step="0.5"
                 value={orb}
-                onChange={(e) => setOrb(parseFloat(e.target.value))}
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value);
+                  if (!isNaN(value) && value >= 0 && value <= 30) {
+                    setOrb(value);
+                  }
+                }}
                 disabled={aspectMode !== "degree"}
                 placeholder="7.0"
                 className={aspectMode !== "degree" ? "opacity-50" : ""}
               />
+              {aspectMode === "degree" && (
+                <p className="text-xs text-muted-foreground">
+                  טווח: 0-30 מעלות • נוכחי: {orb}° • חל על כל ההיבטים
+                </p>
+              )}
             </div>
             
             <div className="space-y-2">
@@ -298,6 +327,74 @@ export default function AstroForm({
               </div>
             ))}
           </div>
+        </div>
+
+        {/* בחירת פלנטות להצגה */}
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
+              👁️ פלנטות להצגה בטבלה
+            </h3>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="px-2 py-1">
+                {displayPlanets.length}/13 פלנטות
+              </Badge>
+              <div className="flex flex-wrap gap-2">
+                <Button 
+                  type="button"
+                  variant="outline" 
+                  size="sm"
+                  onClick={setMainPlanetsDisplay}
+                  className="gap-1"
+                >
+                  ⭐ ראשיות
+                </Button>
+                <Button 
+                  type="button"
+                  variant="default" 
+                  size="sm"
+                  onClick={selectAllDisplay}
+                  className="bg-emerald-500 hover:bg-emerald-600 gap-1"
+                >
+                  ✅ הצג הכל
+                </Button>
+                <Button 
+                  type="button"
+                  variant="destructive" 
+                  size="sm"
+                  onClick={clearAllDisplay}
+                  className="gap-1"
+                >
+                  ❌ הסתר הכל
+                </Button>
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+            {PROFILE_ALL_KEYS.map((k) => (
+              <div key={`display-${k}`} className="flex items-center space-x-2 space-x-reverse">
+                <Checkbox
+                  id={`display-${k}`}
+                  checked={displayPlanets.includes(k)}
+                  onCheckedChange={() => toggleDisplayPlanet(k)}
+                />
+                <Label
+                  htmlFor={`display-${k}`}
+                  className={`text-sm cursor-pointer transition-colors ${
+                    displayPlanets.includes(k) 
+                      ? "font-semibold text-blue-700 dark:text-blue-300" 
+                      : "font-normal text-muted-foreground"
+                  }`}
+                >
+                  {PLANET_NAMES_HE[k]}
+                </Label>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            💡 בחירת הפלנטות להצגה משפיעה רק על הטבלה ולא על החישובים
+          </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
