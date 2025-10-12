@@ -112,7 +112,7 @@ export default function AspectsTable({
                       key={header.id}
                       className={`px-4 py-3 font-semibold border-b ${
                         header.id === 'aInfo' ? 'text-right' : 
-                        header.id === 'bInfo' ? 'text-left' : 'text-center'
+                        header.id === 'bInfo' ? 'text-right' : 'text-center'
                       }`}
                     >
                       {header.isPlaceholder
@@ -139,7 +139,7 @@ export default function AspectsTable({
                       key={cell.id}
                       className={`px-4 py-3 ${
                         cell.column.id === 'aInfo' ? 'text-right' : 
-                        cell.column.id === 'bInfo' ? 'text-left' : 'text-center'
+                        cell.column.id === 'bInfo' ? 'text-right' : 'text-center'
                       }`}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
