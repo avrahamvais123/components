@@ -97,8 +97,8 @@ export default function AstroPage() {
   const { isDark, tableColors } = useTheme();
 
   const [form, setForm] = useState({
-    date: "2010-03-16",
-    time: "10:00",
+    date: "1987-01-28",
+    time: "02:30",
     lat: 32.0853,
     lon: 34.7818,
     houseSystem: "placidus",
