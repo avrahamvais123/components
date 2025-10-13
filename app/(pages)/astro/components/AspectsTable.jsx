@@ -22,9 +22,11 @@ export default function AspectsTable({
         cell: ({ getValue }) => {
           const aInfo = getValue();
           return (
-            <div className="flex items-center gap-2">
-              <span className="text-base">{aInfo.glyph}</span>
-              <span className="font-medium">{aInfo.nameHe}</span>
+            <div className="flex flex-col items-start gap-1">
+              <div className="flex items-center gap-1">
+                <span className="text-base">{aInfo.glyph}</span>
+                <span className="font-medium text-sm">{aInfo.nameHe}</span>
+              </div>
               <span className="text-xs text-muted-foreground">
                 {aInfo.sign} {aInfo.degOnlyText}
               </span>
@@ -59,9 +61,11 @@ export default function AspectsTable({
         cell: ({ getValue }) => {
           const bInfo = getValue();
           return (
-            <div className="flex items-center gap-2">
-              <span className="text-base">{bInfo.glyph}</span>
-              <span className="font-medium">{bInfo.nameHe}</span>
+            <div className="flex flex-col items-start gap-1">
+              <div className="flex items-center gap-1">
+                <span className="text-base">{bInfo.glyph}</span>
+                <span className="font-medium text-sm">{bInfo.nameHe}</span>
+              </div>
               <span className="text-xs text-muted-foreground">
                 {bInfo.sign} {bInfo.degOnlyText}
               </span>
@@ -95,7 +99,7 @@ export default function AspectsTable({
   if (aspects.length === 0) return null;
 
   return (
-    <Card className="mt-6 transition-all duration-300 hover:shadow-lg">
+    <Card className="transition-all duration-300 hover:shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           {title}
@@ -103,7 +107,13 @@ export default function AspectsTable({
       </CardHeader>
       <CardContent className="p-0">
         <div className="overflow-hidden">
-          <table className="w-full border-collapse text-sm">
+          <table className="w-full border-collapse text-sm table-fixed">
+            <colgroup>
+              <col className="w-1/3" />
+              <col className="w-1/6" />
+              <col className="w-1/3" />
+              <col className="w-1/6" />
+            </colgroup>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id} className="bg-muted/50">
@@ -111,8 +121,7 @@ export default function AspectsTable({
                     <th
                       key={header.id}
                       className={`px-4 py-3 font-semibold border-b ${
-                        header.id === 'aInfo' ? 'text-right' : 
-                        header.id === 'bInfo' ? 'text-right' : 'text-center'
+                        header.id === 'aInfo' || header.id === 'bInfo' ? 'text-right' : 'text-center'
                       }`}
                     >
                       {header.isPlaceholder
@@ -138,9 +147,12 @@ export default function AspectsTable({
                     <td
                       key={cell.id}
                       className={`px-4 py-3 ${
-                        cell.column.id === 'aInfo' ? 'text-right' : 
-                        cell.column.id === 'bInfo' ? 'text-right' : 'text-center'
+                        cell.column.id === 'aInfo' || cell.column.id === 'bInfo' ? 'text-left' : 'text-center'
+                      } ${
+                        cell.column.id === 'aInfo' || cell.column.id === 'bInfo' 
+                          ? 'max-w-0 truncate' : ''
                       }`}
+                      style={cell.column.id === 'aInfo' || cell.column.id === 'bInfo' ? { textAlign: 'left' } : {}}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>

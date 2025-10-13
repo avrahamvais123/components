@@ -129,6 +129,20 @@ export default function AstroPage() {
     "lilith",
   ]);
 
+  // מעקב אחרי הטאב הפעיל עבור אנימציות
+  const [activeTab, setActiveTab] = useState("planets");
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handleTabChange = (newTab) => {
+    if (newTab !== activeTab) {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setActiveTab(newTab);
+        setTimeout(() => setIsTransitioning(false), 100);
+      }, 300);
+    }
+  };
+
   const localCalc = useAstroCalc();
   const apiCalc = useAstroAPI();
 
@@ -324,9 +338,9 @@ export default function AstroPage() {
             </CardContent>
           </Card>
 
-          <Tabs defaultValue="planets" className="w-full">
+          <Tabs defaultValue="planets" className="w-full" onValueChange={handleTabChange}>
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="planets" className="flex items-center gap-2">
+              <TabsTrigger value="planets" className="flex items-center gap-2 transition-all duration-200 hover:bg-muted/50 hover:text-primary">
                 🪐 פלנטות
                 <Badge variant="secondary" className="ml-1">
                   {result.planets?.filter((planet) =>
@@ -334,62 +348,71 @@ export default function AstroPage() {
                   ).length || 0}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value="houses" className="flex items-center gap-2">
+              <TabsTrigger value="houses" className="flex items-center gap-2 transition-all duration-200 hover:bg-muted/50 hover:text-primary">
                 🏠 בתים
                 <Badge variant="secondary" className="ml-1">
                   {result.houses?.length || 0}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value="aspects" className="flex items-center gap-2">
+              <TabsTrigger value="aspects" className="flex items-center gap-2 transition-all duration-200 hover:bg-muted/50 hover:text-primary">
                 🔗 היבטים
                 <Badge variant="secondary" className="ml-1">
                   {result.aspects?.length || 0}
                 </Badge>
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="planets" className="mt-4">
-              <PlanetsTable
-                planets={result.planets.filter((planet) =>
-                  displayPlanets.includes(planet.key)
+            
+            <div className="relative mt-4 overflow-hidden min-h-[400px]">
+              <div className={`transition-all duration-500 ease-in-out transform ${
+                isTransitioning ? 'opacity-0 translate-x-4 scale-95' : 'opacity-100 translate-x-0 scale-100'
+              }`}>
+                {activeTab === "planets" && (
+                  <PlanetsTable
+                    planets={result.planets.filter((planet) =>
+                      displayPlanets.includes(planet.key)
+                    )}
+                    houseFormat={houseFormat}
+                    tableColors={tableColors}
+                    isDark={isDark}
+                  />
                 )}
-                houseFormat={houseFormat}
-                tableColors={tableColors}
-                isDark={isDark}
-              />
-            </TabsContent>
-            <TabsContent value="houses" className="mt-4">
-              <HousesTable
-                houses={result.houses}
-                houseFormat={houseFormat}
-                tableColors={tableColors}
-              />
-            </TabsContent>
-            <TabsContent value="aspects" className="mt-4">
-              {result.aspects?.length > 0 ? (
-                <div className="space-y-4">
-                  <AspectsTable
-                    aspects={groupedAspects.personalsInvolved}
-                    title="⭐ היבטים – פלנטות אישיות (מול כולן)"
+                
+                {activeTab === "houses" && (
+                  <HousesTable
+                    houses={result.houses}
+                    houseFormat={houseFormat}
                     tableColors={tableColors}
-                    isDark={isDark}
                   />
-                  <AspectsTable
-                    aspects={groupedAspects.generationalOnly}
-                    title="🌌 היבטים – פלנטות דוריות עם עצמן (צדק ומעלה)"
-                    tableColors={tableColors}
-                    isDark={isDark}
-                  />
-                </div>
-              ) : (
-                <Alert>
-                  <AlertTitle>אין היבטים להצגה</AlertTitle>
-                  <AlertDescription>
-                    לא נמצאו היבטים בהגדרות הנוכחיות. נסה לשנות את הגדרות
-                    ההיבטים בטופס.
-                  </AlertDescription>
-                </Alert>
-              )}
-            </TabsContent>
+                )}
+                
+                {activeTab === "aspects" && (
+                  result.aspects?.length > 0 ? (
+                    <div className="space-y-6">
+                      <AspectsTable
+                        aspects={groupedAspects.personalsInvolved}
+                        title="⭐ היבטים – פלנטות אישיות (מול כולן)"
+                        tableColors={tableColors}
+                        isDark={isDark}
+                      />
+                      <AspectsTable
+                        aspects={groupedAspects.generationalOnly}
+                        title="🌌 היבטים – פלנטות דוריות עם עצמן (צדק ומעלה)"
+                        tableColors={tableColors}
+                        isDark={isDark}
+                      />
+                    </div>
+                  ) : (
+                    <Alert>
+                      <AlertTitle>אין היבטים להצגה</AlertTitle>
+                      <AlertDescription>
+                        לא נמצאו היבטים בהגדרות הנוכחיות. נסה לשנות את הגדרות
+                        ההיבטים בטופס.
+                      </AlertDescription>
+                    </Alert>
+                  )
+                )}
+              </div>
+            </div>
           </Tabs>
 
           {/* יסודות ואיכויות */}
