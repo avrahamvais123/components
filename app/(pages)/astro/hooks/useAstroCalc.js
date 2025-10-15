@@ -519,11 +519,11 @@ export default function useAstroCalc() {
           houseSystem: form.houseSystem || "placidus",
           zodiac: form.zodiac || "tropical",
           /* הוספה חדשה */
-          language: form?.language || "he",
+          /* language: form?.language || "he",
           aspectPoints: form?.aspectPoints || [],
           aspectTypes: form?.aspectTypes || [],
           aspectWithPoints: form?.aspectWithPoints || false,
-          customOrbs: form?.customOrbs || [],
+          customOrbs: form?.customOrbs || [], */
         });
 
         const angles = extractAngles(horoscope);
