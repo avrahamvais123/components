@@ -425,16 +425,28 @@ export default function AstroPage() {
     return result.aspects.map((a) => {
       const p1En = a?.point1Label || a?.point1 || "";
       const p2En = a?.point2Label || a?.point2 || "";
-      const typeEn = a?.type || "";
+      // נסה לגזור סוג היבט ממספר שדות נפוצים בספריות שונות
+      const typeRaw =
+        a?.type ??
+        a?.aspect ??
+        a?.aspectType ??
+        a?.name ??
+        a?.label ??
+        a?.Type ??
+        a?.Aspect ??
+        "";
       // תרגום שמות נקודות
       const p1 = toHebBodyName({ label: p1En }) || p1En;
       const p2 = toHebBodyName({ label: p2En }) || p2En;
       const p1Glyph = planetGlyph({ label: p1En });
       const p2Glyph = planetGlyph({ label: p2En });
       // תרגום סוג היבט
-      const typeKey = typeEn?.toLowerCase?.() || typeEn;
-      const type = labelAspect(typeKey) || typeEn;
-      const typeGlyph = ASPECT_GLYPHS[typeKey] || "";
+      const typeKey =
+        typeof typeRaw === "string" ? typeRaw.trim().toLowerCase() : "";
+      const type =
+        (typeKey && labelAspect(typeKey)) ||
+        (typeof typeRaw === "string" ? typeRaw : "");
+      const typeGlyph = typeKey ? ASPECT_GLYPHS[typeKey] || "" : "";
       const orb = typeof a?.orb === "number" ? a.orb.toFixed(2) : a?.orb;
       return { p1, p2, p1Glyph, p2Glyph, type, typeGlyph, orb };
     });
