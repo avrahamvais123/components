@@ -21,7 +21,18 @@ const SIGNS = [
 
 // גליפים של המזלות לפי אינדקס 0..11
 const SIGN_GLYPHS = [
-  "♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓",
+  "♈︎",
+  "♉︎",
+  "♊︎",
+  "♋︎",
+  "♌︎",
+  "♍︎",
+  "♎︎",
+  "♏︎",
+  "♐︎",
+  "♑︎",
+  "♒︎",
+  "♓︎",
 ];
 
 const toSign = (deg) => SIGNS[Math.floor((((deg % 360) + 360) % 360) / 30)];
@@ -221,7 +232,9 @@ function planetGlyph({ key, label }) {
   const byKey = PLANET_GLYPHS_BY_KEY[k];
   if (byKey) return byKey;
   if (typeof label === "string") {
-    return PLANET_GLYPHS_BY_EN[label] || PLANET_GLYPHS_BY_EN[label.trim()] || "";
+    return (
+      PLANET_GLYPHS_BY_EN[label] || PLANET_GLYPHS_BY_EN[label.trim()] || ""
+    );
   }
   return "";
 }
@@ -371,7 +384,17 @@ export default function AstroPage() {
         (libHouseNum && libHouseLabelHe) ||
         (Number.isInteger(houseNum) ? HOUSE_ORDINALS_HE[houseNum - 1] : null);
 
-      return { key, labelHe, glyph, retro, sign, signGlyph, deg30, houseNum, houseLabelHe };
+      return {
+        key,
+        labelHe,
+        glyph,
+        retro,
+        sign,
+        signGlyph,
+        deg30,
+        houseNum,
+        houseLabelHe,
+      };
     });
   }, [result, cuspsDegs]);
 
@@ -386,7 +409,13 @@ export default function AstroPage() {
       const labelHe = Number.isInteger(h.num)
         ? HOUSE_ORDINALS_HE[h.num - 1]
         : `מס׳ ${h.num}`;
-      return { num: h.num, labelHe, sign, signGlyph, degFmt: h.degFmt30 || "-" };
+      return {
+        num: h.num,
+        labelHe,
+        sign,
+        signGlyph,
+        degFmt: h.degFmt30 || "-",
+      };
     });
   }, [result]);
 
@@ -568,7 +597,11 @@ export default function AstroPage() {
                       בית {h.labelHe} ({h.num})
                     </div>
                     <div>
-                      מזל: <span className="inline-flex items-center gap-2"><span>{h.signGlyph}</span><span>{h.sign}</span></span>
+                      מזל:{" "}
+                      <span className="inline-flex items-center gap-2">
+                        <span>{h.signGlyph}</span>
+                        <span>{h.sign}</span>
+                      </span>
                     </div>
                     <div>מעלה: {h.degFmt}</div>
                   </div>
@@ -641,7 +674,11 @@ function CardAngle({ title, obj }) {
     <div className="border rounded p-4">
       <div className="font-semibold">{title}</div>
       <div>
-        מזל: <span className="inline-flex items-center gap-2"><span>{signGlyph}</span><span>{sign || "-"}</span></span>
+        מזל:{" "}
+        <span className="inline-flex items-center gap-2">
+          <span>{signGlyph}</span>
+          <span>{sign || "-"}</span>
+        </span>
       </div>
       <div>מעלה: {fmt || "-"}</div>
     </div>
