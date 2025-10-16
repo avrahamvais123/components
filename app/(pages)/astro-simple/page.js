@@ -63,6 +63,88 @@ function fmtDegMin(input) {
   return s;
 }
 
+// נירמול שמות מפתחות של גופים/נקודות כדי למנוע כפילויות (למשל northnode => truenode)
+function normalizeBodyKey(k) {
+  const s = String(k || "").toLowerCase().trim();
+  if (s === "northnode" || s === "north node" || s === "meannode" || s === "mean node" || s === "true node" || s === "truenode") {
+    return "truenode";
+  }
+  if (s === "southnode" || s === "south node") return "southnode";
+  return s;
+}
+
+// מיפוי יסודות ואיכויות לפי אינדקס מזל (0: טלה, 1: שור, ... 11: דגים)
+const ELEMENT_KEY_BY_SIGN_INDEX = [
+  "fire",
+  "earth",
+  "air",
+  "water",
+  "fire",
+  "earth",
+  "air",
+  "water",
+  "fire",
+  "earth",
+  "air",
+  "water",
+];
+const QUALITY_KEY_BY_SIGN_INDEX = [
+  "cardinal",
+  "fixed",
+  "mutable",
+  "cardinal",
+  "fixed",
+  "mutable",
+  "cardinal",
+  "fixed",
+  "mutable",
+  "cardinal",
+  "fixed",
+  "mutable",
+];
+const ELEMENT_NAME_HE = {
+  fire: "אש",
+  earth: "אדמה",
+  air: "אוויר",
+  water: "מים",
+};
+const QUALITY_NAME_HE = {
+  cardinal: "קרדינלי",
+  fixed: "קבוע",
+  mutable: "משתנה",
+};
+
+// בחירות ברירת מחדל למדדי יסודות/איכויות
+const DEFAULT_STATS_KEYS = [
+  "sun",
+  "moon",
+  "mercury",
+  "venus",
+  "mars",
+  "jupiter",
+  "saturn",
+  "uranus",
+  "neptune",
+  "pluto",
+];
+
+// רשימת פלנטות זמינה לבחירה (כולל אופציונליות)
+const STATS_CHOICES = [
+  "sun",
+  "moon",
+  "mercury",
+  "venus",
+  "mars",
+  "jupiter",
+  "saturn",
+  "uranus",
+  "neptune",
+  "pluto",
+  "chiron",
+  "lilith",
+  "truenode",
+];
+
 /** תרגומי פלנטות/נקודות לעברית לפי key/label נפוצים */
 const PLANET_NAMES_HE_BY_KEY = {
   sun: "שמש",
@@ -282,6 +364,12 @@ export default function AstroPage() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  // בחירה אילו פלנטות יוצגו בטבלה
+  const [displayKeys, setDisplayKeys] = useState([...STATS_CHOICES]);
+  // בחירה אילו פלנטות נספרות ליסודות/איכויות
+  const [statsIncludeKeys, setStatsIncludeKeys] = useState([
+    ...DEFAULT_STATS_KEYS,
+  ]);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -345,6 +433,42 @@ export default function AstroPage() {
       }
 
       const bodies = horoscope?.CelestialBodies?.all ?? [];
+      // איסוף נקודות נוספות (לילית וראש דרקון) אם אינן כלולות ב-CelestialBodies
+      const cp =
+        horoscope?._celestialPoints ||
+        horoscope?.CelestialPoints ||
+        horoscope?.celestialPoints ||
+        null;
+
+      const pointsExt = [];
+      if (cp && typeof cp === "object") {
+        const pick = (obj, names) => {
+          for (const n of names) {
+            if (obj?.[n] != null) return obj[n];
+            const lower = n.toLowerCase();
+            // נסיונות השמה שונים במפתח
+            for (const k of Object.keys(obj)) {
+              if (k.toLowerCase() === lower) return obj[k];
+            }
+          }
+          return null;
+        };
+
+        const lilithObj = pick(cp, ["lilith", "blackMoon", "blackmoon", "black_moon"]);
+        if (lilithObj?.ChartPosition?.Ecliptic) {
+          pointsExt.push({ key: "lilith", label: "Lilith", ...lilithObj });
+        }
+        const nodeObj = pick(cp, [
+          "trueNode",
+          "truenode",
+          "northnode",
+          "northNode",
+          "node",
+        ]);
+        if (nodeObj?.ChartPosition?.Ecliptic) {
+          pointsExt.push({ key: "truenode", label: "True Node", ...nodeObj });
+        }
+      }
       const aspects = horoscope?.Aspects?.all ?? [];
       const asc = horoscope?.Ascendant;
       const mc = horoscope?.Midheaven;
@@ -362,6 +486,7 @@ export default function AstroPage() {
             degFmt30: start?.ArcDegreesFormatted30,
           };
         }),
+        pointsExt,
       });
     } catch (e) {
       console.error(e);
@@ -380,8 +505,15 @@ export default function AstroPage() {
   /** פלנטות/נקודות — עם תרגום לעברית ובית בעברית */
   const niceBodies = useMemo(() => {
     if (!result?.bodies) return [];
-    return result.bodies.filter(Boolean).map((b) => {
-      const key = b?.key || b?.id || "";
+    // מזג פלנטות + נקודות נוספות (ללא כפילויות לפי key)
+    const src = [...(result.bodies || []), ...((result.pointsExt || []))].filter(Boolean);
+    const byKey = new Map();
+    for (const b of src) {
+      const k = normalizeBodyKey(b?.key || b?.id || "");
+      if (!byKey.has(k)) byKey.set(k, b);
+    }
+    return Array.from(byKey.values()).map((b) => {
+      const key = normalizeBodyKey(b?.key || b?.id || "");
       const labelHe = toHebBodyName({ key, label: b?.label });
       const glyph = planetGlyph({ key, label: b?.label });
       const retro = b?.isRetrograde ? "℞" : "";
@@ -390,6 +522,9 @@ export default function AstroPage() {
   const deg30Short = fmtDegMin(deg30);
       const sign = Number.isFinite(deg) ? toSign(deg) : "";
       const signGlyph = Number.isFinite(deg) ? toSignGlyph(deg) : "";
+      const signIndex = Number.isFinite(deg)
+        ? Math.floor((((deg % 360) + 360) % 360) / 30)
+        : null;
 
       // בית מהספרייה
       const libHouseNum = b?.House?.id ?? null; // 1..12
@@ -413,6 +548,7 @@ export default function AstroPage() {
         retro,
         sign,
         signGlyph,
+          signIndex,
         deg30,
         deg30Short,
         houseNum,
@@ -420,6 +556,53 @@ export default function AstroPage() {
       };
     });
   }, [result, cuspsDegs]);
+
+  // סטטיסטיקות יסודות ואיכויות מתוך פלנטות מרכזיות
+  const { elementStats, qualityStats } = useMemo(() => {
+    const includeKeys = new Set(
+      (statsIncludeKeys || []).map((k) => String(k || "").toLowerCase())
+    );
+
+    const filtered = (niceBodies || []).filter((b) =>
+      includeKeys.has(String(b.key || "").toLowerCase())
+    );
+    const total = filtered.length || 0;
+
+    const elemCounts = { fire: 0, earth: 0, air: 0, water: 0 };
+    const qualCounts = { cardinal: 0, fixed: 0, mutable: 0 };
+
+    for (const b of filtered) {
+      if (Number.isInteger(b?.signIndex)) {
+        const eKey = ELEMENT_KEY_BY_SIGN_INDEX[b.signIndex];
+        const qKey = QUALITY_KEY_BY_SIGN_INDEX[b.signIndex];
+        if (eKey) elemCounts[eKey] += 1;
+        if (qKey) qualCounts[qKey] += 1;
+      }
+    }
+
+    const toPercents = (counts) => {
+      const out = {};
+      for (const [k, v] of Object.entries(counts)) {
+        out[k] = total ? Math.round((v * 100) / total) : 0;
+      }
+      return out;
+    };
+
+    const elementStats = {
+      total,
+      counts: elemCounts,
+      percents: toPercents(elemCounts),
+      missing: Object.keys(elemCounts).filter((k) => elemCounts[k] === 0),
+    };
+    const qualityStats = {
+      total,
+      counts: qualCounts,
+      percents: toPercents(qualCounts),
+      missing: Object.keys(qualCounts).filter((k) => qualCounts[k] === 0),
+    };
+
+    return { elementStats, qualityStats };
+  }, [niceBodies, statsIncludeKeys]);
 
   /** בתים — נציג שם בעברית */
   const niceHouses = useMemo(() => {
@@ -441,6 +624,16 @@ export default function AstroPage() {
       };
     });
   }, [result]);
+
+  // פלנטות לתצוגה לפי בחירת המשתמש
+  const displayedBodies = useMemo(() => {
+    const allow = new Set(
+      (displayKeys || []).map((k) => String(k || "").toLowerCase())
+    );
+    return (niceBodies || []).filter((b) =>
+      allow.has(String(b.key || "").toLowerCase())
+    );
+  }, [niceBodies, displayKeys]);
 
   /** היבטים — מתורגמים לעברית (שם היבט ושמות נקודות) */
   const niceAspects = useMemo(() => {
@@ -579,6 +772,34 @@ export default function AstroPage() {
           {/* פלנטות ונקודות */}
           <div>
             <h2 className="text-xl font-semibold mb-2">פלנטות ונקודות</h2>
+            {/* בחירת פלנטות לתצוגה בטבלה */}
+            <div className="mb-3 border rounded p-3">
+              <div className="font-medium mb-2">בחר פלנטות לתצוגה</div>
+              <div className="grid sm:grid-cols-3 md:grid-cols-4 gap-2 text-sm">
+                {STATS_CHOICES.map((k) => {
+                  const checked = displayKeys.includes(k);
+                  const nameHe = PLANET_NAMES_HE_BY_KEY[k] || k;
+                  return (
+                    <label key={k} className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        className="accent-black"
+                        checked={checked}
+                        onChange={(e) => {
+                          setDisplayKeys((prev) => {
+                            const set = new Set(prev);
+                            if (e.target.checked) set.add(k);
+                            else set.delete(k);
+                            return Array.from(set);
+                          });
+                        }}
+                      />
+                      <span>{nameHe}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
             <div className="overflow-x-auto">
               <table className="min-w-full border">
                 <thead className="bg-gray-50">
@@ -591,7 +812,7 @@ export default function AstroPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {niceBodies.map((b) => (
+                  {displayedBodies.map((b) => (
                     <tr key={b.key}>
                       <td className="p-2 border">
                         <span className="inline-flex items-center gap-2">
@@ -614,6 +835,73 @@ export default function AstroPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          {/* סטטיסטיקות יסודות ואיכויות */}
+          <div>
+            <h2 className="text-xl font-semibold mb-2">חלוקת יסודות ואיכויות</h2>
+            {/* בחירת פלנטות לחישוב הסטטיסטיקות */}
+            <div className="mb-3 border rounded p-3">
+              <div className="font-medium mb-2">בחר פלנטות לחישוב</div>
+              <div className="grid sm:grid-cols-3 md:grid-cols-4 gap-2 text-sm">
+                {STATS_CHOICES.map((k) => {
+                  const checked = statsIncludeKeys.includes(k);
+                  const nameHe = PLANET_NAMES_HE_BY_KEY[k] || k;
+                  return (
+                    <label key={k} className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        className="accent-black"
+                        checked={checked}
+                        onChange={(e) => {
+                          setStatsIncludeKeys((prev) => {
+                            const set = new Set(prev);
+                            if (e.target.checked) set.add(k);
+                            else set.delete(k);
+                            return Array.from(set);
+                          });
+                        }}
+                      />
+                      <span>{nameHe}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="border rounded p-3">
+                <div className="font-bold mb-2">יסודות</div>
+                <ul className="space-y-1">
+                  {(["fire", "earth", "air", "water"]).map((k) => (
+                    <li key={k} className="flex justify-between">
+                      <span>{ELEMENT_NAME_HE[k]}</span>
+                      <span>{elementStats.percents[k]}%</span>
+                    </li>
+                  ))}
+                </ul>
+                {elementStats.missing.length > 0 && (
+                  <div className="text-sm text-muted-foreground mt-2">
+                    חסרים: {elementStats.missing.map((k) => ELEMENT_NAME_HE[k]).join(", ")}
+                  </div>
+                )}
+              </div>
+              <div className="border rounded p-3">
+                <div className="font-bold mb-2">איכויות</div>
+                <ul className="space-y-1">
+                  {(["cardinal", "fixed", "mutable"]).map((k) => (
+                    <li key={k} className="flex justify-between">
+                      <span>{QUALITY_NAME_HE[k]}</span>
+                      <span>{qualityStats.percents[k]}%</span>
+                    </li>
+                  ))}
+                </ul>
+                {qualityStats.missing.length > 0 && (
+                  <div className="text-sm text-muted-foreground mt-2">
+                    חסרים: {qualityStats.missing.map((k) => QUALITY_NAME_HE[k]).join(", ")}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
