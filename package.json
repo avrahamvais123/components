@@ -39,6 +39,7 @@
     "deepsignal": "^1.6.0",
     "ephemeris": "^2.2.0",
     "framer-motion": "^12.23.12",
+    "gridjs-react": "^6.1.1",
     "hyperactiv": "^0.11.3",
     "lodash": "^4.17.21",
     "lucide-react": "^0.543.0",

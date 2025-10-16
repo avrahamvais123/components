@@ -27,6 +27,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import ephemeris from "ephemeris";
+
+const dateObj = new Date("2015-08-10T17:09:01.000+08:00");
+
+// parameters: ephemeris.getAllPlanets(dateObj, longitude, latitude, height);
 
 /* const store = createStore({ counter: 0, test: "test" });
 
@@ -95,6 +100,10 @@ const calculateChart = async () => {
 
 export default function AstroPage() {
   const { isDark, tableColors } = useTheme();
+  const result1 = ephemeris.getAllPlanets(dateObj, 10.0014, 53.5653, 0);
+  const result2 = ephemeris.getPlanet("sun", dateObj, 10.0014, 53.5653, 0);
+  console.log("result1🔴: ", result1);
+  console.log("result2🟢: ", result2);
 
   const [form, setForm] = useState({
     date: "1987-01-28",
@@ -191,6 +200,7 @@ export default function AstroPage() {
     </div>
   );
 
+  
   return (
     <main className="container mx-auto p-6 max-w-5xl space-y-6">
       <div className="text-center space-y-4">
@@ -338,9 +348,16 @@ export default function AstroPage() {
             </CardContent>
           </Card>
 
-          <Tabs defaultValue="planets" className="w-full" onValueChange={handleTabChange}>
+          <Tabs
+            defaultValue="planets"
+            className="w-full"
+            onValueChange={handleTabChange}
+          >
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="planets" className="flex items-center gap-2 transition-all duration-200 hover:bg-muted/50 hover:text-primary">
+              <TabsTrigger
+                value="planets"
+                className="flex items-center gap-2 transition-all duration-200 hover:bg-muted/50 hover:text-primary"
+              >
                 🪐 פלנטות
                 <Badge variant="secondary" className="ml-1">
                   {result.planets?.filter((planet) =>
@@ -348,24 +365,34 @@ export default function AstroPage() {
                   ).length || 0}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value="houses" className="flex items-center gap-2 transition-all duration-200 hover:bg-muted/50 hover:text-primary">
+              <TabsTrigger
+                value="houses"
+                className="flex items-center gap-2 transition-all duration-200 hover:bg-muted/50 hover:text-primary"
+              >
                 🏠 בתים
                 <Badge variant="secondary" className="ml-1">
                   {result.houses?.length || 0}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value="aspects" className="flex items-center gap-2 transition-all duration-200 hover:bg-muted/50 hover:text-primary">
+              <TabsTrigger
+                value="aspects"
+                className="flex items-center gap-2 transition-all duration-200 hover:bg-muted/50 hover:text-primary"
+              >
                 🔗 היבטים
                 <Badge variant="secondary" className="ml-1">
                   {result.aspects?.length || 0}
                 </Badge>
               </TabsTrigger>
             </TabsList>
-            
+
             <div className="relative mt-4 overflow-hidden min-h-[400px]">
-              <div className={`transition-all duration-500 ease-in-out transform ${
-                isTransitioning ? 'opacity-0 translate-x-4 scale-95' : 'opacity-100 translate-x-0 scale-100'
-              }`}>
+              <div
+                className={`transition-all duration-500 ease-in-out transform ${
+                  isTransitioning
+                    ? "opacity-0 translate-x-4 scale-95"
+                    : "opacity-100 translate-x-0 scale-100"
+                }`}
+              >
                 {activeTab === "planets" && (
                   <PlanetsTable
                     planets={result.planets.filter((planet) =>
@@ -376,7 +403,7 @@ export default function AstroPage() {
                     isDark={isDark}
                   />
                 )}
-                
+
                 {activeTab === "houses" && (
                   <HousesTable
                     houses={result.houses}
@@ -384,9 +411,9 @@ export default function AstroPage() {
                     tableColors={tableColors}
                   />
                 )}
-                
-                {activeTab === "aspects" && (
-                  result.aspects?.length > 0 ? (
+
+                {activeTab === "aspects" &&
+                  (result.aspects?.length > 0 ? (
                     <div className="space-y-6">
                       <AspectsTable
                         aspects={groupedAspects.personalsInvolved}
@@ -409,8 +436,7 @@ export default function AstroPage() {
                         ההיבטים בטופס.
                       </AlertDescription>
                     </Alert>
-                  )
-                )}
+                  ))}
               </div>
             </div>
           </Tabs>
