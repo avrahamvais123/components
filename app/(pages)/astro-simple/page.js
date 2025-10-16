@@ -140,6 +140,10 @@ const STATS_CHOICES = [
   "uranus",
   "neptune",
   "pluto",
+  "ceres",
+  "pallas",
+  "juno",
+  "vesta",
   "chiron",
   "lilith",
   "truenode",
@@ -467,6 +471,23 @@ export default function AstroPage() {
         ]);
         if (nodeObj?.ChartPosition?.Ecliptic) {
           pointsExt.push({ key: "truenode", label: "True Node", ...nodeObj });
+        }
+        // ארבעת האסטרואידים
+        const ceresObj = pick(cp, ["ceres"]);
+        if (ceresObj?.ChartPosition?.Ecliptic) {
+          pointsExt.push({ key: "ceres", label: "Ceres", ...ceresObj });
+        }
+        const pallasObj = pick(cp, ["pallas"]);
+        if (pallasObj?.ChartPosition?.Ecliptic) {
+          pointsExt.push({ key: "pallas", label: "Pallas", ...pallasObj });
+        }
+        const junoObj = pick(cp, ["juno"]);
+        if (junoObj?.ChartPosition?.Ecliptic) {
+          pointsExt.push({ key: "juno", label: "Juno", ...junoObj });
+        }
+        const vestaObj = pick(cp, ["vesta"]);
+        if (vestaObj?.ChartPosition?.Ecliptic) {
+          pointsExt.push({ key: "vesta", label: "Vesta", ...vestaObj });
         }
       }
       const aspects = horoscope?.Aspects?.all ?? [];
