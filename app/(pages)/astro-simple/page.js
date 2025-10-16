@@ -42,6 +42,27 @@ const toSignGlyph = (deg) => {
 };
 const pad2 = (n) => String(n).padStart(2, "0");
 
+/** פורמט מעלה-דקה (ללא שניות) מתוך מחרוזת כמו "7° 32' 11''" => "7° 32" */
+function fmtDegMin(input) {
+  if (input == null) return "";
+  const s = String(input);
+  // נסה לחלץ מעלות ודקות מהמחרוזת
+  const m = s.match(/(-?\d+)\D+(\d+)/);
+  if (m) {
+    const d = m[1];
+    const min = m[2];
+    return `${pad2(min)} ${d}°`;
+  }
+  // fallback: אם זה מספר עשרוני
+  const numeric = Number(s.replace(/[^0-9.\-]/g, ""));
+  if (Number.isFinite(numeric)) {
+    const d = Math.trunc(numeric);
+    const min = Math.round((numeric - d) * 60);
+    return `${pad2(min)} ${d}°`;
+  }
+  return s;
+}
+
 /** תרגומי פלנטות/נקודות לעברית לפי key/label נפוצים */
 const PLANET_NAMES_HE_BY_KEY = {
   sun: "שמש",
@@ -366,6 +387,7 @@ export default function AstroPage() {
       const retro = b?.isRetrograde ? "℞" : "";
       const deg = b?.ChartPosition?.Ecliptic?.DecimalDegrees;
       const deg30 = b?.ChartPosition?.Ecliptic?.ArcDegreesFormatted30;
+  const deg30Short = fmtDegMin(deg30);
       const sign = Number.isFinite(deg) ? toSign(deg) : "";
       const signGlyph = Number.isFinite(deg) ? toSignGlyph(deg) : "";
 
@@ -392,6 +414,7 @@ export default function AstroPage() {
         sign,
         signGlyph,
         deg30,
+        deg30Short,
         houseNum,
         houseLabelHe,
       };
@@ -582,13 +605,9 @@ export default function AstroPage() {
                           <span>{b.sign}</span>
                         </span>
                       </td>
-                      <td className="p-2 border">{b.deg30 || "-"}</td>
+                      <td className="p-2 border">{b.deg30Short || "-"}</td>
                       <td className="p-2 border">
-                        {b.houseNum
-                          ? `בית ${HOUSE_ORDINALS_HE[b.houseNum - 1]} (${
-                              b.houseNum
-                            })`
-                          : "-"}
+                        {Number.isInteger(b.houseNum) ? b.houseNum : "-"}
                       </td>
                       <td className="p-2 border">{b.retro}</td>
                     </tr>
