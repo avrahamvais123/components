@@ -65,80 +65,93 @@ export default function AstroPage() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto p-6 space-y-8" dir="rtl">
-      <h1 className={`text-2xl font-bold ${isDark ? "text-neutral-100" : "text-gray-900"}`}>מחשבון מפת לידה</h1>
+    <main className="max-w-6xl mx-auto p-6" dir="rtl">
+      <h1 className={`text-2xl font-bold mb-6 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>מחשבון מפת לידה</h1>
 
-      {/* טופס קלט */}
-      <AstroForm 
-        form={form} 
-        onChange={onChange} 
-        onSubmit={compute} 
-        loading={loading} 
-      />
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* עמודת הגדרות (ימין במסך RTL) */}
+        <aside className="space-y-6">
+          {/* טופס קלט */}
+          <AstroForm 
+            form={form} 
+            onChange={onChange} 
+            onSubmit={compute} 
+            loading={loading} 
+          />
+          {err && <p className="text-red-600">{err}</p>}
 
-      {err && <p className="text-red-600">{err}</p>}
+          {/* בורר פלנטות לתצוגה */}
+          <PlanetSelector
+            selectedKeys={displayKeys}
+            onSelectionChange={setDisplayKeys}
+            title="בחר פלנטות לתצוגה"
+          />
 
-      {/* תוצאות */}
-      {result && (
+          {/* בורר פלנטות לסטטיסטיקה */}
+          <PlanetSelector
+            selectedKeys={statsIncludeKeys}
+            onSelectionChange={setStatsIncludeKeys}
+            title="בחר פלנטות לחישוב"
+          />
+
+          {/* בוררי פלנטות להיבטים: מקור ויעד */}
+          <PlanetSelector
+            selectedKeys={aspectSourceKeys}
+            onSelectionChange={setAspectSourceKeys}
+            title="בחר פלנטות מקור (מולן יחושבו היבטים)"
+          />
+          <PlanetSelector
+            selectedKeys={aspectTargetKeys}
+            onSelectionChange={setAspectTargetKeys}
+            title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
+          />
+
+          {/* סוגי היבטים ואורבים */}
+          <AspectSelector
+            selectedKeys={selectedAspectTypes}
+            onSelectionChange={setSelectedAspectTypes}
+            aspectOrbs={aspectOrbs}
+            onOrbsChange={setAspectOrbs}
+            title="בחר היבטים לתצוגה"
+          />
+        </aside>
+
+        {/* עמודת תוצאות/טבלאות (שמאל במסך RTL) */}
         <section className="space-y-10">
-          {/* פלנטות ונקודות */}
-          <div>
-            <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>פלנטות ונקודות</h2>
-            <PlanetSelector
-              selectedKeys={displayKeys}
-              onSelectionChange={setDisplayKeys}
-              title="בחר פלנטות לתצוגה"
-            />
-            <PlanetsTable displayedBodies={displayedBodies} />
-          </div>
+          {result && (
+            <>
+              {/* פלנטות ונקודות */}
+              <div>
+                <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>פלנטות ונקודות</h2>
+                <PlanetsTable displayedBodies={displayedBodies} />
+              </div>
 
-          {/* סטטיסטיקות יסודות ואיכויות */}
-          <div>
-            <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>
-              חלוקת יסודות ואיכויות
-            </h2>
-            <PlanetSelector
-              selectedKeys={statsIncludeKeys}
-              onSelectionChange={setStatsIncludeKeys}
-              title="בחר פלנטות לחישוב"
-            />
-            <ElementQualityStats 
-              elementStats={elementStats} 
-              qualityStats={qualityStats} 
-            />
-          </div>
+              {/* סטטיסטיקות יסודות ואיכויות */}
+              <div>
+                <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>
+                  חלוקת יסודות ואיכויות
+                </h2>
+                <ElementQualityStats 
+                  elementStats={elementStats} 
+                  qualityStats={qualityStats} 
+                />
+              </div>
 
-          {/* קאספים של הבתים */}
-          {niceHouses.length === 12 && <HousesGrid niceHouses={niceHouses} />}
+              {/* קאספים של הבתים */}
+              {niceHouses.length === 12 && <HousesGrid niceHouses={niceHouses} />}
 
-          {/* היבטים */}
-          <div>
-            <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>היבטים</h2>
-            {/* בחירת קבוצות להיבטים: מקורות ויעדים */}
-            <PlanetSelector
-              selectedKeys={aspectSourceKeys}
-              onSelectionChange={setAspectSourceKeys}
-              title="בחר פלנטות מקור (מולן יחושבו היבטים)"
-            />
-            <PlanetSelector
-              selectedKeys={aspectTargetKeys}
-              onSelectionChange={setAspectTargetKeys}
-              title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
-            />
-            <AspectSelector
-              selectedKeys={selectedAspectTypes}
-              onSelectionChange={setSelectedAspectTypes}
-              aspectOrbs={aspectOrbs}
-              onOrbsChange={setAspectOrbs}
-              title="בחר היבטים לתצוגה"
-            />
-            <AspectsTable niceAspects={niceAspects} />
-          </div>
+              {/* היבטים */}
+              <div>
+                <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>היבטים</h2>
+                <AspectsTable niceAspects={niceAspects} />
+              </div>
 
-          {/* ASC & MC */}
-          <AnglesGrid asc={result.asc} mc={result.mc} />
+              {/* ASC & MC */}
+              <AnglesGrid asc={result.asc} mc={result.mc} />
+            </>
+          )}
         </section>
-      )}
+      </div>
     </main>
   );
 }

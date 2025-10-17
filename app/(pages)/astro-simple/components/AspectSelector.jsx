@@ -69,7 +69,7 @@ export default function AspectSelector({ selectedKeys, onSelectionChange, title,
       </div>
 
       {/* רשימת היבטים */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2">
         {ASPECT_TYPES.map((aspect) => {
           const isSelected = selectedKeys.includes(aspect.key);
           const orbVal = (aspectOrbs && aspectOrbs[aspect.key] != null)
@@ -78,7 +78,7 @@ export default function AspectSelector({ selectedKeys, onSelectionChange, title,
           return (
             <label
               key={aspect.key}
-              className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors ${
+              className={`flex items-center justify-between gap-2 p-2 rounded-md border cursor-pointer transition-colors w-full ${
                 isSelected
                   ? isDark
                     ? "bg-neutral-700 border-neutral-600 text-neutral-100"
@@ -88,13 +88,15 @@ export default function AspectSelector({ selectedKeys, onSelectionChange, title,
                   : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
               }`}
             >
-              <input
-                type="checkbox"
-                checked={isSelected}
-                onChange={() => handleToggle(aspect.key)}
-                className="rounded"
-              />
-              <span className="text-sm">{aspect.labelHe}</span>
+              <div className="flex items-center gap-2 min-w-0 flex-grow">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => handleToggle(aspect.key)}
+                  className="rounded shrink-0"
+                />
+                <span className="text-sm truncate">{aspect.labelHe}</span>
+              </div>
               {/* שדה אורב לכל היבט */}
               <input
                 type="number"
@@ -107,10 +109,11 @@ export default function AspectSelector({ selectedKeys, onSelectionChange, title,
                   const safe = isNaN(v) ? 0 : Math.max(0, Math.min(30, v));
                   onOrbsChange?.({ ...DEFAULT_ASPECT_ORBS, ...(aspectOrbs || {}), [aspect.key]: safe });
                 }}
-                className={`w-16 px-2 py-1 text-sm rounded border ${
+                className={`w-16 h-8 px-2 text-sm rounded border shrink-0 ${
                   isDark ? "bg-neutral-800 border-neutral-600 text-neutral-100" : "bg-white border-gray-300 text-gray-900"
                 }`}
                 title="אורב במעלות"
+                inputMode="decimal"
               />
             </label>
           );
