@@ -382,6 +382,14 @@ export default function AstroPage() {
 
   const compute = async (e) => {
     e.preventDefault();
+    console.log("[astro-simple] compute() start", {
+      date: form.date,
+      time: form.time,
+      lat: form.lat,
+      lon: form.lon,
+      houseSystem: form.houseSystem,
+      zodiac: form.zodiac,
+    });
     setLoading(true);
     setErr("");
     setResult(null);
@@ -444,7 +452,7 @@ export default function AstroPage() {
         horoscope?.celestialPoints ||
         null;
 
-      const pointsExt = [];
+  let pointsExt = [];
       if (cp && typeof cp === "object") {
         const pick = (obj, names) => {
           for (const n of names) {
@@ -490,10 +498,82 @@ export default function AstroPage() {
           pointsExt.push({ key: "vesta", label: "Vesta", ...vestaObj });
         }
       }
+      // נסיון להרחיב אסטרואידים דרך ה-API בצד השרת (Swiss Ephemeris)
+      try {
+        // מחולל טקסט 0-30° בסגנון הספרייה (עם שניות לאפס, כדי שהמפרמט הקיים יעבוד)
+        const arcFmt30 = (deg) => {
+          const norm = ((deg % 360) + 360) % 360;
+          const d30 = norm % 30;
+          const d = Math.floor(d30);
+          let m = Math.round((d30 - d) * 60);
+          if (m === 60) { m = 0; }
+          return `${d}° ${String(m).padStart(2, "0")}' 00''`;
+        };
+
+        console.log("[astro-simple] calling /api/astro/calculate", {
+          date: form.date,
+          time: form.time,
+          lat,
+          lon,
+          houseSystem: hs,
+          zodiac: form.zodiac || "tropical",
+          asteroids: ["ceres", "pallas", "juno", "vesta"],
+        });
+
+        const resp = await fetch("/api/astro/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: form.date,
+            time: form.time,
+            lat: lat,
+            lon: lon,
+            houseSystem: hs,
+            zodiac: form.zodiac || "tropical",
+            aspectMode: "degree",
+            orb: 7,
+            asteroids: ["ceres", "pallas", "juno", "vesta"],
+          }),
+        });
+        console.log("[astro-simple] API response status:", resp.status, resp.statusText);
+        if (resp.ok) {
+          const data = await resp.json();
+          console.log("[astro-simple] API /api/astro/calculate response:", data);
+          const planets = Array.isArray(data?.data?.planets)
+            ? data.data.planets
+            : [];
+          console.log("[astro-simple] aspects from API:", data?.data?.aspects);
+          const desired = new Set(["ceres", "pallas", "juno", "vesta"]);
+          const apiExt = planets
+            .filter((p) => desired.has(String(p?.key || "").toLowerCase()))
+            .map((p) => ({
+              key: String(p.key).toLowerCase(),
+              label: p.key[0].toUpperCase() + String(p.key).slice(1),
+              ChartPosition: {
+                Ecliptic: {
+                  DecimalDegrees: p.deg,
+                  ArcDegreesFormatted30: arcFmt30(p.deg),
+                },
+              },
+            }));
+          console.log("[astro-simple] asteroids from API:", apiExt);
+          if (apiExt.length) pointsExt = [...pointsExt, ...apiExt];
+        } else {
+          let text = null;
+          try { text = await resp.text(); } catch {}
+          console.warn("[astro-simple] API not ok:", resp.status, resp.statusText, text);
+        }
+      } catch (err) {
+        // אם ה-API לא זמין, פשוט נמשיך ללא אסטרואידים
+        console.warn("[astro-simple] failed to fetch asteroids from API", err?.message || err);
+      }
+
+      // הערה: ביטלנו fallback של SwissEph בצד לקוח כדי למנוע בעיות טעינת WASM בדפדפן.
       const aspects = horoscope?.Aspects?.all ?? [];
       const asc = horoscope?.Ascendant;
       const mc = horoscope?.Midheaven;
 
+      console.log("[astro-simple] pointsExt keys before setResult:", pointsExt.map(p => p.key));
       setResult({
         bodies,
         aspects,
