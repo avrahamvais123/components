@@ -92,20 +92,10 @@ export function useAstroCalculation() {
           pointsExt.push({ key: "truenode", label: "True Node", ...nodeObj });
         }
 
-        // ארבעת האסטרואידים
-        ["ceres", "pallas", "juno", "vesta"].forEach(name => {
-          const obj = pick(cp, [name]);
-          if (obj?.ChartPosition?.Ecliptic) {
-            pointsExt.push({ 
-              key: name, 
-              label: name[0].toUpperCase() + name.slice(1), 
-              ...obj 
-            });
-          }
-        });
+        // ללא אסטרואידים
       }
 
-      // נסיון להרחיב אסטרואידים דרך ה-API ולקבל היבטים עם אורב לכל סוג
+  // ניסיון קבלת היבטים מה-API בלבד (ללא אסטרואידים)
       try {
         const arcFmt30 = (deg) => {
           const norm = ((deg % 360) + 360) % 360;
@@ -128,27 +118,12 @@ export function useAstroCalculation() {
             zodiac: form.zodiac || "tropical",
             aspectMode: "degree",
             aspectOrbs: options.aspectOrbs || undefined,
-            asteroids: ["ceres", "pallas", "juno", "vesta"],
           }),
         });
 
         if (resp.ok) {
           const data = await resp.json();
-          const planets = Array.isArray(data?.data?.planets) ? data.data.planets : [];
-          const desired = new Set(["ceres", "pallas", "juno", "vesta"]);
-          const apiExt = planets
-            .filter((p) => desired.has(String(p?.key || "").toLowerCase()))
-            .map((p) => ({
-              key: String(p.key).toLowerCase(),
-              label: p.key[0].toUpperCase() + String(p.key).slice(1),
-              ChartPosition: {
-                Ecliptic: {
-                  DecimalDegrees: p.deg,
-                  ArcDegreesFormatted30: arcFmt30(p.deg),
-                },
-              },
-            }));
-          if (apiExt.length) pointsExt = [...pointsExt, ...apiExt];
+          // לא מוסיפים אסטרואידים
           // אם יש היבטים מה-API, נעדיף אותם על פני אלו של הספרייה המקומית
           if (Array.isArray(data?.data?.aspects)) {
             aspects = data.data.aspects;

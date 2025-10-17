@@ -14,6 +14,7 @@ import {
   HousesGrid,
   AspectsTable,
   AnglesGrid,
+  DraggablePanel,
 } from "./components";
 
 export default function AstroPage() {
@@ -68,33 +69,29 @@ export default function AstroPage() {
     <main className="max-w-6xl mx-auto p-6" dir="rtl">
       <h1 className={`text-2xl font-bold mb-6 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>מחשבון מפת לידה</h1>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* עמודת הגדרות (ימין במסך RTL) */}
-        <aside className="space-y-6">
-          {/* טופס קלט */}
-          <AstroForm 
-            form={form} 
-            onChange={onChange} 
-            onSubmit={compute} 
-            loading={loading} 
+      <div className="relative">
+        {/* פאנל צף וגריר להגדרות - לא תופס מקום בפריסה */}
+        <DraggablePanel title="הגדרות מחשבון" initialTop={100} initialLeft={24}>
+          <AstroForm
+            form={form}
+            onChange={onChange}
+            onSubmit={compute}
+            loading={loading}
           />
           {err && <p className="text-red-600">{err}</p>}
 
-          {/* בורר פלנטות לתצוגה */}
           <PlanetSelector
             selectedKeys={displayKeys}
             onSelectionChange={setDisplayKeys}
             title="בחר פלנטות לתצוגה"
           />
 
-          {/* בורר פלנטות לסטטיסטיקה */}
           <PlanetSelector
             selectedKeys={statsIncludeKeys}
             onSelectionChange={setStatsIncludeKeys}
-            title="בחר פלנטות לחישוב"
+            title="בחר פלנטות לחישוב (איכויות ויסודות)"
           />
 
-          {/* בוררי פלנטות להיבטים: מקור ויעד */}
           <PlanetSelector
             selectedKeys={aspectSourceKeys}
             onSelectionChange={setAspectSourceKeys}
@@ -106,7 +103,6 @@ export default function AstroPage() {
             title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
           />
 
-          {/* סוגי היבטים ואורבים */}
           <AspectSelector
             selectedKeys={selectedAspectTypes}
             onSelectionChange={setSelectedAspectTypes}
@@ -114,9 +110,9 @@ export default function AstroPage() {
             onOrbsChange={setAspectOrbs}
             title="בחר היבטים לתצוגה"
           />
-        </aside>
+        </DraggablePanel>
 
-        {/* עמודת תוצאות/טבלאות (שמאל במסך RTL) */}
+        {/* אזור התוצאות – תופס את כל הרוחב */}
         <section className="space-y-10">
           {result && (
             <>

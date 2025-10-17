@@ -27,10 +27,6 @@ const PLANET_NAMES_HE = {
   chiron: "כירון",
   sirius: "סיריוס",
   lilith: "לילית",
-  ceres: "צרס",
-  pallas: "פאלס",
-  juno: "ג׳ונו",
-  vesta: "וסטה",
 };
 
 const PROFILE_ALL_KEYS = [
@@ -88,54 +84,7 @@ const toJulianDayUT = (y, m, d, hh, mm = 0) => {
   return date.getTime() / 86400000 + JD_UNIX_EPOCH;
 };
 
-// חישוב אסטרואידים עם SwissEph אם זמין; מחזיר [{key, deg}]
-async function computeAsteroidsSwiss({ y, m, d, hh, mm, zodiac, asteroids }) {
-  try {
-    const swe = await import("swisseph-wasm");
-    // ייתכן ונדרש אתחול/טעינה; ננסה אם יש פונקציה לכך
-    if (typeof swe?.default === "function") {
-      // חלק מהחבילות מייצאות init כברירת מחדל
-      await swe.default();
-    }
-    const jd = toJulianDayUT(y, m, d, hh, mm);
-    const out = [];
-    const nameToNum = {
-      ceres: 1,
-      pallas: 2,
-      juno: 3,
-      vesta: 4,
-    };
-    // דגלים בסיסיים: חישוב גאוצנטרי, טרופי
-    const SEFLG_SWIEPH = swe.SEFLG_SWIEPH || 2;
-    const SEFLG_SPEED = swe.SEFLG_SPEED || 256;
-    const flags = SEFLG_SWIEPH | SEFLG_SPEED;
-    for (const k of asteroids) {
-      const id = nameToNum[k];
-      if (!id) continue;
-      // בקוד Swiss מקורי יש offset לאסטרואידים; ננסה גם בלי וגם עם offset
-      const SE_AST_OFFSET = swe.SE_AST_OFFSET || 10000;
-      let code = id + SE_AST_OFFSET;
-      let res = null;
-      try {
-        res = swe.swe_calc_ut ? swe.swe_calc_ut(jd, code, flags) : null;
-      } catch {}
-      // ניסיון ללא offset אם נכשל
-      if (!res || res?.rc < 0) {
-        try {
-          res = swe.swe_calc_ut ? swe.swe_calc_ut(jd, id, flags) : null;
-        } catch {}
-      }
-      const lon = Array.isArray(res?.xx) ? res.xx[0] : null;
-      if (typeof lon === "number" && isFinite(lon)) {
-        out.push({ key: k, deg: ((lon % 360) + 360) % 360 });
-      }
-    }
-    return out;
-  } catch (e) {
-    console.warn("SwissEph not available or failed:", e?.message || e);
-    return [];
-  }
-}
+// אין תמיכה באסטרואידים – פונקציות חישוב הוסרו
 
 // קריאת מעלות
 function readDegrees(maybe) {
@@ -458,8 +407,7 @@ export async function POST(request) {
       // הגדרות פרופיל
       profileIncludeKeys,
       profileExcludeKeys,
-      // אסטרואידים אופציונליים
-      asteroids = ["ceres", "pallas", "juno", "vesta"],
+  // אין תמיכה באסטרואידים
     } = body;
 
     // ולידציה בסיסית
@@ -528,30 +476,7 @@ export async function POST(request) {
     const houses = extractHouses(horoscope);
     let planets = extractPlanets(horoscope, houses);
 
-    // נסה להוסיף אסטרואידים אם נתבקש
-    if (Array.isArray(asteroids) && asteroids.length) {
-      const jdDate = { y, m, d, hh, mm };
-      const astros = await computeAsteroidsSwiss({ ...jdDate, zodiac, asteroids });
-      if (astros.length) {
-        for (const a of astros) {
-          const deg = a.deg;
-          const house = findHouseForPlanet(deg, houses);
-          planets.push({
-            key: a.key,
-            nameHe: PLANET_NAMES_HE[a.key] || a.key,
-            deg,
-            house,
-            signIndex: signIndex(deg),
-            signName: signNameOf(deg),
-            signGlyph: signGlyphOf(deg),
-            degText: fmtInSign(deg),
-            degDecText: fmtInSignDec(deg),
-            degOnlyText: fmtInSignDegOnly(deg),
-            retro: false,
-          });
-        }
-      }
-    }
+    // אין הוספת אסטרואידים
 
     let aspectsOut = [];
     if (aspectMode === "degree") {

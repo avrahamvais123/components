@@ -116,9 +116,37 @@ const getAspectColor = (aspectType, isDark) => {
 
 export default function AspectsTable({ niceAspects }) {
   const { isDark } = useThemeState();
+  // חישוב סיכום לפי סוג היבט
+  const byType = new Map();
+  if (Array.isArray(niceAspects)) {
+    for (const a of niceAspects) {
+      const key = String(a?.type || "").toLowerCase().trim();
+      if (!key) continue;
+      const prev = byType.get(key) || { count: 0, label: a.type, glyph: a.typeGlyph };
+      byType.set(key, { count: prev.count + 1, label: prev.label || a.type, glyph: prev.glyph || a.typeGlyph });
+    }
+  }
+  const summaryItems = Array.from(byType.values());
   return (
     <div>
       <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>היבטים</h2>
+      {/* סיכום לפי סוג היבט */}
+      {summaryItems.length > 0 ? (
+        <div className="mb-3 flex flex-wrap gap-2">
+          {summaryItems.map((it, idx) => (
+            <span
+              key={`${it.label}-${idx}`}
+              className={`inline-flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium ${getAspectColor(it.label, isDark)}`}
+            >
+              {it.glyph && <span>{it.glyph}</span>}
+              <span>{it.label}</span>
+              <span className={isDark ? "text-neutral-300/80" : "text-gray-700/80"}>({it.count})</span>
+            </span>
+          ))}
+        </div>
+      ) : (
+        <p className={"mb-3 text-sm " + (isDark ? "text-neutral-400" : "text-gray-600")}>אין היבטים לתצוגה</p>
+      )}
       <div className="overflow-x-auto">
         <table className="min-w-full border">
           <thead className={isDark ? "bg-neutral-900" : "bg-gray-50"}>
