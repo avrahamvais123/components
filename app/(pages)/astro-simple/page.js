@@ -36,6 +36,7 @@ export default function AstroPage() {
   // בחירת קבוצות להיבטים: מקורות ויעדים
   const [aspectSourceKeys, setAspectSourceKeys] = useState([...DEFAULT_STATS_KEYS]);
   const [aspectTargetKeys, setAspectTargetKeys] = useState([...STATS_CHOICES]);
+  const [showSettings, setShowSettings] = useState(true);
 
   const { result, loading, err, calculate } = useAstroCalculation();
   const {
@@ -71,7 +72,14 @@ export default function AstroPage() {
 
       <div className="relative">
         {/* פאנל צף וגריר להגדרות - לא תופס מקום בפריסה */}
-        <DraggablePanel title="הגדרות מחשבון" initialTop={100} initialLeft={24}>
+        {showSettings && (
+          <DraggablePanel
+            title="הגדרות מחשבון"
+            initialTop={100}
+            initialLeft={24}
+            initialAlignRight
+            onClose={() => setShowSettings(false)}
+          >
           <AstroForm
             form={form}
             onChange={onChange}
@@ -111,14 +119,25 @@ export default function AstroPage() {
             title="בחר היבטים לתצוגה"
           />
         </DraggablePanel>
+        )}
+
+        {!showSettings && (
+          <button
+            type="button"
+            className="fixed z-40 bottom-6 right-6 rounded-full px-4 py-2 shadow-lg bg-white dark:bg-neutral-900 border dark:border-neutral-800 text-gray-800 dark:text-neutral-100 hover:bg-gray-50 dark:hover:bg-neutral-800"
+            onClick={() => setShowSettings(true)}
+          >
+            הצג הגדרות
+          </button>
+        )}
 
         {/* אזור התוצאות – תופס את כל הרוחב */}
         <section className="space-y-10">
           {result && (
             <>
-              {/* פלנטות ונקודות */}
+              {/* פלנטות ומזלות */}
               <div>
-                <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>פלנטות ונקודות</h2>
+                <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>פלנטות ומזלות</h2>
                 <PlanetsTable displayedBodies={displayedBodies} />
               </div>
 
@@ -133,7 +152,7 @@ export default function AstroPage() {
                 />
               </div>
 
-              {/* קאספים של הבתים */}
+              {/* תחילת הבתים */}
               {niceHouses.length === 12 && <HousesGrid niceHouses={niceHouses} />}
 
               {/* היבטים */}

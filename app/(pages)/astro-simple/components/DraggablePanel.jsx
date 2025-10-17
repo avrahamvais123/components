@@ -7,7 +7,9 @@ export default function DraggablePanel({
   children,
   initialTop = 100,
   initialLeft = 24,
+  initialAlignRight = false,
   defaultCollapsed = false,
+  onClose,
 }) {
   const panelRef = useRef(null);
   const [pos, setPos] = useState({ top: initialTop, left: initialLeft });
@@ -48,6 +50,22 @@ export default function DraggablePanel({
       window.removeEventListener("touchend", onTouchEnd);
     };
   }, []);
+
+  // On first mount, if requested, align the panel to the right by computing its left position
+  useEffect(() => {
+    if (!initialAlignRight) return;
+    const margin = 24;
+    const placeRight = () => {
+      const rect = panelRef.current?.getBoundingClientRect();
+      const w = rect?.width || 360;
+      const left = Math.max(8, window.innerWidth - w - margin);
+      setPos((p) => ({ ...p, left }));
+    };
+    // try immediately and again on next frame to ensure correct width after render
+    placeRight();
+    const id = requestAnimationFrame(placeRight);
+    return () => cancelAnimationFrame(id);
+  }, [initialAlignRight]);
 
   const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
@@ -113,6 +131,18 @@ export default function DraggablePanel({
           >
             {collapsed ? "＋" : "–"}
           </button>
+          {typeof onClose === 'function' && (
+            <button
+              type="button"
+              className="inline-flex items-center justify-center h-7 w-7 rounded-md text-gray-700 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-800"
+              title="סגור"
+              aria-label="סגור"
+              onClick={(e) => { e.stopPropagation(); onClose(); }}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
+              ×
+            </button>
+          )}
         </div>
       </div>
       {!collapsed && (

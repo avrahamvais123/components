@@ -127,12 +127,20 @@ export default function AspectsTable({ niceAspects }) {
     }
   }
   const summaryItems = Array.from(byType.values());
+  const totalCount = Array.isArray(niceAspects) ? niceAspects.length : 0;
   return (
     <div>
-      <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>היבטים</h2>
-      {/* סיכום לפי סוג היבט */}
-      {summaryItems.length > 0 ? (
-        <div className="mb-3 flex flex-wrap gap-2">
+      {/* סיכום לפי סוג היבט + סה"כ */}
+      {totalCount > 0 ? (
+        <div className="mb-3 flex flex-wrap gap-2 items-center">
+          <span
+            className={
+              `inline-flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium ` +
+              (isDark ? "text-neutral-100 bg-neutral-800" : "text-gray-800 bg-gray-100")
+            }
+          >
+            סה״כ: {totalCount}
+          </span>
           {summaryItems.map((it, idx) => (
             <span
               key={`${it.label}-${idx}`}
@@ -145,15 +153,17 @@ export default function AspectsTable({ niceAspects }) {
           ))}
         </div>
       ) : (
-        <p className={"mb-3 text-sm " + (isDark ? "text-neutral-400" : "text-gray-600")}>אין היבטים לתצוגה</p>
+        <p className={"mb-3 text-sm " + (isDark ? "text-neutral-400" : "text-gray-600")}>
+          אין היבטים לתצוגה (סה״כ: 0)
+        </p>
       )}
       <div className="overflow-x-auto">
         <table className="min-w-full border">
           <thead className={isDark ? "bg-neutral-900" : "bg-gray-50"}>
             <tr>
-              <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>נק׳ 1</th>
+              <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>פלנטה 1</th>
               <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>סוג</th>
-              <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>נק׳ 2</th>
+              <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>פלנטה 2</th>
               <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>אורב</th>
             </tr>
           </thead>
@@ -163,9 +173,18 @@ export default function AspectsTable({ niceAspects }) {
               return (
                 <tr key={i} className={isDark ? "bg-neutral-950 even:bg-neutral-900/50" : "bg-white even:bg-gray-50"}>
                   <td className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-200" : "border-gray-200"}`}>
-                    <span className="inline-flex items-center gap-2">
+                    <span className="inline-flex items-center gap-2 flex-wrap">
                       <span>{a.p1Glyph}</span>
                       <span>{a.p1}</span>
+                      {(a.p1Sign || a.p1SignGlyph) && (
+                        <>
+                          <span className={isDark ? "mx-3 text-neutral-500" : "mx-3 text-gray-400"}>·</span>
+                          <span className="inline-flex items-center gap-1">
+                            {a.p1SignGlyph && <span>{a.p1SignGlyph}</span>}
+                            {a.p1Sign && <span>{a.p1Sign}</span>}
+                          </span>
+                        </>
+                      )}
                     </span>
                   </td>
                   <td className={`p-2 border ${isDark ? "border-neutral-700" : "border-gray-200"}`}>
@@ -175,9 +194,18 @@ export default function AspectsTable({ niceAspects }) {
                     </span>
                   </td>
                   <td className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-200" : "border-gray-200"}`}>
-                    <span className="inline-flex items-center gap-2">
+                    <span className="inline-flex items-center gap-2 flex-wrap">
                       <span>{a.p2Glyph}</span>
                       <span>{a.p2}</span>
+                      {(a.p2Sign || a.p2SignGlyph) && (
+                        <>
+                          <span className={isDark ? "mx-3 text-neutral-500" : "mx-3 text-gray-400"}>·</span>
+                          <span className="inline-flex items-center gap-1">
+                            {a.p2SignGlyph && <span>{a.p2SignGlyph}</span>}
+                            {a.p2Sign && <span>{a.p2Sign}</span>}
+                          </span>
+                        </>
+                      )}
                     </span>
                   </td>
                   <td className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-200" : "border-gray-200"}`}>{a.orb}</td>

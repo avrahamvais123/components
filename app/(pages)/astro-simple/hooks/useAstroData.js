@@ -32,7 +32,7 @@ export function useAstroData(
   aspectTargetKeys = STATS_CHOICES,
   aspectOrbs = DEFAULT_ASPECT_ORBS
 ) {
-  /** קאספים כמעלות דצימליות */
+  /** מעלות התחלת הבתים (דצימלי) */
   const cuspsDegs = useMemo(() => {
     if (!result?.houses || result.houses.length !== 12) return null;
     return result.houses.map((h) => h.degDecimal);
@@ -151,13 +151,15 @@ export function useAstroData(
       const occupants = (niceBodies || []).filter(
         (b) => Number.isInteger(b?.houseNum) && b.houseNum === h.num
       );
-      const occupantGlyphs = occupants.map((b) => b.glyph).filter(Boolean);
+      const occupantGlyphs = occupants
+        .map((b) => ({ glyph: b.glyph, key: b.key }))
+        .filter((x) => x.glyph);
       return {
         num: h.num,
         labelHe,
         sign,
         signGlyph,
-        degFmt: h.degFmt30 || "-",
+        degFmt: fmtDegMin(h.degFmt30) || "-",
         occupantGlyphs,
       };
     });
@@ -176,6 +178,10 @@ export function useAstroData(
   /** היבטים עם תרגום לעברית ופילטור לפי בחירה */
   const niceAspects = useMemo(() => {
     if (!result?.aspects) return [];
+    // מפה למצוא פלנטה -> מזל
+    const bodyByKey = new Map(
+      (niceBodies || []).map((b) => [String(b.key || "").toLowerCase(), b])
+    );
     const srcSet = new Set((aspectSourceKeys || []).map((k) => String(k).toLowerCase()));
     const tgtSet = new Set((aspectTargetKeys || []).map((k) => String(k).toLowerCase()));
     
@@ -259,7 +265,14 @@ export function useAstroData(
         // נרמול סוג ההיבט לבדיקה
         const normalizedType = normalizeAspectType(type);
         
-        return { p1, p2, p1Glyph, p2Glyph, type, typeGlyph, orb, orbNum, normalizedType, p1Key, p2Key };
+        const b1 = bodyByKey.get(p1Key);
+        const b2 = bodyByKey.get(p2Key);
+        const p1Sign = b1?.sign || "";
+        const p1SignGlyph = b1?.signGlyph || "";
+        const p2Sign = b2?.sign || "";
+        const p2SignGlyph = b2?.signGlyph || "";
+
+        return { p1, p2, p1Glyph, p2Glyph, p1Sign, p1SignGlyph, p2Sign, p2SignGlyph, type, typeGlyph, orb, orbNum, normalizedType, p1Key, p2Key };
       })
       .filter((aspect) => {
         // פילטור לפי קבוצות המקור/יעד

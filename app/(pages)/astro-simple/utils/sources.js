@@ -169,6 +169,23 @@ export const PLANET_GLYPHS_BY_EN = {
   Sirius: "★",
 };
 
+/** מחלקות צבע (Tailwind) לפלנטות/נקודות עבור הדגשה ויזואלית */
+export const PLANET_COLOR_CLASS = {
+  sun: "text-yellow-500",
+  moon: "text-blue-400",
+  mercury: "text-emerald-500",
+  venus: "text-pink-500",
+  mars: "text-red-500",
+  jupiter: "text-orange-500",
+  saturn: "text-amber-700",
+  uranus: "text-cyan-500",
+  neptune: "text-indigo-500",
+  pluto: "text-violet-500",
+  chiron: "text-fuchsia-500",
+  lilith: "text-rose-500",
+  truenode: "text-amber-500",
+};
+
 /** גליפים להיבטים */
 export const ASPECT_GLYPHS = {
   conjunction: "☌",
