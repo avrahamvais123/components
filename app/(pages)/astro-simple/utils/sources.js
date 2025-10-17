@@ -221,6 +221,29 @@ export const PLANET_NAMES_HE_BY_EN = {
   Sirius: "סיריוס",
 };
 
+/** סוגי היבטים לבחירה */
+export const ASPECT_TYPES = [
+  { key: 'conjunction', labelHe: 'צמידות', labelEn: 'conjunction' },
+  { key: 'opposition', labelHe: 'מולות', labelEn: 'opposition' },
+  { key: 'trine', labelHe: 'טריין', labelEn: 'trine' },
+  { key: 'square', labelHe: 'ריבוע', labelEn: 'square' },
+  { key: 'sextile', labelHe: 'שישית', labelEn: 'sextile' },
+  { key: 'semisextile', labelHe: 'חצי־שישית', labelEn: 'semisextile' },
+  { key: 'quincunx', labelHe: 'קווינקנקס', labelEn: 'quincunx' },
+  { key: 'semisquare', labelHe: 'חצי־ריבוע', labelEn: 'semisquare' },
+  { key: 'sesquiquadrate', labelHe: 'ריבוע־וחצי', labelEn: 'sesquiquadrate' },
+  { key: 'quintile', labelHe: 'קווינטיל', labelEn: 'quintile' },
+  { key: 'biquintile', labelHe: 'בי־קווינטיל', labelEn: 'biquintile' }
+];
+
+/** היבטים עיקריים (ברירת מחדל) */
+export const DEFAULT_ASPECT_TYPES = [
+  'conjunction', 'opposition', 'trine', 'square', 'sextile'
+];
+
+/** כל סוגי ההיבטים */
+export const ALL_ASPECT_TYPES = ASPECT_TYPES.map(a => a.key);
+
 /** תרגומי בתים לעברית */
 export const HOUSE_ORDINALS_HE = [
   "ראשון",

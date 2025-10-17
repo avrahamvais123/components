@@ -1,6 +1,9 @@
 "use client";
 
+import { useThemeState } from "../../../hooks/useThemeState";
+
 export default function AstroForm({ form, onChange, onSubmit, loading }) {
+  const { isDark } = useThemeState();
   return (
     <form onSubmit={onSubmit} className="grid md:grid-cols-2 gap-4 items-end">
       <label className="flex flex-col gap-1">
@@ -87,7 +90,11 @@ export default function AstroForm({ form, onChange, onSubmit, loading }) {
       <button
         type="submit"
         disabled={loading}
-        className="md:col-span-2 bg-black text-white rounded p-3"
+        className={`md:col-span-2 rounded p-3 transition-colors ${
+          isDark 
+            ? "bg-neutral-50 text-neutral-900 hover:bg-neutral-100 border border-neutral-800" 
+            : "bg-black text-white hover:bg-gray-800"
+        } disabled:opacity-50`}
       >
         {loading ? "מחשב..." : "חשב מפה"}
       </button>

@@ -1,5 +1,6 @@
 export { default as AstroForm } from './AstroForm.jsx';
 export { default as PlanetSelector } from './PlanetSelector.jsx';
+export { default as AspectSelector } from './AspectSelector.jsx';
 export { default as PlanetsTable } from './PlanetsTable.jsx';
 export { default as ElementQualityStats } from './ElementQualityStats.jsx';
 export { default as HousesGrid } from './HousesGrid.jsx';

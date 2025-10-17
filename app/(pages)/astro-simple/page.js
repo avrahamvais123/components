@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { DEFAULT_STATS_KEYS, STATS_CHOICES } from "./utils/sources";
+import { DEFAULT_STATS_KEYS, STATS_CHOICES, DEFAULT_ASPECT_TYPES, ALL_ASPECT_TYPES } from "./utils/sources";
 import { useAstroCalculation } from "./hooks/useAstroCalculation";
 import { useAstroData } from "./hooks/useAstroData";
+import { useThemeState } from "../../hooks/useThemeState";
 import {
   AstroForm,
   PlanetSelector,
+  AspectSelector,
   PlanetsTable,
   ElementQualityStats,
   HousesGrid,
@@ -15,6 +17,8 @@ import {
 } from "./components";
 
 export default function AstroPage() {
+  const { isDark } = useThemeState();
+  
   const [form, setForm] = useState({
     date: "1987-01-28",
     time: "02:30",
@@ -26,6 +30,7 @@ export default function AstroPage() {
 
   const [displayKeys, setDisplayKeys] = useState([...STATS_CHOICES]);
   const [statsIncludeKeys, setStatsIncludeKeys] = useState([...DEFAULT_STATS_KEYS]);
+  const [selectedAspectTypes, setSelectedAspectTypes] = useState([...DEFAULT_ASPECT_TYPES]);
 
   const { result, loading, err, calculate } = useAstroCalculation();
   const {
@@ -35,7 +40,7 @@ export default function AstroPage() {
     niceHouses,
     displayedBodies,
     niceAspects,
-  } = useAstroData(result, displayKeys, statsIncludeKeys);
+  } = useAstroData(result, displayKeys, statsIncludeKeys, selectedAspectTypes);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +54,7 @@ export default function AstroPage() {
 
   return (
     <main className="max-w-4xl mx-auto p-6 space-y-8" dir="rtl">
-      <h1 className="text-2xl font-bold">מחשבון מפת לידה</h1>
+      <h1 className={`text-2xl font-bold ${isDark ? "text-neutral-100" : "text-gray-900"}`}>מחשבון מפת לידה</h1>
 
       {/* טופס קלט */}
       <AstroForm 
@@ -66,7 +71,7 @@ export default function AstroPage() {
         <section className="space-y-10">
           {/* פלנטות ונקודות */}
           <div>
-            <h2 className="text-xl font-semibold mb-2">פלנטות ונקודות</h2>
+            <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>פלנטות ונקודות</h2>
             <PlanetSelector
               selectedKeys={displayKeys}
               onSelectionChange={setDisplayKeys}
@@ -77,7 +82,7 @@ export default function AstroPage() {
 
           {/* סטטיסטיקות יסודות ואיכויות */}
           <div>
-            <h2 className="text-xl font-semibold mb-2">
+            <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>
               חלוקת יסודות ואיכויות
             </h2>
             <PlanetSelector
@@ -95,7 +100,15 @@ export default function AstroPage() {
           {niceHouses.length === 12 && <HousesGrid niceHouses={niceHouses} />}
 
           {/* היבטים */}
-          <AspectsTable niceAspects={niceAspects} />
+          <div>
+            <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>היבטים</h2>
+            <AspectSelector
+              selectedKeys={selectedAspectTypes}
+              onSelectionChange={setSelectedAspectTypes}
+              title="בחר היבטים לתצוגה"
+            />
+            <AspectsTable niceAspects={niceAspects} />
+          </div>
 
           {/* ASC & MC */}
           <AnglesGrid asc={result.asc} mc={result.mc} />

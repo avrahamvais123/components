@@ -1,15 +1,17 @@
 "use client";
 
 import { STATS_CHOICES, PLANET_NAMES_HE_BY_KEY } from "../utils/sources";
+import { useThemeState } from "../../../hooks/useThemeState";
 
 export default function PlanetSelector({ 
   selectedKeys, 
   onSelectionChange, 
   title = "בחר פלנטות" 
 }) {
+  const { isDark } = useThemeState();
   return (
-    <div className="mb-3 border rounded p-3">
-      <div className="font-medium mb-2">{title}</div>
+    <div className={`mb-3 border rounded p-3 ${isDark ? "border-neutral-700 bg-neutral-900" : "border-gray-200 bg-white"}`}>
+      <div className={`font-medium mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>{title}</div>
       <div className="grid sm:grid-cols-3 md:grid-cols-4 gap-2 text-sm">
         {STATS_CHOICES.map((k) => {
           const checked = selectedKeys.includes(k);
@@ -18,7 +20,7 @@ export default function PlanetSelector({
             <label key={k} className="inline-flex items-center gap-2">
               <input
                 type="checkbox"
-                className="accent-black"
+                className={isDark ? "accent-neutral-300" : "accent-black"}
                 checked={checked}
                 onChange={(e) => {
                   onSelectionChange((prev) => {
@@ -29,7 +31,7 @@ export default function PlanetSelector({
                   });
                 }}
               />
-              <span>{nameHe}</span>
+              <span className={isDark ? "text-neutral-200" : "text-gray-700"}>{nameHe}</span>
             </label>
           );
         })}
