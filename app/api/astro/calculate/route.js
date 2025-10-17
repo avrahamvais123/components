@@ -451,8 +451,9 @@ export async function POST(request) {
       
   // הגדרות היבטים
   aspectMode = "degree",
-      orb = 7,
-      aspects = ["conjunction", "sextile", "square", "trine", "opposition"],
+  orb = 7,
+  aspects = ["conjunction", "sextile", "square", "trine", "opposition"],
+  aspectOrbs,
       
       // הגדרות פרופיל
       profileIncludeKeys,
@@ -557,6 +558,19 @@ export async function POST(request) {
       aspectsOut = computeAspectsByDegree(planets, { aspects, orb });
     } else if (aspectMode === "sign") {
       aspectsOut = computeAspectsBySign(planets, { aspects });
+    }
+
+    // אם נשלח מפה של אורבים לפי סוג היבט, נסנן בהתאם
+    if (aspectMode === "degree" && aspectOrbs && typeof aspectOrbs === 'object') {
+      const orbsMap = aspectOrbs;
+      aspectsOut = aspectsOut.filter((a) => {
+        const key = String(a?.type || '').toLowerCase();
+        const lim = orbsMap[key];
+        if (typeof lim !== 'number') return true;
+        const orbNum = typeof a?.orb === 'number' ? a.orb : Number(a?.orb);
+        if (Number.isFinite(orbNum)) return orbNum <= lim;
+        return true;
+      });
     }
 
     // דיבאג: כמה היבטים חושבו

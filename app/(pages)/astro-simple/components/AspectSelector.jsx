@@ -1,9 +1,9 @@
 "use client";
 
 import { useThemeState } from "../../../hooks/useThemeState";
-import { ASPECT_TYPES } from "../utils/sources";
+import { ASPECT_TYPES, DEFAULT_ASPECT_ORBS } from "../utils/sources";
 
-export default function AspectSelector({ selectedKeys, onSelectionChange, title }) {
+export default function AspectSelector({ selectedKeys, onSelectionChange, title, aspectOrbs, onOrbsChange }) {
   const { isDark } = useThemeState();
 
   const handleToggle = (key) => {
@@ -72,6 +72,9 @@ export default function AspectSelector({ selectedKeys, onSelectionChange, title 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         {ASPECT_TYPES.map((aspect) => {
           const isSelected = selectedKeys.includes(aspect.key);
+          const orbVal = (aspectOrbs && aspectOrbs[aspect.key] != null)
+            ? aspectOrbs[aspect.key]
+            : DEFAULT_ASPECT_ORBS[aspect.key] ?? 6;
           return (
             <label
               key={aspect.key}
@@ -92,6 +95,23 @@ export default function AspectSelector({ selectedKeys, onSelectionChange, title 
                 className="rounded"
               />
               <span className="text-sm">{aspect.labelHe}</span>
+              {/* שדה אורב לכל היבט */}
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                max="30"
+                value={orbVal}
+                onChange={(e) => {
+                  const v = parseFloat(e.target.value);
+                  const safe = isNaN(v) ? 0 : Math.max(0, Math.min(30, v));
+                  onOrbsChange?.({ ...DEFAULT_ASPECT_ORBS, ...(aspectOrbs || {}), [aspect.key]: safe });
+                }}
+                className={`w-16 px-2 py-1 text-sm rounded border ${
+                  isDark ? "bg-neutral-800 border-neutral-600 text-neutral-100" : "bg-white border-gray-300 text-gray-900"
+                }`}
+                title="אורב במעלות"
+              />
             </label>
           );
         })}

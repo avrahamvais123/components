@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DEFAULT_STATS_KEYS, STATS_CHOICES, DEFAULT_ASPECT_TYPES, ALL_ASPECT_TYPES } from "./utils/sources";
+import { DEFAULT_STATS_KEYS, STATS_CHOICES, DEFAULT_ASPECT_TYPES, ALL_ASPECT_TYPES, DEFAULT_ASPECT_ORBS } from "./utils/sources";
 import { useAstroCalculation } from "./hooks/useAstroCalculation";
 import { useAstroData } from "./hooks/useAstroData";
 import { useThemeState } from "../../hooks/useThemeState";
@@ -31,6 +31,10 @@ export default function AstroPage() {
   const [displayKeys, setDisplayKeys] = useState([...STATS_CHOICES]);
   const [statsIncludeKeys, setStatsIncludeKeys] = useState([...DEFAULT_STATS_KEYS]);
   const [selectedAspectTypes, setSelectedAspectTypes] = useState([...DEFAULT_ASPECT_TYPES]);
+  const [aspectOrbs, setAspectOrbs] = useState({ ...DEFAULT_ASPECT_ORBS });
+  // בחירת קבוצות להיבטים: מקורות ויעדים
+  const [aspectSourceKeys, setAspectSourceKeys] = useState([...DEFAULT_STATS_KEYS]);
+  const [aspectTargetKeys, setAspectTargetKeys] = useState([...STATS_CHOICES]);
 
   const { result, loading, err, calculate } = useAstroCalculation();
   const {
@@ -40,7 +44,15 @@ export default function AstroPage() {
     niceHouses,
     displayedBodies,
     niceAspects,
-  } = useAstroData(result, displayKeys, statsIncludeKeys, selectedAspectTypes);
+  } = useAstroData(
+    result,
+    displayKeys,
+    statsIncludeKeys,
+    selectedAspectTypes,
+    aspectSourceKeys,
+    aspectTargetKeys,
+    aspectOrbs
+  );
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -102,9 +114,22 @@ export default function AstroPage() {
           {/* היבטים */}
           <div>
             <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>היבטים</h2>
+            {/* בחירת קבוצות להיבטים: מקורות ויעדים */}
+            <PlanetSelector
+              selectedKeys={aspectSourceKeys}
+              onSelectionChange={setAspectSourceKeys}
+              title="בחר פלנטות מקור (מולן יחושבו היבטים)"
+            />
+            <PlanetSelector
+              selectedKeys={aspectTargetKeys}
+              onSelectionChange={setAspectTargetKeys}
+              title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
+            />
             <AspectSelector
               selectedKeys={selectedAspectTypes}
               onSelectionChange={setSelectedAspectTypes}
+              aspectOrbs={aspectOrbs}
+              onOrbsChange={setAspectOrbs}
               title="בחר היבטים לתצוגה"
             />
             <AspectsTable niceAspects={niceAspects} />

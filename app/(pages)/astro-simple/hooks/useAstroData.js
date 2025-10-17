@@ -9,6 +9,8 @@ import {
   ELEMENT_NAME_HE,
   HOUSE_ORDINALS_HE,
   QUALITY_KEY_BY_SIGN_INDEX,
+  DEFAULT_ASPECT_ORBS,
+  STATS_CHOICES,
 } from "../utils/sources";
 import {
   toSign,
@@ -21,7 +23,15 @@ import {
   houseNameHe,
 } from "../utils/helpers";
 
-export function useAstroData(result, displayKeys, statsIncludeKeys, selectedAspectTypes) {
+export function useAstroData(
+  result,
+  displayKeys,
+  statsIncludeKeys,
+  selectedAspectTypes,
+  aspectSourceKeys = DEFAULT_STATS_KEYS,
+  aspectTargetKeys = STATS_CHOICES,
+  aspectOrbs = DEFAULT_ASPECT_ORBS
+) {
   /** קאספים כמעלות דצימליות */
   const cuspsDegs = useMemo(() => {
     if (!result?.houses || result.houses.length !== 12) return null;
@@ -137,15 +147,21 @@ export function useAstroData(result, displayKeys, statsIncludeKeys, selectedAspe
       const labelHe = Number.isInteger(h.num)
         ? HOUSE_ORDINALS_HE[h.num - 1]
         : `מס׳ ${h.num}`;
+      // פלנטות שנמצאות בבית זה (לפי niceBodies.houseNum)
+      const occupants = (niceBodies || []).filter(
+        (b) => Number.isInteger(b?.houseNum) && b.houseNum === h.num
+      );
+      const occupantGlyphs = occupants.map((b) => b.glyph).filter(Boolean);
       return {
         num: h.num,
         labelHe,
         sign,
         signGlyph,
         degFmt: h.degFmt30 || "-",
+        occupantGlyphs,
       };
     });
-  }, [result]);
+  }, [result, niceBodies]);
 
   /** פלנטות לתצוגה לפי בחירת המשתמש */
   const displayedBodies = useMemo(() => {
@@ -160,6 +176,8 @@ export function useAstroData(result, displayKeys, statsIncludeKeys, selectedAspe
   /** היבטים עם תרגום לעברית ופילטור לפי בחירה */
   const niceAspects = useMemo(() => {
     if (!result?.aspects) return [];
+    const srcSet = new Set((aspectSourceKeys || []).map((k) => String(k).toLowerCase()));
+    const tgtSet = new Set((aspectTargetKeys || []).map((k) => String(k).toLowerCase()));
     
     // פונקציה לנרמול סוג היבט לבדיקה
     const normalizeAspectType = (aspectType) => {
@@ -213,6 +231,8 @@ export function useAstroData(result, displayKeys, statsIncludeKeys, selectedAspe
       .map((a) => {
         const p1En = a?.point1Label || a?.point1 || "";
         const p2En = a?.point2Label || a?.point2 || "";
+        const p1Key = String(a?.a || a?.point1 || p1En).toLowerCase();
+        const p2Key = String(a?.b || a?.point2 || p2En).toLowerCase();
         const typeRaw =
           a?.type ??
           a?.aspect ??
@@ -233,18 +253,27 @@ export function useAstroData(result, displayKeys, statsIncludeKeys, selectedAspe
           (typeKey && labelAspect(typeKey)) ||
           (typeof typeRaw === "string" ? typeRaw : "");
         const typeGlyph = typeKey ? ASPECT_GLYPHS[typeKey] || "" : "";
-        const orb = typeof a?.orb === "number" ? a.orb.toFixed(2) : a?.orb;
+  const orbNum = typeof a?.orb === "number" ? a.orb : null;
+  const orb = orbNum != null ? orbNum.toFixed(2) : a?.orb;
         
         // נרמול סוג ההיבט לבדיקה
         const normalizedType = normalizeAspectType(type);
         
-        return { p1, p2, p1Glyph, p2Glyph, type, typeGlyph, orb, normalizedType };
+        return { p1, p2, p1Glyph, p2Glyph, type, typeGlyph, orb, orbNum, normalizedType, p1Key, p2Key };
       })
       .filter((aspect) => {
-        // פילטור לפי היבטים שנבחרו
-        return selectedAspectTypes.includes(aspect.normalizedType);
+        // פילטור לפי קבוצות המקור/יעד
+        const inPair = (srcSet.has(aspect.p1Key) && tgtSet.has(aspect.p2Key))
+                    || (srcSet.has(aspect.p2Key) && tgtSet.has(aspect.p1Key));
+        if (!inPair) return false;
+        // פילטור לפי סוגי היבטים שנבחרו
+        if (!selectedAspectTypes.includes(aspect.normalizedType)) return false;
+        // פילטור לפי אורב לכל סוג: אם האורב שקיבלנו גדול מהאורב המותר, נפסול
+        const limit = aspectOrbs?.[aspect.normalizedType] ?? DEFAULT_ASPECT_ORBS[aspect.normalizedType] ?? 7;
+        if (typeof aspect.orbNum === "number" && aspect.orbNum > limit) return false;
+        return true;
       });
-  }, [result, selectedAspectTypes]);
+  }, [result, selectedAspectTypes, aspectSourceKeys, aspectTargetKeys, aspectOrbs]);
 
   return {
     niceBodies,

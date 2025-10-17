@@ -24,6 +24,16 @@ export default function HousesGrid({ niceHouses }) {
               </span>
             </div>
             <div className={isDark ? "text-neutral-200" : "text-gray-700"}>מעלה: {h.degFmt}</div>
+            {Array.isArray(h.occupantGlyphs) && h.occupantGlyphs.length > 0 && (
+              <div className={isDark ? "text-neutral-200" : "text-gray-700"}>
+                פלנטות: {" "}
+                <span className="inline-flex flex-wrap gap-2 align-middle">
+                  {h.occupantGlyphs.map((g, idx) => (
+                    <span key={idx} className="text-lg leading-none">{g}</span>
+                  ))}
+                </span>
+              </div>
+            )}
           </div>
         ))}
       </div>

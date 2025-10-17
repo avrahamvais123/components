@@ -8,7 +8,7 @@ export function useAstroCalculation() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
-  const calculate = async (form) => {
+  const calculate = async (form, options = {}) => {
     console.log("[astro-simple] compute() start", form);
     setLoading(true);
     setErr("");
@@ -105,7 +105,7 @@ export function useAstroCalculation() {
         });
       }
 
-      // נסיון להרחיב אסטרואידים דרך ה-API
+      // נסיון להרחיב אסטרואידים דרך ה-API ולקבל היבטים עם אורב לכל סוג
       try {
         const arcFmt30 = (deg) => {
           const norm = ((deg % 360) + 360) % 360;
@@ -127,7 +127,7 @@ export function useAstroCalculation() {
             houseSystem: hs,
             zodiac: form.zodiac || "tropical",
             aspectMode: "degree",
-            orb: 7,
+            aspectOrbs: options.aspectOrbs || undefined,
             asteroids: ["ceres", "pallas", "juno", "vesta"],
           }),
         });
@@ -149,12 +149,16 @@ export function useAstroCalculation() {
               },
             }));
           if (apiExt.length) pointsExt = [...pointsExt, ...apiExt];
+          // אם יש היבטים מה-API, נעדיף אותם על פני אלו של הספרייה המקומית
+          if (Array.isArray(data?.data?.aspects)) {
+            aspects = data.data.aspects;
+          }
         }
       } catch (err) {
         console.warn("[astro-simple] failed to fetch asteroids from API", err?.message || err);
       }
 
-      const aspects = horoscope?.Aspects?.all ?? [];
+      let aspects = horoscope?.Aspects?.all ?? [];
       const asc = horoscope?.Ascendant;
       const mc = horoscope?.Midheaven;
 

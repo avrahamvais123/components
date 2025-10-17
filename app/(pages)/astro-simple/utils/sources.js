@@ -244,6 +244,21 @@ export const DEFAULT_ASPECT_TYPES = [
 /** כל סוגי ההיבטים */
 export const ALL_ASPECT_TYPES = ASPECT_TYPES.map(a => a.key);
 
+// אורב ברירת מחדל לכל סוג היבט (במעלות)
+export const DEFAULT_ASPECT_ORBS = {
+  conjunction: 8,
+  opposition: 8,
+  square: 7,
+  trine: 7,
+  sextile: 6,
+  semisextile: 2,
+  quincunx: 3,
+  semisquare: 2,
+  sesquiquadrate: 2,
+  quintile: 1.5,
+  biquintile: 1.5,
+};
+
 /** תרגומי בתים לעברית */
 export const HOUSE_ORDINALS_HE = [
   "ראשון",
