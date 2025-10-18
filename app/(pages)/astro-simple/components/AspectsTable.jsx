@@ -173,19 +173,18 @@ export default function AspectsTable({ niceAspects }) {
               return (
                 <tr key={i} className={isDark ? "bg-neutral-950 even:bg-neutral-900/50" : "bg-white even:bg-gray-50"}>
                   <td className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-200" : "border-gray-200"}`}>
-                    <span className="inline-flex items-center gap-2 flex-wrap">
-                      <span>{a.p1Glyph}</span>
-                      <span>{a.p1}</span>
+                    <div className="flex flex-col">
+                      <span className="inline-flex items-center gap-2 flex-wrap">
+                        <span>{a.p1Glyph}</span>
+                        <span>{a.p1}</span>
+                      </span>
                       {(a.p1Sign || a.p1SignGlyph) && (
-                        <>
-                          <span className={isDark ? "mx-3 text-neutral-500" : "mx-3 text-gray-400"}>·</span>
-                          <span className="inline-flex items-center gap-1">
-                            {a.p1SignGlyph && <span>{a.p1SignGlyph}</span>}
-                            {a.p1Sign && <span>{a.p1Sign}</span>}
-                          </span>
-                        </>
+                        <span className={`mt-0.5 text-xs inline-flex items-center gap-1 ${isDark ? "text-neutral-400" : "text-gray-500"}`}>
+                          {a.p1SignGlyph && <span>{a.p1SignGlyph}</span>}
+                          {a.p1Sign && <span>{a.p1Sign}</span>}
+                        </span>
                       )}
-                    </span>
+                    </div>
                   </td>
                   <td className={`p-2 border ${isDark ? "border-neutral-700" : "border-gray-200"}`}>
                     <span className={`inline-flex items-center gap-2 px-2 py-1 rounded-md font-medium ${aspectColorClass}`}>
@@ -194,19 +193,18 @@ export default function AspectsTable({ niceAspects }) {
                     </span>
                   </td>
                   <td className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-200" : "border-gray-200"}`}>
-                    <span className="inline-flex items-center gap-2 flex-wrap">
-                      <span>{a.p2Glyph}</span>
-                      <span>{a.p2}</span>
+                    <div className="flex flex-col">
+                      <span className="inline-flex items-center gap-2 flex-wrap">
+                        <span>{a.p2Glyph}</span>
+                        <span>{a.p2}</span>
+                      </span>
                       {(a.p2Sign || a.p2SignGlyph) && (
-                        <>
-                          <span className={isDark ? "mx-3 text-neutral-500" : "mx-3 text-gray-400"}>·</span>
-                          <span className="inline-flex items-center gap-1">
-                            {a.p2SignGlyph && <span>{a.p2SignGlyph}</span>}
-                            {a.p2Sign && <span>{a.p2Sign}</span>}
-                          </span>
-                        </>
+                        <span className={`mt-0.5 text-xs inline-flex items-center gap-1 ${isDark ? "text-neutral-400" : "text-gray-500"}`}>
+                          {a.p2SignGlyph && <span>{a.p2SignGlyph}</span>}
+                          {a.p2Sign && <span>{a.p2Sign}</span>}
+                        </span>
                       )}
-                    </span>
+                    </div>
                   </td>
                   <td className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-200" : "border-gray-200"}`}>{a.orb}</td>
                 </tr>

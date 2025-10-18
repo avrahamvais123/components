@@ -66,8 +66,7 @@ export default function AstroPage() {
   const [showMainSettings, setShowMainSettings] = useState(true); // טופס ראשי: פרטי לידה + מערכת בתים וזודיאק
   const [showDisplayPlanets, setShowDisplayPlanets] = useState(false);
   const [showStatsPlanets, setShowStatsPlanets] = useState(false);
-  const [showAspectSources, setShowAspectSources] = useState(false);
-  const [showAspectTargets, setShowAspectTargets] = useState(false);
+  const [showAspectsSelection, setShowAspectsSelection] = useState(false); // מקורות ויעדים בכרטיס אחד
   const [showAspectTypes, setShowAspectTypes] = useState(false);
 
   const { result, loading, err, calculate } = useAstroCalculation();
@@ -130,16 +129,9 @@ export default function AstroPage() {
           <button
             type="button"
             className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
-            onClick={() => setShowAspectSources(true)}
+            onClick={() => setShowAspectsSelection(true)}
           >
-            מקורות היבטים
-          </button>
-          <button
-            type="button"
-            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
-            onClick={() => setShowAspectTargets(true)}
-          >
-            יעדי היבטים
+            היבטים: מקורות ויעדים
           </button>
           <button
             type="button"
@@ -180,6 +172,8 @@ export default function AstroPage() {
             title="תצוגת פלנטות"
             initialTop={120}
             initialLeft={24}
+            showInlineHint={false}
+            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
             onClose={() => setShowDisplayPlanets(false)}
           >
             <PlanetSelector
@@ -196,6 +190,8 @@ export default function AstroPage() {
             title="פלנטות למדדים"
             initialTop={300}
             initialLeft={24}
+            showInlineHint={false}
+            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
             onClose={() => setShowStatsPlanets(false)}
           >
             <PlanetSelector
@@ -206,37 +202,29 @@ export default function AstroPage() {
           </DraggablePanel>
         )}
 
-        {/* פאנל: מקורות היבטים */}
-        {showAspectSources && (
+        {/* פאנל: היבטים – מקורות ויעדים בכרטיס אחד */}
+        {showAspectsSelection && (
           <DraggablePanel
-            title="מקורות היבטים"
+            title="היבטים: מקורות ויעדים"
             initialTop={300}
             initialLeft={24}
             initialAlignRight
-            onClose={() => setShowAspectSources(false)}
+            showInlineHint={false}
+            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
+            onClose={() => setShowAspectsSelection(false)}
           >
-            <PlanetSelector
-              selectedKeys={aspectSourceKeys}
-              onSelectionChange={setAspectSourceKeys}
-              title="בחר פלנטות מקור (מולן יחושבו היבטים)"
-            />
-          </DraggablePanel>
-        )}
-
-        {/* פאנל: יעדי היבטים */}
-        {showAspectTargets && (
-          <DraggablePanel
-            title="יעדי היבטים"
-            initialTop={480}
-            initialLeft={24}
-            initialAlignRight
-            onClose={() => setShowAspectTargets(false)}
-          >
-            <PlanetSelector
-              selectedKeys={aspectTargetKeys}
-              onSelectionChange={setAspectTargetKeys}
-              title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
-            />
+            <div className="space-y-4">
+              <PlanetSelector
+                selectedKeys={aspectSourceKeys}
+                onSelectionChange={setAspectSourceKeys}
+                title="בחר פלנטות מקור (מולן יחושבו היבטים)"
+              />
+              <PlanetSelector
+                selectedKeys={aspectTargetKeys}
+                onSelectionChange={setAspectTargetKeys}
+                title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
+              />
+            </div>
           </DraggablePanel>
         )}
 
@@ -246,6 +234,8 @@ export default function AstroPage() {
             title="סוגי היבטים"
             initialTop={480}
             initialLeft={24}
+            showInlineHint={false}
+            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
             onClose={() => setShowAspectTypes(false)}
           >
             <AspectSelector

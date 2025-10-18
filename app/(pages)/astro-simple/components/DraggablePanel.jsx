@@ -8,7 +8,7 @@ export default function DraggablePanel({
   children,
   initialTop = 100,
   initialLeft = 24,
-  initialAlignRight = false,
+  initialAlignRight = true,
   defaultCollapsed = false,
   onClose,
   // UX options
