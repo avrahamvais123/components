@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DEFAULT_STATS_KEYS, STATS_CHOICES, DEFAULT_ASPECT_TYPES, ALL_ASPECT_TYPES, DEFAULT_ASPECT_ORBS } from "./utils/sources";
+import { STATS_CHOICES, DEFAULT_ASPECT_TYPES, DEFAULT_ASPECT_ORBS } from "./utils/sources";
 import { useAstroCalculation } from "./hooks/useAstroCalculation";
 import { useAstroData } from "./hooks/useAstroData";
 import { useThemeState } from "../../hooks/useThemeState";
@@ -30,12 +30,38 @@ export default function AstroPage() {
   });
 
   const [displayKeys, setDisplayKeys] = useState([...STATS_CHOICES]);
-  const [statsIncludeKeys, setStatsIncludeKeys] = useState([...DEFAULT_STATS_KEYS]);
+  // ברירת מחדל למדדי יסודות/איכויות: 5 הפלנטות העיקריות
+  const [statsIncludeKeys, setStatsIncludeKeys] = useState([
+    "sun",
+    "moon",
+    "mercury",
+    "venus",
+    "mars",
+  ]);
   const [selectedAspectTypes, setSelectedAspectTypes] = useState([...DEFAULT_ASPECT_TYPES]);
   const [aspectOrbs, setAspectOrbs] = useState({ ...DEFAULT_ASPECT_ORBS });
   // בחירת קבוצות להיבטים: מקורות ויעדים
-  const [aspectSourceKeys, setAspectSourceKeys] = useState([...DEFAULT_STATS_KEYS]);
-  const [aspectTargetKeys, setAspectTargetKeys] = useState([...STATS_CHOICES]);
+  // ברירת מחדל למקורות היבטים: 5 הפלנטות העיקריות
+  const [aspectSourceKeys, setAspectSourceKeys] = useState([
+    "sun",
+    "moon",
+    "mercury",
+    "venus",
+    "mars",
+  ]);
+  // ברירת מחדל ליעדי היבטים: 5 העיקריות + חיצוניות
+  const [aspectTargetKeys, setAspectTargetKeys] = useState([
+    "sun",
+    "moon",
+    "mercury",
+    "venus",
+    "mars",
+    "jupiter",
+    "saturn",
+    "uranus",
+    "neptune",
+    "pluto",
+  ]);
   const [showSettings, setShowSettings] = useState(true);
 
   const { result, loading, err, calculate } = useAstroCalculation();
