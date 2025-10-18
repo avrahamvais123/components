@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 
 export default function DraggablePanel({
   title = "הגדרות",
@@ -12,8 +12,19 @@ export default function DraggablePanel({
   onClose,
 }) {
   const panelRef = useRef(null);
-  const [pos, setPos] = useState({ top: initialTop, left: initialLeft });
+  const [pos, setPos] = useState(() => {
+    // חישוב מיקום התחלתי בצד ימין עוד לפני הציור הראשון כדי למנוע קפיצה
+    if (typeof window === "undefined") return { top: initialTop, left: initialLeft };
+    if (initialAlignRight) {
+      const margin = 24;
+      const estimatedWidth = Math.min(360, Math.floor(window.innerWidth * 0.95));
+      const left = Math.max(8, window.innerWidth - estimatedWidth - margin);
+      return { top: initialTop, left };
+    }
+    return { top: initialTop, left: initialLeft };
+  });
   const [collapsed, setCollapsed] = useState(!!defaultCollapsed);
+  const [mounted, setMounted] = useState(false);
   const dragState = useRef({ dragging: false, startX: 0, startY: 0, origTop: 0, origLeft: 0 });
 
   useEffect(() => {
@@ -51,21 +62,21 @@ export default function DraggablePanel({
     };
   }, []);
 
-  // On first mount, if requested, align the panel to the right by computing its left position
-  useEffect(() => {
+  // יישור עדין לימין לפני הציור הראשון לפי הרוחב האמיתי של הכרטיס, ללא הבהוב
+  useLayoutEffect(() => {
     if (!initialAlignRight) return;
     const margin = 24;
-    const placeRight = () => {
-      const rect = panelRef.current?.getBoundingClientRect();
-      const w = rect?.width || 360;
-      const left = Math.max(8, window.innerWidth - w - margin);
-      setPos((p) => ({ ...p, left }));
-    };
-    // try immediately and again on next frame to ensure correct width after render
-    placeRight();
-    const id = requestAnimationFrame(placeRight);
-    return () => cancelAnimationFrame(id);
+    const rect = panelRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const w = rect.width || 360;
+    const left = Math.max(8, window.innerWidth - w - margin);
+    setPos((p) => (p.left === left ? p : { ...p, left }));
   }, [initialAlignRight]);
+
+  // סימון שהקליינט מוכן כדי להחליף מ-right (SSR) ל-left מחושב (קליינט)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
@@ -104,7 +115,11 @@ export default function DraggablePanel({
         "fixed z-50 max-h-[85vh] overflow-auto rounded-xl border shadow-2xl backdrop-blur bg-white/90 dark:bg-neutral-900/90 dark:border-neutral-800 " +
         (collapsed ? " w-auto" : " w-[360px] max-w-[95vw]")
       }
-      style={{ top: pos.top, left: pos.left }}
+      style={
+        initialAlignRight && !mounted
+          ? { top: initialTop, right: 24 }
+          : { top: pos.top, left: pos.left }
+      }
     >
       <div
         className="sticky top-0 select-none border-b bg-white dark:bg-neutral-900 dark:border-neutral-800 px-3 py-2 rounded-t-xl flex items-center justify-between"
