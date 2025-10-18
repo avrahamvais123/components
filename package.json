@@ -1,7 +1,15 @@
 {
-  "name": "components",
+  "name": "astrology-calc",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avrahamvais123/astrology-calc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/avrahamvais123/astrology-calc/issues"
+  },
+  "homepage": "https://github.com/avrahamvais123/astrology-calc#readme",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",

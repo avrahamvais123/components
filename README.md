@@ -1,3 +1,7 @@
+# מחשבון אסטרולוגיה (astrology-calc)
+
+Repo: https://github.com/avrahamvais123/astrology-calc
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## 🔒 Secure PayPal Integration

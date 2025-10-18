@@ -19,7 +19,7 @@ const notoSans = Noto_Sans_Hebrew({
 });
 
 export const metadata = {
-  title: "ספריית רכיבים",
+  title: "מחשבון אסטרולוגיה",
   description: "רכיבים מותאמים אישית",
 };
 
