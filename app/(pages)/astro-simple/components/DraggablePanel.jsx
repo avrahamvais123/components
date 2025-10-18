@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function DraggablePanel({
   title = "הגדרות",
@@ -10,6 +11,10 @@ export default function DraggablePanel({
   initialAlignRight = false,
   defaultCollapsed = false,
   onClose,
+  // UX options
+  showInlineHint = true,
+  titleTooltip = null,
+  hintText = "ניתן לגרור (דאבל־קליק לכיווץ/הרחבה)",
 }) {
   const panelRef = useRef(null);
   const [pos, setPos] = useState(() => {
@@ -130,10 +135,25 @@ export default function DraggablePanel({
         role="toolbar"
       >
         <div className="flex items-center gap-2">
-          <div className="font-semibold text-sm text-gray-800 dark:text-neutral-100">
-            {title}
-          </div>
-          <div className="text-[11px] text-gray-500 dark:text-neutral-400 hidden sm:block">ניתן לגרור (דאבל־קליק לכיווץ/הרחבה)</div>
+          {titleTooltip ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="font-semibold text-sm text-gray-800 dark:text-neutral-100 cursor-help">
+                  {title}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={6} className="max-w-xs text-center">
+                {typeof titleTooltip === "string" ? titleTooltip : hintText}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <div className="font-semibold text-sm text-gray-800 dark:text-neutral-100">
+              {title}
+            </div>
+          )}
+          {showInlineHint && (
+            <div className="text-[11px] text-gray-500 dark:text-neutral-400 hidden sm:block">{hintText}</div>
+          )}
         </div>
         <div className="flex items-center gap-1">
           <button

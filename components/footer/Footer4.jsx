@@ -1,40 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import {
-  DribbbleIcon,
-  GithubIcon,
-  TwitchIcon,
-  TwitterIcon,
-} from "lucide-react";
+import { DribbbleIcon, GithubIcon, TwitchIcon, TwitterIcon } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "../customized/header/logo";
 
 const footerLinks = [
-  {
-    title: "Overview",
-    href: "#",
-  },
-  {
-    title: "Features",
-    href: "#",
-  },
-  {
-    title: "Pricing",
-    href: "#",
-  },
-  {
-    title: "Careers",
-    href: "#",
-  },
-  {
-    title: "Help",
-    href: "#",
-  },
-  {
-    title: "Privacy",
-    href: "#",
-  },
+  { title: "בית", href: "/" },
+  { title: "מחשבון אסטרולוגיה", href: "/astro" },
+  { title: "מוצרים", href: "/products" },
+  { title: "קטגוריות", href: "/categories" },
+  { title: "סיוע", href: "#help" },
+  { title: "פרטיות", href: "#privacy" },
 ];
 
 const Footer4 = () => {
@@ -60,12 +37,12 @@ const Footer4 = () => {
             </ul>
           </div>
 
-          {/* Subscribe Newsletter */}
+          {/* ניוזלטר */}
           <div className="max-w-xs w-full">
-            <h6 className="font-medium">Stay up to date</h6>
+            <h6 className="font-medium">הישארו מעודכנים</h6>
             <form className="mt-6 flex items-center gap-2">
-              <Input type="email" placeholder="Enter your email" />
-              <Button>Subscribe</Button>
+              <Input type="email" placeholder="הקלידו אימייל" aria-label="כתובת אימייל" />
+              <Button type="button" aria-label="הירשמו">הירשמו</Button>
             </form>
           </div>
         </div>
@@ -73,24 +50,20 @@ const Footer4 = () => {
         <div className="py-8 flex flex-col-reverse sm:flex-row items-center justify-between gap-x-2 gap-y-5 px-6 xl:px-0">
           {/* Copyright */}
           <span className="text-muted-foreground">
-            &copy; {new Date().getFullYear()}{" "}
-            <Link href="/" target="_blank">
-              Shadcn UI Blocks
-            </Link>
-            . All rights reserved.
+            &copy; {new Date().getFullYear()} מחשבון אסטרולוגיה. כל הזכויות שמורות.
           </span>
 
           <div className="flex items-center gap-5 text-muted-foreground">
-            <Link href="#" target="_blank">
+            <Link href="#" aria-label="טוויטר">
               <TwitterIcon className="h-5 w-5" />
             </Link>
-            <Link href="#" target="_blank">
+            <Link href="#" aria-label="דריבל">
               <DribbbleIcon className="h-5 w-5" />
             </Link>
-            <Link href="#" target="_blank">
+            <Link href="#" aria-label="טוויץ'">
               <TwitchIcon className="h-5 w-5" />
             </Link>
-            <Link href="#" target="_blank">
+            <Link href="#" aria-label="גיתהאב">
               <GithubIcon className="h-5 w-5" />
             </Link>
           </div>

@@ -286,7 +286,7 @@ export function useAstroData(
         if (typeof aspect.orbNum === "number" && aspect.orbNum > limit) return false;
         return true;
       });
-  }, [result, selectedAspectTypes, aspectSourceKeys, aspectTargetKeys, aspectOrbs]);
+  }, [result, selectedAspectTypes, aspectSourceKeys, aspectTargetKeys, aspectOrbs, niceBodies]);
 
   return {
     niceBodies,

@@ -62,7 +62,13 @@ export default function AstroPage() {
     "neptune",
     "pluto",
   ]);
-  const [showSettings, setShowSettings] = useState(true);
+  // שליטה בתצוגת הפאנלים הצפים
+  const [showMainSettings, setShowMainSettings] = useState(true); // טופס ראשי: פרטי לידה + מערכת בתים וזודיאק
+  const [showDisplayPlanets, setShowDisplayPlanets] = useState(false);
+  const [showStatsPlanets, setShowStatsPlanets] = useState(false);
+  const [showAspectSources, setShowAspectSources] = useState(false);
+  const [showAspectTargets, setShowAspectTargets] = useState(false);
+  const [showAspectTypes, setShowAspectTypes] = useState(false);
 
   const { result, loading, err, calculate } = useAstroCalculation();
   const {
@@ -96,65 +102,160 @@ export default function AstroPage() {
     <main className="max-w-6xl mx-auto p-6" dir="rtl">
       <h1 className={`text-2xl font-bold mb-6 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>מחשבון מפת לידה</h1>
 
-      <div className="relative">
-        {/* פאנל צף וגריר להגדרות - לא תופס מקום בפריסה */}
-        {showSettings && (
-          <DraggablePanel
-            title="הגדרות מחשבון"
-            initialTop={100}
-            initialLeft={24}
-            initialAlignRight
-            onClose={() => setShowSettings(false)}
-          >
-          <AstroForm
-            form={form}
-            onChange={onChange}
-            onSubmit={compute}
-            loading={loading}
-          />
-          {err && <p className="text-red-600">{err}</p>}
-
-          <PlanetSelector
-            selectedKeys={displayKeys}
-            onSelectionChange={setDisplayKeys}
-            title="בחר פלנטות לתצוגה"
-          />
-
-          <PlanetSelector
-            selectedKeys={statsIncludeKeys}
-            onSelectionChange={setStatsIncludeKeys}
-            title="בחר פלנטות לחישוב (איכויות ויסודות)"
-          />
-
-          <PlanetSelector
-            selectedKeys={aspectSourceKeys}
-            onSelectionChange={setAspectSourceKeys}
-            title="בחר פלנטות מקור (מולן יחושבו היבטים)"
-          />
-          <PlanetSelector
-            selectedKeys={aspectTargetKeys}
-            onSelectionChange={setAspectTargetKeys}
-            title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
-          />
-
-          <AspectSelector
-            selectedKeys={selectedAspectTypes}
-            onSelectionChange={setSelectedAspectTypes}
-            aspectOrbs={aspectOrbs}
-            onOrbsChange={setAspectOrbs}
-            title="בחר היבטים לתצוגה"
-          />
-        </DraggablePanel>
-        )}
-
-        {!showSettings && (
+      {/* תפריט עליון לבחירת הכרטיסים הצפים */}
+  <nav className="sticky top-16 z-40 mb-4 bg-white/70 dark:bg-neutral-900/70 backdrop-blur rounded-lg border border-gray-200 dark:border-neutral-800 p-2">
+        <div className="flex flex-wrap gap-2 justify-start">
           <button
             type="button"
-            className="fixed z-40 bottom-6 right-6 rounded-full px-4 py-2 shadow-lg bg-white dark:bg-neutral-900 border dark:border-neutral-800 text-gray-800 dark:text-neutral-100 hover:bg-gray-50 dark:hover:bg-neutral-800"
-            onClick={() => setShowSettings(true)}
+            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
+            onClick={() => setShowMainSettings(true)}
           >
-            הצג הגדרות
+            פרטי לידה
           </button>
+          {/* כפתור מערכת בתים וזודיאק בוטל כי השדות כלולים בפרטי לידה */}
+          <button
+            type="button"
+            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
+            onClick={() => setShowDisplayPlanets(true)}
+          >
+            תצוגת פלנטות
+          </button>
+          <button
+            type="button"
+            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
+            onClick={() => setShowStatsPlanets(true)}
+          >
+            פלנטות למדדים
+          </button>
+          <button
+            type="button"
+            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
+            onClick={() => setShowAspectSources(true)}
+          >
+            מקורות היבטים
+          </button>
+          <button
+            type="button"
+            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
+            onClick={() => setShowAspectTargets(true)}
+          >
+            יעדי היבטים
+          </button>
+          <button
+            type="button"
+            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
+            onClick={() => setShowAspectTypes(true)}
+          >
+            סוגי היבטים
+          </button>
+        </div>
+      </nav>
+
+      <div className="relative">
+        {/* פאנל: פרטי לידה – תאריך/שעה/lat/lon + מערכת בתים וזודיאק */}
+        {showMainSettings && (
+          <DraggablePanel
+            title="פרטי לידה"
+            initialTop={120}
+            initialLeft={24}
+            initialAlignRight
+            onClose={() => setShowMainSettings(false)}
+            showInlineHint={false}
+            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
+          >
+            <AstroForm
+              form={form}
+              onChange={onChange}
+              onSubmit={compute}
+              loading={loading}
+              /* שני מקבצי השדות נכללים כברירת מחדל */
+            />
+            {err && <p className="text-red-600">{err}</p>}
+          </DraggablePanel>
+        )}
+
+        {/* פאנל: בחירת פלנטות לתצוגה */}
+        {showDisplayPlanets && (
+          <DraggablePanel
+            title="תצוגת פלנטות"
+            initialTop={120}
+            initialLeft={24}
+            onClose={() => setShowDisplayPlanets(false)}
+          >
+            <PlanetSelector
+              selectedKeys={displayKeys}
+              onSelectionChange={setDisplayKeys}
+              title="בחר פלנטות לתצוגה"
+            />
+          </DraggablePanel>
+        )}
+
+        {/* פאנל: בחירת פלנטות לחישוב סטטיסטיקות */}
+        {showStatsPlanets && (
+          <DraggablePanel
+            title="פלנטות למדדים"
+            initialTop={300}
+            initialLeft={24}
+            onClose={() => setShowStatsPlanets(false)}
+          >
+            <PlanetSelector
+              selectedKeys={statsIncludeKeys}
+              onSelectionChange={setStatsIncludeKeys}
+              title="בחר פלנטות לחישוב (איכויות ויסודות)"
+            />
+          </DraggablePanel>
+        )}
+
+        {/* פאנל: מקורות היבטים */}
+        {showAspectSources && (
+          <DraggablePanel
+            title="מקורות היבטים"
+            initialTop={300}
+            initialLeft={24}
+            initialAlignRight
+            onClose={() => setShowAspectSources(false)}
+          >
+            <PlanetSelector
+              selectedKeys={aspectSourceKeys}
+              onSelectionChange={setAspectSourceKeys}
+              title="בחר פלנטות מקור (מולן יחושבו היבטים)"
+            />
+          </DraggablePanel>
+        )}
+
+        {/* פאנל: יעדי היבטים */}
+        {showAspectTargets && (
+          <DraggablePanel
+            title="יעדי היבטים"
+            initialTop={480}
+            initialLeft={24}
+            initialAlignRight
+            onClose={() => setShowAspectTargets(false)}
+          >
+            <PlanetSelector
+              selectedKeys={aspectTargetKeys}
+              onSelectionChange={setAspectTargetKeys}
+              title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
+            />
+          </DraggablePanel>
+        )}
+
+        {/* פאנל: סוגי היבטים ומרווחי סבילות */}
+        {showAspectTypes && (
+          <DraggablePanel
+            title="סוגי היבטים"
+            initialTop={480}
+            initialLeft={24}
+            onClose={() => setShowAspectTypes(false)}
+          >
+            <AspectSelector
+              selectedKeys={selectedAspectTypes}
+              onSelectionChange={setSelectedAspectTypes}
+              aspectOrbs={aspectOrbs}
+              onOrbsChange={setAspectOrbs}
+              title="בחר היבטים לתצוגה"
+            />
+          </DraggablePanel>
         )}
 
         {/* אזור התוצאות – תופס את כל הרוחב */}
