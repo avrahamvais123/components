@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
+import { CheckIcon, ChevronRightIcon, ChevronLeftIcon, CircleIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -174,6 +174,13 @@ function DropdownMenuSubTrigger({
   children,
   ...props
 }) {
+  const [isRTL, setIsRTL] = React.useState(false);
+  React.useEffect(() => {
+    if (typeof document !== "undefined") {
+      const dir = getComputedStyle(document.documentElement).direction;
+      setIsRTL(dir === "rtl");
+    }
+  }, []);
   return (
     <DropdownMenuPrimitive.SubTrigger
       data-slot="dropdown-menu-sub-trigger"
@@ -184,7 +191,11 @@ function DropdownMenuSubTrigger({
       )}
       {...props}>
       {children}
-      <ChevronRightIcon className="ml-auto size-4" />
+      {isRTL ? (
+        <ChevronLeftIcon className="mr-auto size-4" />
+      ) : (
+        <ChevronRightIcon className="ml-auto size-4" />
+      )}
     </DropdownMenuPrimitive.SubTrigger>
   );
 }

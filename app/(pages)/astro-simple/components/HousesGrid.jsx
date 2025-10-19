@@ -9,22 +9,22 @@ export default function HousesGrid({ niceHouses }) {
 
   return (
     <div>
-      <h2 className={`text-xl font-semibold mb-4 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>תחילת הבתים</h2>
+  <h2 className={`text-xl font-semibold mb-4 ${isDark ? "text-neutral-100" : "text-neutral-900"}`}>תחילת הבתים</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {niceHouses.map((h) => (
           <div 
             key={h.num} 
-            className={`relative overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-lg ${
+            className={`relative overflow-hidden rounded-xl border transition-all duration-200 ${
               isDark 
-                ? "border-neutral-700 bg-gradient-to-br from-neutral-800 to-neutral-900 hover:border-neutral-600" 
-                : "border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-gray-300 hover:shadow-md"
+                ? "border-neutral-700 bg-neutral-900 hover:border-neutral-600" 
+                : "border-neutral-200 bg-white hover:border-neutral-300"
             }`}
           >
             {/* כותרת הבית */}
             <div className={`px-4 py-3 border-b ${
-              isDark ? "border-neutral-700 bg-neutral-800/50" : "border-gray-200 bg-gray-50/50"
+              isDark ? "border-neutral-700 bg-neutral-800/50" : "border-neutral-200 bg-neutral-50/50"
             }`}>
-              <div className={`font-bold text-lg ${isDark ? "text-neutral-100" : "text-gray-900"}`}>
+              <div className={`font-bold text-lg ${isDark ? "text-neutral-100" : "text-neutral-900"}`}>
                 בית {h.num}
               </div>
             </div>
@@ -37,14 +37,14 @@ export default function HousesGrid({ niceHouses }) {
                   <span className={`text-xl ${isDark ? "text-amber-300" : "text-amber-600"}`}>
                     {h.signGlyph}
                   </span>
-                  <span className={`font-medium ${isDark ? "text-neutral-200" : "text-gray-700"}`}>
+                  <span className={`font-medium ${isDark ? "text-neutral-200" : "text-neutral-700"}`}>
                     {h.sign}
                   </span>
                 </div>
                 <span className={`text-xs px-2 py-1 rounded-full font-mono ${
                   isDark 
                     ? "bg-neutral-700 text-neutral-300" 
-                    : "bg-gray-100 text-gray-600"
+                    : "bg-neutral-100 text-neutral-600"
                 }`}>
                   {h.degFmt}
                 </span>
@@ -54,7 +54,7 @@ export default function HousesGrid({ niceHouses }) {
               {Array.isArray(h.occupantGlyphs) && h.occupantGlyphs.length > 0 && (
                 <div>
                   <div className={`text-xs font-medium mb-2 ${
-                    isDark ? "text-neutral-400" : "text-gray-500"
+                    isDark ? "text-neutral-400" : "text-neutral-500"
                   }`}>
                     פלנטות
                   </div>
@@ -79,7 +79,7 @@ export default function HousesGrid({ niceHouses }) {
               {/* אם אין פלנטות */}
               {(!Array.isArray(h.occupantGlyphs) || h.occupantGlyphs.length === 0) && (
                 <div className={`text-xs italic ${
-                  isDark ? "text-neutral-500" : "text-gray-400"
+                  isDark ? "text-neutral-500" : "text-neutral-400"
                 }`}>
                   אין פלנטות בבית זה
                 </div>
@@ -88,7 +88,7 @@ export default function HousesGrid({ niceHouses }) {
 
             {/* אפקט דקורטיבי */}
             <div className={`absolute top-0 left-0 w-1 h-full ${
-              isDark ? "bg-gradient-to-b from-blue-400 to-purple-500" : "bg-gradient-to-b from-blue-500 to-purple-600"
+              isDark ? "bg-blue-500/50" : "bg-blue-500"
             }`} />
           </div>
         ))}

@@ -17,11 +17,11 @@ export default function AstroForm({
   const inputClassName = `w-full px-4 py-3 rounded-xl border transition-all duration-200 ${
     isDark 
       ? "bg-neutral-800 border-neutral-600 text-neutral-100 placeholder-neutral-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20" 
-      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
+      : "bg-white border-neutral-300 text-neutral-900 placeholder-neutral-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
   } focus:outline-none`;
   
   const labelClassName = `text-sm font-medium ${
-    isDark ? "text-neutral-200" : "text-gray-700"
+  isDark ? "text-neutral-200" : "text-neutral-700"
   }`;
   
   return (
@@ -150,11 +150,11 @@ export default function AstroForm({
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg ${
+            className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-200 ${
               isDark
-                ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 border border-purple-500/20" 
-                : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
-            } disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]`}
+                ? "bg-purple-600 text-white hover:bg-purple-700 border border-purple-500/20" 
+                : "bg-purple-600 text-white hover:bg-purple-700"
+            } disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]`}
           >
             <span className="flex items-center justify-center gap-3">
               {loading ? (

@@ -117,7 +117,7 @@ export default function DraggablePanel({
     <div
       ref={panelRef}
       className={
-        "fixed z-50 max-h-[85vh] overflow-auto rounded-xl border shadow-2xl backdrop-blur bg-white/90 dark:bg-neutral-900/90 dark:border-neutral-800 " +
+        "fixed z-50 max-h-[85vh] overflow-auto rounded-xl border backdrop-blur bg-white/90 dark:bg-neutral-900/90 dark:border-neutral-800 " +
         (collapsed ? " w-auto" : " w-[360px] max-w-[95vw]")
       }
       style={
@@ -138,7 +138,7 @@ export default function DraggablePanel({
           {titleTooltip ? (
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="font-semibold text-sm text-gray-800 dark:text-neutral-100 cursor-help">
+                <div className="font-semibold text-sm text-neutral-800 dark:text-neutral-100 cursor-help">
                   {title}
                 </div>
               </TooltipTrigger>
@@ -147,18 +147,18 @@ export default function DraggablePanel({
               </TooltipContent>
             </Tooltip>
           ) : (
-            <div className="font-semibold text-sm text-gray-800 dark:text-neutral-100">
+            <div className="font-semibold text-sm text-neutral-800 dark:text-neutral-100">
               {title}
             </div>
           )}
           {showInlineHint && (
-            <div className="text-[11px] text-gray-500 dark:text-neutral-400 hidden sm:block">{hintText}</div>
+            <div className="text-[11px] text-neutral-500 dark:text-neutral-400 hidden sm:block">{hintText}</div>
           )}
         </div>
         <div className="flex items-center gap-1">
           <button
             type="button"
-            className="inline-flex items-center justify-center h-7 w-7 rounded-md text-gray-700 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-800"
+            className="inline-flex items-center justify-center h-7 w-7 rounded-md text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
             title={collapsed ? "הגדל" : "הקטן"}
             aria-label={collapsed ? "הגדל" : "הקטן"}
             onClick={(e) => { e.stopPropagation(); toggleCollapsed(); }}
@@ -169,7 +169,7 @@ export default function DraggablePanel({
           {typeof onClose === 'function' && (
             <button
               type="button"
-              className="inline-flex items-center justify-center h-7 w-7 rounded-md text-gray-700 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-800"
+              className="inline-flex items-center justify-center h-7 w-7 rounded-md text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
               title="סגור"
               aria-label="סגור"
               onClick={(e) => { e.stopPropagation(); onClose(); }}

@@ -29,7 +29,7 @@ export default function PlanetSelector({
   return (
     <div>
       {title && (
-        <div className={`font-medium mb-3 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>
+  <div className={`font-medium mb-3 ${isDark ? "text-neutral-100" : "text-neutral-900"}`}>
           {title}
         </div>
       )}
@@ -41,7 +41,7 @@ export default function PlanetSelector({
           className={`px-3 py-1.5 text-xs rounded-full font-medium transition-all ${
             isDark 
               ? "bg-neutral-700 text-neutral-200 hover:bg-neutral-600 border border-neutral-600" 
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
+              : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-200"
           }`}
         >
           בחר הכל
@@ -51,7 +51,7 @@ export default function PlanetSelector({
           className={`px-3 py-1.5 text-xs rounded-full font-medium transition-all ${
             isDark 
               ? "bg-neutral-700 text-neutral-200 hover:bg-neutral-600 border border-neutral-600" 
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
+              : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-200"
           }`}
         >
           נקה הכל
@@ -70,11 +70,11 @@ export default function PlanetSelector({
               className={`relative flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200 border ${
                 checked
                   ? isDark
-                    ? "bg-blue-950/30 border-blue-700/50 text-blue-200 shadow-sm"
-                    : "bg-blue-50 border-blue-200 text-blue-900 shadow-sm"
+                    ? "bg-blue-950/30 border-blue-700/50 text-blue-200"
+                    : "bg-blue-50 border-blue-200 text-blue-900"
                   : isDark
                   ? "bg-neutral-800/50 border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:border-neutral-600"
-                  : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300"
+                  : "bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300"
               }`}
             >
               {/* Checkbox מותאם אישית */}
@@ -85,7 +85,7 @@ export default function PlanetSelector({
                     : "bg-blue-600 border-blue-600"
                   : isDark
                   ? "border-neutral-500 bg-neutral-800"
-                  : "border-gray-300 bg-white"
+                  : "border-neutral-300 bg-white"
               }`}>
                 {checked && (
                   <svg 
