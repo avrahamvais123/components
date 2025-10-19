@@ -7,3 +7,5 @@ export { default as HousesGrid } from './HousesGrid.jsx';
 export { default as AspectsTable } from './AspectsTable.jsx';
 export { default as AnglesGrid } from './AnglesGrid.jsx';
 export { default as DraggablePanel } from './DraggablePanel.jsx';
+export { default as HeaderDropdown } from './HeaderDropdown.jsx';
+export { default as StatsTable } from './StatsTable.jsx';

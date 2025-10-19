@@ -60,8 +60,8 @@ export default function AspectsTable({ niceAspects }) {
       )}
 
       {totalCount > 0 && (
-        <div className={`w-full rounded-xl overflow-hidden border ${isDark ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-white'}`}>
-          <div className="overflow-auto w-full">
+        <div className={`h-full w-full rounded-xl overflow-hidden border ${isDark ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-white'}`}>
+          <div className="overflow-auto w-full h-full">
             <table className="w-full align-top">
               <thead className={isDark ? 'bg-neutral-800' : 'bg-neutral-50'}>
                 <tr>
