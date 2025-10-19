@@ -98,191 +98,125 @@ export default function AstroPage() {
   };
 
   return (
-    <main className="max-w-6xl mx-auto p-6" dir="rtl">
-      <h1 className={`text-2xl font-bold mb-6 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>מחשבון מפת לידה</h1>
+    <main className="min-h-screen" dir="rtl">
+      <h1 className={`text-2xl font-bold p-6 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>מחשבון מפת לידה</h1>
 
-      {/* תפריט עליון לבחירת הכרטיסים הצפים */}
-  <nav className="sticky top-16 z-40 mb-4 bg-white/70 dark:bg-neutral-900/70 backdrop-blur rounded-lg border border-gray-200 dark:border-neutral-800 p-2">
-        <div className="flex flex-wrap gap-2 justify-start">
-          <button
-            type="button"
-            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
-            onClick={() => setShowMainSettings(true)}
-          >
-            פרטי לידה
-          </button>
-          {/* כפתור מערכת בתים וזודיאק בוטל כי השדות כלולים בפרטי לידה */}
-          <button
-            type="button"
-            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
-            onClick={() => setShowDisplayPlanets(true)}
-          >
-            תצוגת פלנטות
-          </button>
-          <button
-            type="button"
-            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
-            onClick={() => setShowStatsPlanets(true)}
-          >
-            פלנטות למדדים
-          </button>
-          <button
-            type="button"
-            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
-            onClick={() => setShowAspectsSelection(true)}
-          >
-            היבטים: מקורות ויעדים
-          </button>
-          <button
-            type="button"
-            className="px-3 py-1.5 rounded-md text-sm border bg-white dark:bg-neutral-900 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-800"
-            onClick={() => setShowAspectTypes(true)}
-          >
-            סוגי היבטים
-          </button>
+      <div className="max-w-7xl mx-auto p-6">
+        {/* פרטי לידה - תמיד בראש */}
+        <div className={`border rounded-lg p-4 mb-6 ${isDark ? "border-neutral-700 bg-neutral-800" : "border-gray-200 bg-white"}`}>
+          <h2 className={`text-xl font-semibold mb-3 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>פרטי לידה</h2>
+          <AstroForm
+            form={form}
+            onChange={onChange}
+            onSubmit={compute}
+            loading={loading}
+          />
+          {err && <p className="text-red-600 mt-2">{err}</p>}
         </div>
-      </nav>
 
-      <div className="relative">
-        {/* פאנל: פרטי לידה – תאריך/שעה/lat/lon + מערכת בתים וזודיאק */}
-        {showMainSettings && (
-          <DraggablePanel
-            title="פרטי לידה"
-            initialTop={120}
-            initialLeft={24}
-            initialAlignRight
-            onClose={() => setShowMainSettings(false)}
-            showInlineHint={false}
-            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
-          >
-            <AstroForm
-              form={form}
-              onChange={onChange}
-              onSubmit={compute}
-              loading={loading}
-              /* שני מקבצי השדות נכללים כברירת מחדל */
-            />
-            {err && <p className="text-red-600">{err}</p>}
-          </DraggablePanel>
-        )}
-
-        {/* פאנל: בחירת פלנטות לתצוגה */}
-        {showDisplayPlanets && (
-          <DraggablePanel
-            title="תצוגת פלנטות"
-            initialTop={120}
-            initialLeft={24}
-            showInlineHint={false}
-            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
-            onClose={() => setShowDisplayPlanets(false)}
-          >
-            <PlanetSelector
-              selectedKeys={displayKeys}
-              onSelectionChange={setDisplayKeys}
-              title="בחר פלנטות לתצוגה"
-            />
-          </DraggablePanel>
-        )}
-
-        {/* פאנל: בחירת פלנטות לחישוב סטטיסטיקות */}
-        {showStatsPlanets && (
-          <DraggablePanel
-            title="פלנטות למדדים"
-            initialTop={300}
-            initialLeft={24}
-            showInlineHint={false}
-            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
-            onClose={() => setShowStatsPlanets(false)}
-          >
-            <PlanetSelector
-              selectedKeys={statsIncludeKeys}
-              onSelectionChange={setStatsIncludeKeys}
-              title="בחר פלנטות לחישוב (איכויות ויסודות)"
-            />
-          </DraggablePanel>
-        )}
-
-        {/* פאנל: היבטים – מקורות ויעדים בכרטיס אחד */}
-        {showAspectsSelection && (
-          <DraggablePanel
-            title="היבטים: מקורות ויעדים"
-            initialTop={300}
-            initialLeft={24}
-            initialAlignRight
-            showInlineHint={false}
-            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
-            onClose={() => setShowAspectsSelection(false)}
-          >
-            <div className="space-y-4">
-              <PlanetSelector
-                selectedKeys={aspectSourceKeys}
-                onSelectionChange={setAspectSourceKeys}
-                title="בחר פלנטות מקור (מולן יחושבו היבטים)"
-              />
-              <PlanetSelector
-                selectedKeys={aspectTargetKeys}
-                onSelectionChange={setAspectTargetKeys}
-                title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
-              />
+        {result && (
+          <div className="space-y-10">
+            {/* פלנטות ומזלות */}
+            <div>
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* הגדרות תצוגת פלנטות */}
+                <div className={`lg:w-1/3 border rounded-lg p-4 ${isDark ? "border-neutral-700 bg-neutral-800" : "border-gray-200 bg-white"}`}>
+                  <h3 className={`text-lg font-semibold mb-3 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>תצוגת פלנטות</h3>
+                  <PlanetSelector
+                    selectedKeys={displayKeys}
+                    onSelectionChange={setDisplayKeys}
+                    title="בחר פלנטות לתצוגה"
+                  />
+                </div>
+                
+                {/* טבלת פלנטות */}
+                <div className="lg:w-2/3">
+                  <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>פלנטות ומזלות</h2>
+                  <PlanetsTable displayedBodies={displayedBodies} />
+                </div>
+              </div>
             </div>
-          </DraggablePanel>
+
+            {/* סטטיסטיקות יסודות ואיכויות */}
+            <div>
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* הגדרות פלנטות למדדים */}
+                <div className={`lg:w-1/3 border rounded-lg p-4 ${isDark ? "border-neutral-700 bg-neutral-800" : "border-gray-200 bg-white"}`}>
+                  <h3 className={`text-lg font-semibold mb-3 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>פלנטות למדדים</h3>
+                  <PlanetSelector
+                    selectedKeys={statsIncludeKeys}
+                    onSelectionChange={setStatsIncludeKeys}
+                    title="בחר פלנטות לחישוב (איכויות ויסודות)"
+                  />
+                </div>
+                
+                {/* תצוגת סטטיסטיקות */}
+                <div className="lg:w-2/3">
+                  <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>
+                    חלוקת יסודות ואיכויות
+                  </h2>
+                  <ElementQualityStats 
+                    elementStats={elementStats} 
+                    qualityStats={qualityStats} 
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* תחילת הבתים - ללא הגדרות נוספות */}
+            {niceHouses.length === 12 && <HousesGrid niceHouses={niceHouses} />}
+
+            {/* היבטים */}
+            <div>
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* הגדרות היבטים */}
+                <div className={`lg:w-1/3 border rounded-lg p-4 ${isDark ? "border-neutral-700 bg-neutral-800" : "border-gray-200 bg-white"} space-y-6`}>
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-3 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>מקורות ויעדים</h3>
+                    <div className="space-y-4">
+                      <PlanetSelector
+                        selectedKeys={aspectSourceKeys}
+                        onSelectionChange={setAspectSourceKeys}
+                        title="בחר פלנטות מקור (מולן יחושבו היבטים)"
+                      />
+                      <PlanetSelector
+                        selectedKeys={aspectTargetKeys}
+                        onSelectionChange={setAspectTargetKeys}
+                        title="בחר פלנטות יעד (כלפי אילו יחושבו היבטים)"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-3 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>סוגי היבטים</h3>
+                    <AspectSelector
+                      selectedKeys={selectedAspectTypes}
+                      onSelectionChange={setSelectedAspectTypes}
+                      aspectOrbs={aspectOrbs}
+                      onOrbsChange={setAspectOrbs}
+                      title="בחר היבטים לתצוגה"
+                    />
+                  </div>
+                </div>
+                
+                {/* טבלת היבטים */}
+                <div className="lg:w-2/3">
+                  <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>היבטים</h2>
+                  <AspectsTable niceAspects={niceAspects} />
+                </div>
+              </div>
+            </div>
+
+            {/* ASC & MC - ללא הגדרות נוספות */}
+            <AnglesGrid asc={result.asc} mc={result.mc} />
+          </div>
         )}
 
-        {/* פאנל: סוגי היבטים ומרווחי סבילות */}
-        {showAspectTypes && (
-          <DraggablePanel
-            title="סוגי היבטים"
-            initialTop={480}
-            initialLeft={24}
-            showInlineHint={false}
-            titleTooltip="ניתן לגרור את הכרטיס. דאבל־קליק על הכותרת יכווץ/ירחיב."
-            onClose={() => setShowAspectTypes(false)}
-          >
-            <AspectSelector
-              selectedKeys={selectedAspectTypes}
-              onSelectionChange={setSelectedAspectTypes}
-              aspectOrbs={aspectOrbs}
-              onOrbsChange={setAspectOrbs}
-              title="בחר היבטים לתצוגה"
-            />
-          </DraggablePanel>
+        {!result && (
+          <div className={`text-center py-20 ${isDark ? "text-neutral-400" : "text-gray-500"}`}>
+            <p>מלא את פרטי הלידה למעלה ולחץ על "חשב מפה" כדי לראות את התוצאות</p>
+          </div>
         )}
-
-        {/* אזור התוצאות – תופס את כל הרוחב */}
-        <section className="space-y-10">
-          {result && (
-            <>
-              {/* פלנטות ומזלות */}
-              <div>
-                <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>פלנטות ומזלות</h2>
-                <PlanetsTable displayedBodies={displayedBodies} />
-              </div>
-
-              {/* סטטיסטיקות יסודות ואיכויות */}
-              <div>
-                <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>
-                  חלוקת יסודות ואיכויות
-                </h2>
-                <ElementQualityStats 
-                  elementStats={elementStats} 
-                  qualityStats={qualityStats} 
-                />
-              </div>
-
-              {/* תחילת הבתים */}
-              {niceHouses.length === 12 && <HousesGrid niceHouses={niceHouses} />}
-
-              {/* היבטים */}
-              <div>
-                <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>היבטים</h2>
-                <AspectsTable niceAspects={niceAspects} />
-              </div>
-
-              {/* ASC & MC */}
-              <AnglesGrid asc={result.asc} mc={result.mc} />
-            </>
-          )}
-        </section>
       </div>
     </main>
   );
