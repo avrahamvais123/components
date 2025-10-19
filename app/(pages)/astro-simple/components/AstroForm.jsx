@@ -13,71 +13,107 @@ export default function AstroForm({
   showSubmit = true,
 }) {
   const { isDark } = useThemeState();
+  
+  const inputClassName = `w-full px-4 py-3 rounded-xl border transition-all duration-200 ${
+    isDark 
+      ? "bg-neutral-800 border-neutral-600 text-neutral-100 placeholder-neutral-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20" 
+      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
+  } focus:outline-none`;
+  
+  const labelClassName = `text-sm font-medium ${
+    isDark ? "text-neutral-200" : "text-gray-700"
+  }`;
+  
   return (
-    <form onSubmit={onSubmit} className="grid md:grid-cols-2 gap-4 items-end">
+    <form onSubmit={onSubmit} className="space-y-6">
       {showDateTimeLatLon && (
-        <>
-          <label className="flex flex-col gap-1">
-            <span>תאריך לידה</span>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className={labelClassName}>
+              <span className="flex items-center gap-2">
+                <span>📅</span>
+                תאריך לידה
+              </span>
+            </label>
             <input
               type="date"
               name="date"
               value={form.date}
               onChange={onChange}
-              className="border rounded p-2"
+              className={inputClassName}
               required
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1">
-            <span>שעת לידה (מקומית)</span>
+          <div className="space-y-2">
+            <label className={labelClassName}>
+              <span className="flex items-center gap-2">
+                <span>🕐</span>
+                שעת לידה (מקומית)
+              </span>
+            </label>
             <input
               type="time"
               name="time"
               value={form.time}
               onChange={onChange}
-              className="border rounded p-2"
+              className={inputClassName}
               required
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1">
-            <span>קו־רוחב (lat)</span>
+          <div className="space-y-2">
+            <label className={labelClassName}>
+              <span className="flex items-center gap-2">
+                <span>🌐</span>
+                קו־רוחב (lat)
+              </span>
+            </label>
             <input
               type="text"
               inputMode="decimal"
               name="lat"
               value={form.lat}
               onChange={onChange}
-              className="border rounded p-2"
-              placeholder="לדוגמה: 31.778"
+              className={inputClassName}
+              placeholder="לדוגמה: 31.778 (ירושלים)"
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1">
-            <span>קו־אורך (lon)</span>
+          <div className="space-y-2">
+            <label className={labelClassName}>
+              <span className="flex items-center gap-2">
+                <span>🗺️</span>
+                קו־אורך (lon)
+              </span>
+            </label>
             <input
               type="text"
               inputMode="decimal"
               name="lon"
               value={form.lon}
               onChange={onChange}
-              className="border rounded p-2"
-              placeholder="לדוגמה: 35.235"
+              className={inputClassName}
+              placeholder="לדוגמה: 35.235 (ירושלים)"
             />
-          </label>
-        </>
+          </div>
+        </div>
       )}
 
       {showHouseZodiac && (
-        <>
-          <label className="flex flex-col gap-1">
-            <span>House System</span>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className={labelClassName}>
+              <span className="flex items-center gap-2">
+                <span>🏠</span>
+                מערכת בתים
+              </span>
+            </label>
             <select
               name="houseSystem"
               value={form.houseSystem}
               onChange={onChange}
-              className="border rounded p-2"
+              className={inputClassName}
             >
               <option value="placidus">Placidus</option>
               <option value="whole-sign">Whole Sign</option>
@@ -87,35 +123,54 @@ export default function AstroForm({
               <option value="campanus">Campanus</option>
               <option value="topocentric">Topocentric</option>
             </select>
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1">
-            <span>Zodiac</span>
+          <div className="space-y-2">
+            <label className={labelClassName}>
+              <span className="flex items-center gap-2">
+                <span>♈</span>
+                מערכת זודיאק
+              </span>
+            </label>
             <select
               name="zodiac"
               value={form.zodiac}
               onChange={onChange}
-              className="border rounded p-2"
+              className={inputClassName}
             >
-              <option value="tropical">Tropical</option>
-              <option value="sidereal">Sidereal</option>
+              <option value="tropical">Tropical (טרופי)</option>
+              <option value="sidereal">Sidereal (כוכבי)</option>
             </select>
-          </label>
-        </>
+          </div>
+        </div>
       )}
 
       {showSubmit && (
-        <button
-          type="submit"
-          disabled={loading}
-          className={`md:col-span-2 rounded p-3 transition-colors ${
-            isDark
-              ? "bg-neutral-50 text-neutral-900 hover:bg-neutral-100 border border-neutral-800"
-              : "bg-black text-white hover:bg-gray-800"
-          } disabled:opacity-50`}
-        >
-          {loading ? "מחשב..." : "חשב מפה"}
-        </button>
+        <div className="pt-4">
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg ${
+              isDark
+                ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 border border-purple-500/20" 
+                : "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+            } disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]`}
+          >
+            <span className="flex items-center justify-center gap-3">
+              {loading ? (
+                <>
+                  <span className="animate-spin">⏳</span>
+                  מחשב את המפה...
+                </>
+              ) : (
+                <>
+                  <span>✨</span>
+                  חשב מפה אסטרולוגית
+                </>
+              )}
+            </span>
+          </button>
+        </div>
       )}
     </form>
   );

@@ -128,91 +128,165 @@ export default function AspectsTable({ niceAspects }) {
   }
   const summaryItems = Array.from(byType.values());
   const totalCount = Array.isArray(niceAspects) ? niceAspects.length : 0;
+  
   return (
     <div>
       {/* סיכום לפי סוג היבט + סה"כ */}
       {totalCount > 0 ? (
-        <div className="mb-3 flex flex-wrap gap-2 items-center">
-          <span
-            className={
-              `inline-flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium ` +
-              (isDark ? "text-neutral-100 bg-neutral-800" : "text-gray-800 bg-gray-100")
-            }
-          >
-            סה״כ: {totalCount}
-          </span>
-          {summaryItems.map((it, idx) => (
-            <span
-              key={`${it.label}-${idx}`}
-              className={`inline-flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium ${getAspectColor(it.label, isDark)}`}
-            >
-              {it.glyph && <span>{it.glyph}</span>}
-              <span>{it.label}</span>
-              <span className={isDark ? "text-neutral-300/80" : "text-gray-700/80"}>({it.count})</span>
-            </span>
-          ))}
+        <div className="mb-6">
+          <div className="flex flex-wrap gap-3 items-center">
+            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold shadow-sm ${
+              isDark 
+                ? "text-neutral-100 bg-gradient-to-r from-neutral-800 to-neutral-700 border border-neutral-600" 
+                : "text-gray-800 bg-gradient-to-r from-white to-gray-50 border border-gray-200"
+            }`}>
+              <span className="text-lg">📊</span>
+              סה״כ: {totalCount}
+            </div>
+            {summaryItems.map((it, idx) => (
+              <div
+                key={`${it.label}-${idx}`}
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium shadow-sm transition-transform hover:scale-105 ${getAspectColor(it.label, isDark)}`}
+              >
+                {it.glyph && <span className="text-base">{it.glyph}</span>}
+                <span>{it.label}</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                  isDark ? "bg-black/20 text-neutral-300" : "bg-white/60 text-gray-600"
+                }`}>
+                  {it.count}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
-        <p className={"mb-3 text-sm " + (isDark ? "text-neutral-400" : "text-gray-600")}>
-          אין היבטים לתצוגה (סה״כ: 0)
-        </p>
+        <div className={`mb-6 p-6 rounded-xl text-center ${
+          isDark 
+            ? "bg-neutral-800 border border-neutral-700 text-neutral-400" 
+            : "bg-gray-50 border border-gray-200 text-gray-600"
+        }`}>
+          <span className="text-4xl mb-2 block">🌌</span>
+          <p className="text-sm font-medium">אין היבטים לתצוגה</p>
+        </div>
       )}
-      <div className="overflow-x-auto">
-        <table className="min-w-full border">
-          <thead className={isDark ? "bg-neutral-900" : "bg-gray-50"}>
-            <tr>
-              <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>פלנטה 1</th>
-              <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>סוג</th>
-              <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>פלנטה 2</th>
-              <th className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-100" : "border-gray-200"}`}>אורב</th>
-            </tr>
-          </thead>
-          <tbody>
-            {niceAspects.map((a, i) => {
-              const aspectColorClass = getAspectColor(a.type, isDark);
-              return (
-                <tr key={i} className={isDark ? "bg-neutral-950 even:bg-neutral-900/50" : "bg-white even:bg-gray-50"}>
-                  <td className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-200" : "border-gray-200"}`}>
-                    <div className="flex flex-col">
-                      <span className="inline-flex items-center gap-2 flex-wrap">
-                        <span>{a.p1Glyph}</span>
-                        <span>{a.p1}</span>
-                      </span>
-                      {(a.p1Sign || a.p1SignGlyph) && (
-                        <span className={`mt-0.5 text-xs inline-flex items-center gap-1 ${isDark ? "text-neutral-400" : "text-gray-500"}`}>
-                          {a.p1SignGlyph && <span>{a.p1SignGlyph}</span>}
-                          {a.p1Sign && <span>{a.p1Sign}</span>}
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td className={`p-2 border ${isDark ? "border-neutral-700" : "border-gray-200"}`}>
-                    <span className={`inline-flex items-center gap-2 px-2 py-1 rounded-md font-medium ${aspectColorClass}`}>
-                      <span>{a.typeGlyph}</span>
-                      <span>{a.type}</span>
-                    </span>
-                  </td>
-                  <td className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-200" : "border-gray-200"}`}>
-                    <div className="flex flex-col">
-                      <span className="inline-flex items-center gap-2 flex-wrap">
-                        <span>{a.p2Glyph}</span>
-                        <span>{a.p2}</span>
-                      </span>
-                      {(a.p2Sign || a.p2SignGlyph) && (
-                        <span className={`mt-0.5 text-xs inline-flex items-center gap-1 ${isDark ? "text-neutral-400" : "text-gray-500"}`}>
-                          {a.p2SignGlyph && <span>{a.p2SignGlyph}</span>}
-                          {a.p2Sign && <span>{a.p2Sign}</span>}
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td className={`p-2 border ${isDark ? "border-neutral-700 text-neutral-200" : "border-gray-200"}`}>{a.orb}</td>
+      
+      {totalCount > 0 && (
+        <div className={`rounded-xl overflow-hidden border shadow-sm ${
+          isDark ? "border-neutral-700 bg-neutral-800" : "border-gray-200 bg-white"
+        }`}>
+          <div className="overflow-x-auto">
+            <table className="min-w-full">
+              <thead className={`${
+                isDark 
+                  ? "bg-gradient-to-r from-neutral-800 to-neutral-700" 
+                  : "bg-gradient-to-r from-gray-50 to-gray-100"
+              }`}>
+                <tr>
+                  <th className={`py-4 px-6 text-right font-semibold ${
+                    isDark ? "text-neutral-100" : "text-gray-900"
+                  }`}>
+                    פלנטה ראשונה
+                  </th>
+                  <th className={`py-4 px-6 text-center font-semibold ${
+                    isDark ? "text-neutral-100" : "text-gray-900"
+                  }`}>
+                    סוג היבט
+                  </th>
+                  <th className={`py-4 px-6 text-right font-semibold ${
+                    isDark ? "text-neutral-100" : "text-gray-900"
+                  }`}>
+                    פלנטה שנייה
+                  </th>
+                  <th className={`py-4 px-6 text-center font-semibold ${
+                    isDark ? "text-neutral-100" : "text-gray-900"
+                  }`}>
+                    אורב
+                  </th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
+                {niceAspects.map((a, i) => {
+                  const aspectColorClass = getAspectColor(a.type, isDark);
+                  return (
+                    <tr 
+                      key={i} 
+                      className={`transition-colors hover:bg-opacity-50 ${
+                        isDark 
+                          ? "hover:bg-neutral-700/30" 
+                          : "hover:bg-gray-50"
+                      }`}
+                    >
+                      <td className="py-4 px-6">
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-3">
+                            <span className={`text-xl ${
+                              isDark ? "text-amber-300" : "text-amber-600"
+                            }`}>
+                              {a.p1Glyph}
+                            </span>
+                            <span className={`font-medium ${
+                              isDark ? "text-neutral-200" : "text-gray-900"
+                            }`}>
+                              {a.p1}
+                            </span>
+                          </div>
+                          {(a.p1Sign || a.p1SignGlyph) && (
+                            <div className={`mt-1 mr-8 flex items-center gap-2 text-xs ${
+                              isDark ? "text-neutral-400" : "text-gray-500"
+                            }`}>
+                              {a.p1SignGlyph && <span className="text-sm">{a.p1SignGlyph}</span>}
+                              {a.p1Sign && <span>{a.p1Sign}</span>}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg font-medium shadow-sm ${aspectColorClass}`}>
+                          <span className="text-lg">{a.typeGlyph}</span>
+                          <span className="text-sm">{a.type}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-3">
+                            <span className={`text-xl ${
+                              isDark ? "text-amber-300" : "text-amber-600"
+                            }`}>
+                              {a.p2Glyph}
+                            </span>
+                            <span className={`font-medium ${
+                              isDark ? "text-neutral-200" : "text-gray-900"
+                            }`}>
+                              {a.p2}
+                            </span>
+                          </div>
+                          {(a.p2Sign || a.p2SignGlyph) && (
+                            <div className={`mt-1 mr-8 flex items-center gap-2 text-xs ${
+                              isDark ? "text-neutral-400" : "text-gray-500"
+                            }`}>
+                              {a.p2SignGlyph && <span className="text-sm">{a.p2SignGlyph}</span>}
+                              {a.p2Sign && <span>{a.p2Sign}</span>}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        <span className={`inline-flex items-center justify-center px-3 py-1 rounded-md text-sm font-mono ${
+                          isDark 
+                            ? "bg-neutral-700 text-neutral-300 border border-neutral-600" 
+                            : "bg-gray-100 text-gray-700 border border-gray-200"
+                        }`}>
+                          {a.orb}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

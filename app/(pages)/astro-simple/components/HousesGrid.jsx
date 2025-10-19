@@ -1,7 +1,6 @@
 "use client";
 
 import { useThemeState } from "../../../hooks/useThemeState";
-import { PLANET_COLOR_CLASS } from "../utils/sources";
 
 export default function HousesGrid({ niceHouses }) {
   const { isDark } = useThemeState();
@@ -10,35 +9,87 @@ export default function HousesGrid({ niceHouses }) {
 
   return (
     <div>
-  <h2 className={`text-xl font-semibold mb-2 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>תחילת הבתים</h2>
-      <div className="grid md:grid-cols-3 gap-2">
+      <h2 className={`text-xl font-semibold mb-4 ${isDark ? "text-neutral-100" : "text-gray-900"}`}>תחילת הבתים</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {niceHouses.map((h) => (
-          <div key={h.num} className={`border rounded p-3 ${isDark ? "border-neutral-700 bg-neutral-900" : "border-gray-200 bg-white"}`}>
-            <div className={`font-bold ${isDark ? "text-neutral-100" : "text-gray-900"}`}>
-              בית {h.labelHe} ({h.num})
+          <div 
+            key={h.num} 
+            className={`relative overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-lg ${
+              isDark 
+                ? "border-neutral-700 bg-gradient-to-br from-neutral-800 to-neutral-900 hover:border-neutral-600" 
+                : "border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-gray-300 hover:shadow-md"
+            }`}
+          >
+            {/* כותרת הבית */}
+            <div className={`px-4 py-3 border-b ${
+              isDark ? "border-neutral-700 bg-neutral-800/50" : "border-gray-200 bg-gray-50/50"
+            }`}>
+              <div className={`font-bold text-lg ${isDark ? "text-neutral-100" : "text-gray-900"}`}>
+                בית {h.num}
+              </div>
             </div>
-            <div className={isDark ? "text-neutral-200" : "text-gray-700"}>
-              מזל:{" "}
-              <span className="inline-flex items-center gap-2">
-                <span>{h.signGlyph}</span>
-                <span>{h.sign}</span>
-              </span>
-            </div>
-            <div className={isDark ? "text-neutral-200" : "text-gray-700"}>מעלה: {h.degFmt}</div>
-            {Array.isArray(h.occupantGlyphs) && h.occupantGlyphs.length > 0 && (
-              <div className={isDark ? "text-neutral-200" : "text-gray-700"}>
-                פלנטות: {" "}
-                <span className="inline-flex flex-wrap gap-2 align-middle">
-                  {h.occupantGlyphs.map((o, idx) => {
-                    const key = String(o?.key || "").toLowerCase();
-                    const color = PLANET_COLOR_CLASS[key] || (isDark ? "text-neutral-100" : "text-gray-900");
-                    return (
-                      <span key={idx} className={`text-lg leading-none ${color}`}>{o.glyph}</span>
-                    );
-                  })}
+
+            {/* תוכן הבית */}
+            <div className="p-4 space-y-3">
+              {/* מזל ומעלות */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className={`text-xl ${isDark ? "text-amber-300" : "text-amber-600"}`}>
+                    {h.signGlyph}
+                  </span>
+                  <span className={`font-medium ${isDark ? "text-neutral-200" : "text-gray-700"}`}>
+                    {h.sign}
+                  </span>
+                </div>
+                <span className={`text-xs px-2 py-1 rounded-full font-mono ${
+                  isDark 
+                    ? "bg-neutral-700 text-neutral-300" 
+                    : "bg-gray-100 text-gray-600"
+                }`}>
+                  {h.degFmt}
                 </span>
               </div>
-            )}
+
+              {/* פלנטות */}
+              {Array.isArray(h.occupantGlyphs) && h.occupantGlyphs.length > 0 && (
+                <div>
+                  <div className={`text-xs font-medium mb-2 ${
+                    isDark ? "text-neutral-400" : "text-gray-500"
+                  }`}>
+                    פלנטות
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {h.occupantGlyphs.map((o, idx) => (
+                      <span 
+                        key={idx} 
+                        className={`inline-flex items-center justify-center w-8 h-8 rounded-lg text-lg font-bold transition-colors ${
+                          isDark 
+                            ? "bg-blue-900/30 text-blue-300 border border-blue-800/50" 
+                            : "bg-blue-50 text-blue-600 border border-blue-200"
+                        }`}
+                        title={o.name || 'פלנטה'}
+                      >
+                        {o.glyph}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* אם אין פלנטות */}
+              {(!Array.isArray(h.occupantGlyphs) || h.occupantGlyphs.length === 0) && (
+                <div className={`text-xs italic ${
+                  isDark ? "text-neutral-500" : "text-gray-400"
+                }`}>
+                  אין פלנטות בבית זה
+                </div>
+              )}
+            </div>
+
+            {/* אפקט דקורטיבי */}
+            <div className={`absolute top-0 left-0 w-1 h-full ${
+              isDark ? "bg-gradient-to-b from-blue-400 to-purple-500" : "bg-gradient-to-b from-blue-500 to-purple-600"
+            }`} />
           </div>
         ))}
       </div>
