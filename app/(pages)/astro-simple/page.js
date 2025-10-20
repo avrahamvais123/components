@@ -225,12 +225,55 @@ export default function AstroPage() {
               </HeaderDropdown>
 
               {/* היבטים להצגה */}
-              <HeaderDropdown icon="🔗" label="היבטים">
-                {ASPECT_TYPES.map((a)=> (
-                  <DropdownMenuCheckboxItem key={a.key} checked={selectedAspectTypes.includes(a.key)} onCheckedChange={(checked)=> setSelectedAspectTypes((prev)=> checked ? (prev.includes(a.key)?prev:[...prev,a.key]) : prev.filter((k)=>k!==a.key))}>
-                    {a.labelHe}
-                  </DropdownMenuCheckboxItem>
-                ))}
+              <HeaderDropdown icon="🔗" label="היבטים" minWidth="min-w-[20rem]">
+                <DropdownMenuGroup>
+                  {/* סוגי היבטים עם אפשרות לשנות אורב */}
+                  {ASPECT_TYPES.map((a)=> (
+                    <DropdownMenuSub key={a.key}>
+                      <DropdownMenuSubTrigger className="flex items-center gap-2">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedAspectTypes.includes(a.key)}
+                            onChange={(e) => {
+                              e.stopPropagation();
+                              const checked = e.target.checked;
+                              setSelectedAspectTypes((prev)=> checked ? (prev.includes(a.key)?prev:[...prev,a.key]) : prev.filter((k)=>k!==a.key));
+                            }}
+                            className={`w-3 h-3 rounded ${isDark ? "accent-blue-400" : "accent-blue-600"}`}
+                          />
+                          <span>{a.labelHe}</span>
+                        </div>
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${isDark ? "bg-neutral-700 text-neutral-300" : "bg-neutral-100 text-neutral-600"}`}>
+                          {aspectOrbs[a.key] || DEFAULT_ASPECT_ORBS[a.key]}°
+                        </span>
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuSubContent className={`${menuContentBase} rounded-xl min-w-[12rem]`}>
+                        <DropdownMenuLabel className={`${menuLabelMutedCls}`}>אורב (מעלות)</DropdownMenuLabel>
+                        <div className="px-2 pb-2 space-y-2">
+                          <input
+                            type="number"
+                            min="0.5"
+                            max="15"
+                            step="0.5"
+                            value={aspectOrbs[a.key] || DEFAULT_ASPECT_ORBS[a.key]}
+                            onChange={(e) => {
+                              const newOrb = parseFloat(e.target.value) || DEFAULT_ASPECT_ORBS[a.key];
+                              setAspectOrbs(prev => ({...prev, [a.key]: newOrb}));
+                            }}
+                            className={`${isDark?"bg-neutral-800 border-neutral-600 text-neutral-100":"bg-white border-neutral-300 text-neutral-900"} border rounded-md px-2 py-1 text-sm w-full`}
+                          />
+                          <button
+                            onClick={() => setAspectOrbs(prev => ({...prev, [a.key]: DEFAULT_ASPECT_ORBS[a.key]}))}
+                            className={`${isDark?"bg-neutral-700 hover:bg-neutral-600 text-neutral-200":"bg-neutral-100 hover:bg-neutral-200 text-neutral-700"} w-full rounded-md px-2 py-1 text-xs`}
+                          >
+                            אפס לברירת מחדל ({DEFAULT_ASPECT_ORBS[a.key]}°)
+                          </button>
+                        </div>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+                  ))}
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuCheckboxItem checked={selectedAspectTypes.length===ASPECT_TYPES.length} onCheckedChange={(checked)=> setSelectedAspectTypes(checked? ASPECT_TYPES.map((x)=>x.key): [])}>
@@ -238,6 +281,9 @@ export default function AstroPage() {
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem checked={false} onCheckedChange={()=> setSelectedAspectTypes([...DEFAULT_ASPECT_TYPES])}>
                     אפס לברירת מחדל
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem checked={false} onCheckedChange={()=> setAspectOrbs({...DEFAULT_ASPECT_ORBS})}>
+                    אפס כל האורבים
                   </DropdownMenuCheckboxItem>
                 </DropdownMenuGroup>
               </HeaderDropdown>
