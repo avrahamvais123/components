@@ -11,7 +11,7 @@ export default function PlanetsTable({ displayedBodies }) {
     }`}>
       <div className="overflow-auto w-full h-full">
         <table className="w-full align-top">
-          <thead className={`${
+          <thead className={`sticky top-0 z-10 ${
             isDark 
               ? "bg-neutral-800" 
               : "bg-neutral-50"

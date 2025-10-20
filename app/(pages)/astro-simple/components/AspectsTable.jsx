@@ -51,7 +51,7 @@ export default function AspectsTable({ niceAspects }) {
   const totalCount = Array.isArray(niceAspects) ? niceAspects.length : 0;
 
   return (
-    <div>
+    <>
       {totalCount === 0 && (
         <div className={`${isDark ? 'bg-neutral-800 border border-neutral-700 text-neutral-400' : 'bg-neutral-50 border border-neutral-200 text-neutral-600'} mb-6 p-6 rounded-xl text-center`}>
           <span className="text-4xl mb-2 block">🌌</span>
@@ -60,80 +60,81 @@ export default function AspectsTable({ niceAspects }) {
       )}
 
       {totalCount > 0 && (
-        <div className={`h-full w-full rounded-xl overflow-hidden border ${isDark ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-white'}`}>
-          <div className="overflow-auto w-full h-full">
-            <table className="w-full align-top">
-              <thead className={isDark ? 'bg-neutral-800' : 'bg-neutral-50'}>
-                <tr>
-                  <th className={`py-1.5 px-2 text-right font-semibold ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
-                    פלנטה ראשונה
-                  </th>
-                  <th className={`py-1.5 px-2 text-center font-semibold ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
-                    סוג ההיבט
-                  </th>
-                  <th className={`py-1.5 px-2 text-right font-semibold ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
-                    פלנטה שנייה
-                  </th>
-                  <th className={`py-1.5 px-2 text-center font-semibold ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
-                    אורב
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
-                {niceAspects.map((a, i) => {
-                  const aspectColorClass = getAspectColor(a.type, isDark);
-                  return (
-                    <tr key={i} className={isDark ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}>
-                      <td className="py-1.5 px-2 align-top">
-                        <div className="flex items-start gap-1">
-                          <span className={isDark ? 'text-amber-300 text-lg' : 'text-amber-600 text-lg'}>{a.p1Glyph}</span>
-                          <div className="leading-tight">
-                            <div className={isDark ? 'text-neutral-200 font-medium' : 'text-neutral-900 font-medium'}>{a.p1}</div>
-                            {(a.p1Sign || a.p1SignGlyph) && (
-                              <div className={isDark ? 'mt-0 flex items-center gap-0.5 text-xs text-neutral-400' : 'mt-0 flex items-center gap-0.5 text-xs text-neutral-500'}>
-                                {a.p1SignGlyph && <span className="text-xs">{a.p1SignGlyph}</span>}
-                                {a.p1Sign && <span>{a.p1Sign}</span>}
-                              </div>
-                            )}
-                          </div>
+        <div className={`h-full w-full rounded-xl border ${isDark ? 'border-neutral-700 bg-neutral-800' : 'border-neutral-200 bg-white'} flex flex-col overflow-hidden`}>
+          {/* כותרת קבועה */}
+          <div className={`${isDark ? 'bg-neutral-800' : 'bg-neutral-50'} border-b ${isDark ? 'border-neutral-700' : 'border-neutral-200'} flex-shrink-0`}>
+            <div className="flex">
+              <div className={`py-1.5 px-2 text-right font-semibold flex-1 ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
+                פלנטה 1
+              </div>
+              <div className={`py-1.5 px-2 text-center font-semibold w-24 ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
+                סוג ההיבט
+              </div>
+              <div className={`py-1.5 px-2 text-right font-semibold flex-1 ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
+                פלנטה 2
+              </div>
+              <div className={`py-1.5 px-2 text-center font-semibold w-16 ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
+                אורב
+              </div>
+            </div>
+          </div>
+          
+          {/* תוכן עם גלילה */}
+          <div className="flex-1 overflow-auto min-h-0">
+            <div className="divide-y divide-neutral-200 dark:divide-neutral-700">
+              {niceAspects.map((a, i) => {
+                const aspectColorClass = getAspectColor(a.type, isDark);
+                return (
+                  <div key={i} className={`flex ${isDark ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}`}>
+                    <div className="py-1.5 px-2 flex-1">
+                      <div className="flex items-start gap-1">
+                        <span className={isDark ? 'text-amber-300 text-lg' : 'text-amber-600 text-lg'}>{a.p1Glyph}</span>
+                        <div className="leading-tight">
+                          <div className={isDark ? 'text-neutral-200 font-medium' : 'text-neutral-900 font-medium'}>{a.p1}</div>
+                          {(a.p1Sign || a.p1SignGlyph) && (
+                            <div className={isDark ? 'mt-0 flex items-center gap-0.5 text-xs text-neutral-400' : 'mt-0 flex items-center gap-0.5 text-xs text-neutral-500'}>
+                              {a.p1SignGlyph && <span className="text-xs">{a.p1SignGlyph}</span>}
+                              {a.p1Sign && <span>{a.p1Sign}</span>}
+                            </div>
+                          )}
                         </div>
-                      </td>
+                      </div>
+                    </div>
 
-                      <td className="py-1.5 px-2 text-center align-top">
-                        <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md font-medium ${aspectColorClass}`}>
-                          <span className="text-base">{a.typeGlyph}</span>
-                          <span className="text-xs">{a.type}</span>
+                    <div className="py-1.5 px-2 text-center w-24 flex items-center justify-center">
+                      <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md font-medium ${aspectColorClass}`}>
+                        <span className="text-base">{a.typeGlyph}</span>
+                        <span className="text-xs">{a.type}</span>
+                      </div>
+                    </div>
+
+                    <div className="py-1.5 px-2 flex-1">
+                      <div className="flex items-start gap-1">
+                        <span className={isDark ? 'text-amber-300 text-lg' : 'text-amber-600 text-lg'}>{a.p2Glyph}</span>
+                        <div className="leading-tight">
+                          <div className={isDark ? 'text-neutral-200 font-medium' : 'text-neutral-900 font-medium'}>{a.p2}</div>
+                          {(a.p2Sign || a.p2SignGlyph) && (
+                            <div className={isDark ? 'mt-0 flex items-center gap-0.5 text-xs text-neutral-400' : 'mt-0 flex items-center gap-0.5 text-xs text-neutral-500'}>
+                              {a.p2SignGlyph && <span className="text-xs">{a.p2SignGlyph}</span>}
+                              {a.p2Sign && <span>{a.p2Sign}</span>}
+                            </div>
+                          )}
                         </div>
-                      </td>
+                      </div>
+                    </div>
 
-                      <td className="py-1.5 px-2 align-top">
-                        <div className="flex items-start gap-1">
-                          <span className={isDark ? 'text-amber-300 text-lg' : 'text-amber-600 text-lg'}>{a.p2Glyph}</span>
-                          <div className="leading-tight">
-                            <div className={isDark ? 'text-neutral-200 font-medium' : 'text-neutral-900 font-medium'}>{a.p2}</div>
-                            {(a.p2Sign || a.p2SignGlyph) && (
-                              <div className={isDark ? 'mt-0 flex items-center gap-0.5 text-xs text-neutral-400' : 'mt-0 flex items-center gap-0.5 text-xs text-neutral-500'}>
-                                {a.p2SignGlyph && <span className="text-xs">{a.p2SignGlyph}</span>}
-                                {a.p2Sign && <span>{a.p2Sign}</span>}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-
-                      <td className="py-1.5 px-2 text-center align-top">
-                        <span className={isDark ? 'inline-flex items-center justify-center px-2 py-0.5 rounded-md text-xs font-mono bg-neutral-700 text-neutral-300 border border-neutral-600' : 'inline-flex items-center justify-center px-2 py-0.5 rounded-md text-xs font-mono bg-neutral-100 text-neutral-700 border border-neutral-200'}>
-                          {a.orb}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                    <div className="py-1.5 px-2 text-center w-16 flex items-center justify-center">
+                      <span className={isDark ? 'inline-flex items-center justify-center px-2 py-0.5 rounded-md text-xs font-mono bg-neutral-700 text-neutral-300 border border-neutral-600' : 'inline-flex items-center justify-center px-2 py-0.5 rounded-md text-xs font-mono bg-neutral-100 text-neutral-700 border border-neutral-200'}>
+                        {a.orb}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

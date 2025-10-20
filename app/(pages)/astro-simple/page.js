@@ -296,13 +296,15 @@ export default function AstroPage() {
                   <div className={`grid ${colsBase} ${colsMd} ${colsLg} gap-2 items-stretch lg:auto-rows-fr lg:max-h-[calc(100vh-14rem)] lg:h-[calc(100vh-14rem)] lg:overflow-hidden`}>
                     {/* צד שמאל: פלנטות ומזלות */}
                     {showPlanetsSection && (
-                      <div className="flex flex-col h-full min-h-0 overflow-auto">
-                        <SectionHeader
-                          icon="🪐"
-                          iconCls={isDark?"bg-amber-900/30 text-amber-300 border border-amber-800/50":"bg-amber-100 text-amber-600 border border-amber-200"}
-                          title="פלנטות ומזלות"
-                          subtitle="מיקום הפלנטות במזלות ובבתים"
-                        />
+                      <div className="flex flex-col h-full min-h-0">
+                        <div className="flex-shrink-0">
+                          <SectionHeader
+                            icon="🪐"
+                            iconCls={isDark?"bg-amber-900/30 text-amber-300 border border-amber-800/50":"bg-amber-100 text-amber-600 border border-amber-200"}
+                            title="פלנטות ומזלות"
+                            subtitle="מיקום הפלנטות במזלות ובבתים"
+                          />
+                        </div>
                         <div className="flex-1 min-h-0 h-full pr-1">
                           <PlanetsTable displayedBodies={displayedBodies} />
                         </div>
@@ -311,13 +313,15 @@ export default function AstroPage() {
 
                     {/* צד ימין: היבטים עם גלילה + סטטיסטיקות מתחת */}
                     {showAspectsSection && (
-                      <div className="flex flex-col h-full min-h-0 overflow-auto">
-                        <SectionHeader
-                          icon="🔗"
-                          iconCls={isDark?"bg-blue-900/30 text-blue-300 border border-blue-800/50":"bg-blue-100 text-blue-600 border border-blue-200"}
-                          title="היבטים"
-                          subtitle="זוויות וקשרים בין הפלנטות"
-                        />
+                      <div className="flex flex-col h-full min-h-0">
+                        <div className="flex-shrink-0">
+                          <SectionHeader
+                            icon="🔗"
+                            iconCls={isDark?"bg-blue-900/30 text-blue-300 border border-blue-800/50":"bg-blue-100 text-blue-600 border border-blue-200"}
+                            title="היבטים"
+                            subtitle="זוויות וקשרים בין הפלנטות"
+                          />
+                        </div>
                         <div className="flex-1 min-h-0 h-full pr-1">
                           <AspectsTable niceAspects={niceAspects} />
                         </div>
@@ -325,13 +329,15 @@ export default function AstroPage() {
                     )}
 
                     {showStatsSection && (
-                      <div className="flex flex-col h-full min-h-0 overflow-auto">
-                        <SectionHeader
-                          icon="📊"
-                          iconCls={isDark?"bg-emerald-900/30 text-emerald-300 border border-emerald-800/50":"bg-emerald-100 text-emerald-600 border border-emerald-200"}
-                          title="חלוקת יסודות ואיכויות"
-                          subtitle="ניתוח סטטיסטי"
-                        />
+                      <div className="flex flex-col h-full min-h-0">
+                        <div className="flex-shrink-0">
+                          <SectionHeader
+                            icon="📊"
+                            iconCls={isDark?"bg-emerald-900/30 text-emerald-300 border border-emerald-800/50":"bg-emerald-100 text-emerald-600 border border-emerald-200"}
+                            title="חלוקת יסודות ואיכויות"
+                            subtitle="ניתוח סטטיסטי"
+                          />
+                        </div>
                         <div className="flex-1 min-h-0 h-full pr-1">
                           <StatsTable elementStats={elementStats} qualityStats={qualityStats} />
                         </div>
