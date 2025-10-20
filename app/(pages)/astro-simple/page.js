@@ -22,6 +22,9 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from "../../../components/ui/dropdown-menu";
 
 export default function AstroPage() {
@@ -192,25 +195,33 @@ export default function AstroPage() {
                 </DropdownMenuGroup>
               </HeaderDropdown>
 
-              {/* מערכת בתים */}
-              <HeaderDropdown icon="🏠" label="מערכת בתים">
-                <DropdownMenuRadioGroup value={form.houseSystem} onValueChange={(v)=>setForm((p)=>({...p,houseSystem:v}))}>
-                  <DropdownMenuRadioItem value="placidus">Placidus</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="whole-sign">Whole Sign</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="equal-house">Equal</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="koch">Koch</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="regiomontanus">Regiomontanus</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="campanus">Campanus</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="topocentric">Topocentric</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </HeaderDropdown>
-
-              {/* מערכת זודיאק */}
-              <HeaderDropdown icon="♈" label="זודיאק">
-                <DropdownMenuRadioGroup value={form.zodiac} onValueChange={(v)=>setForm((p)=>({...p,zodiac:v}))}>
-                  <DropdownMenuRadioItem value="tropical">Tropical (טרופי)</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="sidereal">Sidereal (כוכבי)</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
+              {/* הגדרות (מערכת בתים + זודיאק) */}
+              <HeaderDropdown icon="⚙️" label="הגדרות" minWidth="min-w-[16rem]">
+                <DropdownMenuGroup>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>מערכת בתים</DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className={`${menuContentBase} rounded-xl min-w-[16rem]`}>
+                      <DropdownMenuRadioGroup value={form.houseSystem} onValueChange={(v)=>setForm((p)=>({...p,houseSystem:v}))}>
+                        <DropdownMenuRadioItem value="placidus">Placidus</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="whole-sign">Whole Sign</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="equal-house">Equal</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="koch">Koch</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="regiomontanus">Regiomontanus</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="campanus">Campanus</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="topocentric">Topocentric</DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>זודיאק</DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className={`${menuContentBase} rounded-xl min-w-[16rem]`}>
+                      <DropdownMenuRadioGroup value={form.zodiac} onValueChange={(v)=>setForm((p)=>({...p,zodiac:v}))}>
+                        <DropdownMenuRadioItem value="tropical">Tropical (טרופי)</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="sidereal">Sidereal (כוכבי)</DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                </DropdownMenuGroup>
               </HeaderDropdown>
 
               {/* היבטים להצגה */}
@@ -231,53 +242,67 @@ export default function AstroPage() {
                 </DropdownMenuGroup>
               </HeaderDropdown>
 
-              {/* פלנטות להיבטים */}
-              <HeaderDropdown icon="🎯" label="פלנטות להיבטים" minWidth="min-w-[18rem]">
-                <DropdownMenuLabel className={`${menuLabelMutedCls}`}>מקורות</DropdownMenuLabel>
-                {STATS_CHOICES.map((k)=> (
-                  <DropdownMenuCheckboxItem key={`aspect-src-${k}`} checked={aspectSourceKeys.includes(k)} onCheckedChange={(checked)=> setAspectSourceKeys((prev)=> checked ? (prev.includes(k)?prev:[...prev,k]) : prev.filter((x)=>x!==k))}>
-                    {PLANET_NAMES_HE_BY_KEY[k] || k}
-                  </DropdownMenuCheckboxItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel className={`${menuLabelMutedCls}`}>יעדים</DropdownMenuLabel>
-                {STATS_CHOICES.map((k)=> (
-                  <DropdownMenuCheckboxItem key={`aspect-tgt-${k}`} checked={aspectTargetKeys.includes(k)} onCheckedChange={(checked)=> setAspectTargetKeys((prev)=> checked ? (prev.includes(k)?prev:[...prev,k]) : prev.filter((x)=>x!==k))}>
-                    {PLANET_NAMES_HE_BY_KEY[k] || k}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </HeaderDropdown>
-
-              {/* פלנטות למדדים */}
-              <HeaderDropdown icon="📊" label="פלנטות למדדים">
-                {STATS_CHOICES.map((k)=> (
-                  <DropdownMenuCheckboxItem key={`stats-${k}`} checked={statsIncludeKeys.includes(k)} onCheckedChange={(checked)=> setStatsIncludeKeys((prev)=> checked ? (prev.includes(k)?prev:[...prev,k]) : prev.filter((x)=>x!==k))}>
-                    {PLANET_NAMES_HE_BY_KEY[k] || k}
-                  </DropdownMenuCheckboxItem>
-                ))}
-                <DropdownMenuSeparator />
+              {/* פלנטות (תצוגה/מדדים/להיבטים) */}
+              <HeaderDropdown icon="🪐" label="פלנטות" minWidth="min-w-[16rem]">
                 <DropdownMenuGroup>
-                  <DropdownMenuCheckboxItem checked={statsIncludeKeys.length===STATS_CHOICES.length} onCheckedChange={(checked)=> setStatsIncludeKeys(checked ? [...STATS_CHOICES] : [])}>
-                    בחר/נקה הכל
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem checked={false} onCheckedChange={()=> setStatsIncludeKeys(["sun","moon","mercury","venus","mars"]) }>
-                    אפס לברירת מחדל
-                  </DropdownMenuCheckboxItem>
-                </DropdownMenuGroup>
-              </HeaderDropdown>
+                  {/* לתצוגה */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>לתצוגה</DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className={`${menuContentBase} rounded-xl min-w-[18rem]`}>
+                      {STATS_CHOICES.map((k)=> (
+                        <DropdownMenuCheckboxItem key={`display-${k}`} checked={displayKeys.includes(k)} onCheckedChange={(checked)=> setDisplayKeys((prev)=> checked ? (prev.includes(k)?prev:[...prev,k]) : prev.filter((x)=>x!==k))}>
+                          {PLANET_NAMES_HE_BY_KEY[k] || k}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuCheckboxItem checked={displayKeys.length===STATS_CHOICES.length} onCheckedChange={(checked)=> setDisplayKeys(checked ? [...STATS_CHOICES] : [])}>
+                          בחר/נקה הכל
+                        </DropdownMenuCheckboxItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
 
-              {/* פלנטות לתצוגה */}
-              <HeaderDropdown icon="🪐" label="פלנטות לתצוגה">
-                {STATS_CHOICES.map((k)=> (
-                  <DropdownMenuCheckboxItem key={`display-${k}`} checked={displayKeys.includes(k)} onCheckedChange={(checked)=> setDisplayKeys((prev)=> checked ? (prev.includes(k)?prev:[...prev,k]) : prev.filter((x)=>x!==k))}>
-                    {PLANET_NAMES_HE_BY_KEY[k] || k}
-                  </DropdownMenuCheckboxItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuCheckboxItem checked={displayKeys.length===STATS_CHOICES.length} onCheckedChange={(checked)=> setDisplayKeys(checked ? [...STATS_CHOICES] : [])}>
-                    בחר/נקה הכל
-                  </DropdownMenuCheckboxItem>
+                  {/* למדדים */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>למדדים</DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className={`${menuContentBase} rounded-xl min-w-[18rem]`}>
+                      {STATS_CHOICES.map((k)=> (
+                        <DropdownMenuCheckboxItem key={`stats-${k}`} checked={statsIncludeKeys.includes(k)} onCheckedChange={(checked)=> setStatsIncludeKeys((prev)=> checked ? (prev.includes(k)?prev:[...prev,k]) : prev.filter((x)=>x!==k))}>
+                          {PLANET_NAMES_HE_BY_KEY[k] || k}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuCheckboxItem checked={statsIncludeKeys.length===STATS_CHOICES.length} onCheckedChange={(checked)=> setStatsIncludeKeys(checked ? [...STATS_CHOICES] : [])}>
+                          בחר/נקה הכל
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem checked={false} onCheckedChange={()=> setStatsIncludeKeys(["sun","moon","mercury","venus","mars"]) }>
+                          אפס לברירת מחדל
+                        </DropdownMenuCheckboxItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+
+                  {/* להיבטים */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>להיבטים</DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className={`${menuContentBase} rounded-xl min-w-[18rem]`}>
+                      <DropdownMenuLabel className={`${menuLabelMutedCls}`}>מקורות</DropdownMenuLabel>
+                      {STATS_CHOICES.map((k)=> (
+                        <DropdownMenuCheckboxItem key={`aspect-src-${k}`} checked={aspectSourceKeys.includes(k)} onCheckedChange={(checked)=> setAspectSourceKeys((prev)=> checked ? (prev.includes(k)?prev:[...prev,k]) : prev.filter((x)=>x!==k))}>
+                          {PLANET_NAMES_HE_BY_KEY[k] || k}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                      <DropdownMenuSeparator />
+                      <DropdownMenuLabel className={`${menuLabelMutedCls}`}>יעדים</DropdownMenuLabel>
+                      {STATS_CHOICES.map((k)=> (
+                        <DropdownMenuCheckboxItem key={`aspect-tgt-${k}`} checked={aspectTargetKeys.includes(k)} onCheckedChange={(checked)=> setAspectTargetKeys((prev)=> checked ? (prev.includes(k)?prev:[...prev,k]) : prev.filter((x)=>x!==k))}>
+                          {PLANET_NAMES_HE_BY_KEY[k] || k}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
                 </DropdownMenuGroup>
               </HeaderDropdown>
             </div>
