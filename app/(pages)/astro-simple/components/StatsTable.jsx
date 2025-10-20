@@ -26,7 +26,7 @@ export default function StatsTable({ elementStats, qualityStats }) {
   return (
     <div className={`w-full h-full rounded-xl border ${isDark ? "border-neutral-700 bg-neutral-800" : "border-neutral-200 bg-white"} flex flex-col overflow-hidden`}>
       {/* כותרת קבועה */}
-      <div className={`${isDark ? "bg-neutral-800" : "bg-neutral-50"} border-b ${isDark ? 'border-neutral-700' : 'border-neutral-200'} flex-shrink-0`}>
+      <div className={`${isDark ? "bg-neutral-800" : "bg-neutral-50"} border-b shadow-sm ${isDark ? 'border-neutral-600 shadow-neutral-900/50' : 'border-neutral-300 shadow-neutral-200/50'} flex-shrink-0`}>
         <div className="flex">
           <div className={`py-1.5 px-2 text-right font-semibold w-20 ${isDark ? "text-neutral-100" : "text-neutral-900"}`}>קטגוריה</div>
           <div className={`py-1.5 px-2 text-right font-semibold flex-1 ${isDark ? "text-neutral-100" : "text-neutral-900"}`}>שם</div>

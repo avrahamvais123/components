@@ -11,10 +11,10 @@ export default function PlanetsTable({ displayedBodies }) {
     }`}>
       <div className="overflow-auto w-full h-full">
         <table className="w-full align-top">
-          <thead className={`sticky top-0 z-10 ${
+          <thead className={`sticky top-0 z-10 border-b ${
             isDark 
-              ? "bg-neutral-800" 
-              : "bg-neutral-50"
+              ? "bg-neutral-800 border-neutral-600" 
+              : "bg-neutral-50 border-neutral-300"
           }`}>
             <tr>
               <th className={`py-1.5 px-2 text-right font-semibold ${
